@@ -31,7 +31,8 @@ public static class MauiProgram
 #endif
 
 		var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "database.sqlite");
-		builder.Services.AddSingleton(s => ActivatorUtilities.CreateInstance<PaymentFrequencyTypeService>(s, dbPath));
+		//builder.Services.AddSingleton(s => ActivatorUtilities.CreateInstance<PaymentFrequencyTypeService>(s, dbPath));
+		builder.Services.AddTransient<PaymentFrequencyTypeService>();
 
 		return builder.Build();
 	}
