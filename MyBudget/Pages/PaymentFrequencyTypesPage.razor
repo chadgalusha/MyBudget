@@ -3,7 +3,7 @@
 @using MyBudget.Models
 @inject PaymentFrequencyTypeService paymentFrequencyTypeService
 
-<h3 style="text-align:center">PaymentFrequencyTypes</h3>
+<h3 style="text-align:center">Payment Frequency Types</h3>
 <p style="color:red">@Error</p>
 
 @if (paymentFrequencyTypesList == null)
@@ -25,10 +25,62 @@ else
 				<tr>
 					<td>@type.PaymentFrequencyTypeId</td>
 					<td>@type.PaymentFrequencyType</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditType(type))">
+						Edit
+						</button>
+					</td>
 				</tr>
 			}
 		</tbody>
 	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewType">
+			Add New Type
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Edit Payment Frequency Type</h3>
+                        <!-- Button to close the popup -->
+                        <button type="button" class="close"
+                        @onclick="ClosePopup">
+                            <span aria-hidden="true">X</span>
+                        </button>
+                    </div>
+                    <!-- Edit form for the current forecast -->
+                    <div class="modal-body">
+                        <input class="form-control" type="number" disabled="disabled"
+                       @bind="paymentFrequencyType.PaymentFrequencyTypeId" />
+                        <input class="form-control" type="text"
+                       placeholder="New Type"
+                       @bind="paymentFrequencyType.PaymentFrequencyType" />
+                        <br />
+                        <!-- Button to save the forecast -->
+                        <button class="btn btn-success"
+                        @onclick="SaveType">
+                            Save
+                        </button>&nbsp;
+                        <!-- Only show delete button if not a new record -->
+                        @if (paymentFrequencyType.PaymentFrequencyTypeId > 0)
+                        {
+                            <!-- Button to delete the forecast -->
+                            <button class="btn btn-danger"
+                        @onclick="DeleteType">
+                                Delete
+                            </button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+	}
 }
 
 @code 
@@ -41,5 +93,35 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetListAsync();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewType()
+	{
+		paymentFrequencyType = new PaymentFrequencyTypes();
+		paymentFrequencyType.PaymentFrequencyTypeId = 0;
+		ShowPopup = true;
+	}
+
+	void EditType(PaymentFrequencyTypes type)
+	{
+		paymentFrequencyType = type;
+		ShowPopup = true;
+	}
+
+	async Task SaveType()
+	{
+		ShowPopup = false;
+		Error = "";
+	}
+
+	async Task DeleteType()
+	{
+		ShowPopup = false;
+		Error = "";
 	}
 }

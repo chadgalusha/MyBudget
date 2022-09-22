@@ -7,7 +7,7 @@ namespace MyBudget.Services
 {
     public class PaymentFrequencyTypeService
     {
-        private string _dbPath;
+        private readonly string _dbPath;
         private SQLiteAsyncConnection _connection;
 
         public PaymentFrequencyTypeService()
@@ -25,7 +25,7 @@ namespace MyBudget.Services
             _connection = new SQLiteAsyncConnection(_dbPath);
             await _connection.CreateTableAsync<PaymentFrequencyTypes>();
 
-            if (DoesTableHaveValues() == false)
+            if (await DoesTableHaveValuesAsync() == false)
             {
                 await InitializeTableValuesAsync();
             }
@@ -51,11 +51,39 @@ namespace MyBudget.Services
             }
         }
 
+        public async Task<PaymentFrequencyTypes> UpdateTypeAsync(PaymentFrequencyTypes type)
+        {
+            try
+            {
+                await _connection.UpdateAsync(type);
+                return type;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error updating record: {e.Message}");
+                return null;
+            }
+        }
+
+        public async Task<PaymentFrequencyTypes> DeleteTypeAsync(PaymentFrequencyTypes type)
+        {
+            try
+            {
+                await _connection.DeleteAsync(type);
+                return type;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error delting type: {e.Message}");
+                return null;
+            }
+        }
+
         // private methods
 
-        private bool DoesTableHaveValues()
+        private async Task<bool> DoesTableHaveValuesAsync()
         {
-            var listOfValues = GetListAsync().Result;
+            var listOfValues = await GetListAsync();
             return listOfValues.Any();
         }
 
