@@ -1,23 +1,77 @@
-﻿using BudgetApplication.Helpers;
-using BudgetApplication.Models;
+﻿using MyBudget.Helpers;
+using MyBudget.Models;
+using Serilog;
 using SQLite;
 
 namespace MyBudget.Services
 {
     public class PaymentFrequencyTypeService
     {
-        private string _dbPath = DatbasePath.GetDbPath();
-        private SQLiteConnection _connection;
+        private string _dbPath;
+        private SQLiteAsyncConnection _connection;
 
         public PaymentFrequencyTypeService()
         {
-            _connection = new SQLiteConnection(_dbPath);
-            _connection.CreateTable<PaymentFrequencyTypes>();
+            _dbPath = DatbasePath.GetDbPath();
         }
 
-        public List<PaymentFrequencyTypes> GetList()
+        public async Task InitializeAsync()
         {
-            return _connection.Table<PaymentFrequencyTypes>().ToList();
+            if (_connection != null)
+            {
+                return;
+            }
+
+            _connection = new SQLiteAsyncConnection(_dbPath);
+            await _connection.CreateTableAsync<PaymentFrequencyTypes>();
+
+            if (DoesTableHaveValues() == false)
+            {
+                await InitializeTableValuesAsync();
+            }
+        }
+
+        public async  Task<List<PaymentFrequencyTypes>> GetListAsync()
+        {
+            await InitializeAsync();
+            return await _connection.Table<PaymentFrequencyTypes>().ToListAsync();
+        }
+
+        public async Task<PaymentFrequencyTypes> CreatePaymentFrequencyTypeAsync(PaymentFrequencyTypes newType)
+        {
+            try
+            {
+                await _connection.InsertAsync(newType);
+                return newType;
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error inserting new record: {e.Message}");
+                return null;
+            }
+        }
+
+        // private methods
+
+        private bool DoesTableHaveValues()
+        {
+            var listOfValues = GetListAsync().Result;
+            return listOfValues.Any();
+        }
+
+        private async Task InitializeTableValuesAsync()
+        {
+            var initialValuesArray = PaymentFrequencyTypes.InitialValues();
+
+            foreach (var value in initialValuesArray)
+            {
+                PaymentFrequencyTypes newType = new()
+                {
+                    PaymentFrequencyType = value
+                };
+
+                await CreatePaymentFrequencyTypeAsync(newType);
+            }
         }
     }
 }

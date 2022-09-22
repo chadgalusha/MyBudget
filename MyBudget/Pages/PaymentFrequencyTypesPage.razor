@@ -1,0 +1,45 @@
+﻿@page "/paymentfrequencytypespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@inject PaymentFrequencyTypeService paymentFrequencyTypeService
+
+<h3 style="text-align:center">PaymentFrequencyTypes</h3>
+<p style="color:red">@Error</p>
+
+@if (paymentFrequencyTypesList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Payment Frequency Type Id</th>
+				<th>Payment Frequency Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var type in paymentFrequencyTypesList)
+			{
+				<tr>
+					<td>@type.PaymentFrequencyTypeId</td>
+					<td>@type.PaymentFrequencyType</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+}
+
+@code 
+{
+	string Error = "";
+	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
+	PaymentFrequencyTypes paymentFrequencyType = new PaymentFrequencyTypes();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetListAsync();
+	}
+}

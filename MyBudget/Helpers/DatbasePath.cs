@@ -1,4 +1,4 @@
-﻿namespace BudgetApplication.Helpers
+﻿namespace MyBudget.Helpers
 {
     public class DatbasePath
     {

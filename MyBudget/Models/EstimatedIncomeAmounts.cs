@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace BudgetApplication.Models
+namespace MyBudget.Models
 {
     [Table("EstimatedIncomeAmounts")]
     public class EstimatedIncomeAmounts
