@@ -38,6 +38,6 @@ public static class MauiProgram
 		// DataAccess Transients
 		builder.Services.AddTransient<BankAccountTypeDataAccess>();
 
-		return builder.Build();
+        return builder.Build();
 	}
 }

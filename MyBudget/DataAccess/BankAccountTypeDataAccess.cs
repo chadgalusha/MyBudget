@@ -5,7 +5,7 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class BankAccountTypeDataAccess// : IDataAccess<BankAccountTypes>
+    public class BankAccountTypeDataAccess : IDataAccess<BankAccountTypes>
     {
         private readonly string _dbPath;
         private SQLiteAsyncConnection _connection;

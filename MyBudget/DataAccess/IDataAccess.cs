@@ -4,7 +4,7 @@ namespace MyBudget.DataAccess
 {
     public interface IDataAccess<T>
     {
-        Task<T> CreateRecord(T newType);
+        Task<T> CreateRecord(T type);
         Task<T> DeleteRecordAsync(T type);
         Task<List<T>> GetListAsync();
         Task<T> GetRecordByIdAsync(int id);
