@@ -10,5 +10,11 @@ namespace MyBudget.Models
 
         [MaxLength(50), Unique]
         public string IncomeType { get; set; }
+
+        public static string[] InitialValues()
+        {
+            string[] initialValues = { "Primary", "Secondary", "Occasional", "One-Time" };
+            return initialValues;
+        }
     }
 }

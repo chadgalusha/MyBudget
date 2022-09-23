@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Components.WebView.Maui;
-using MyBudget.DataAccess;
-using MyBudget.Models;
+﻿using MyBudget.DataAccess;
 using MyBudget.Services;
 using Serilog;
 
@@ -34,9 +32,14 @@ public static class MauiProgram
 		// Service Transients
 		builder.Services.AddTransient<PaymentFrequencyTypeService>();
 		builder.Services.AddTransient<BankAccountTypeService>();
+        builder.Services.AddTransient<IncomeTypeService>();
+        builder.Services.AddTransient<ExpenseTypeService>();
 
 		// DataAccess Transients
-		builder.Services.AddTransient<BankAccountTypeDataAccess>();
+		builder.Services.AddTransient<PaymentFrequencyTypeDataAccess>();
+        builder.Services.AddTransient<BankAccountTypeDataAccess>();
+        builder.Services.AddTransient<IncomeTypeDataAccess>();
+        builder.Services.AddTransient<ExpenseTypeDataAccess>();
 
         return builder.Build();
 	}

@@ -92,7 +92,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetListAsync();
+		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
 	}
 
 	void ClosePopup()

@@ -1,0 +1,126 @@
+﻿@page "/expensetypespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@inject ExpenseTypeService expenseTypeService
+
+<h3 style="text-align:center">Expense Types</h3>
+<p style="color:red">@Error</p>
+
+@if (expenseTypeList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Expense Type Id</th>
+				<th>Expense Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var type in expenseTypeList)
+			{
+				<tr>
+					<td>@type.ExpenseTypeId</td>
+					<td>@type.ExpenseType</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(type))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Type
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense Type</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current forecast -->
+					<div class="modal-body">
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="expenseType.ExpenseTypeId" />
+						<input class="form-control" type="text"
+					   placeholder="New Type"
+					   @bind="expenseType.ExpenseType" />
+						<br />
+						<!-- Button to save the forecast -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (expenseType.ExpenseTypeId > 0)
+						{
+							<!-- Button to delete the forecast -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	string Error = "";
+	List<ExpenseTypes> expenseTypeList = new();
+	ExpenseTypes expenseType = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		expenseTypeList = await expenseTypeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		expenseType = new ExpenseTypes();
+		expenseType.ExpenseTypeId = 0;
+		ShowPopup = true;
+	}
+
+	void EditRecord(ExpenseTypes type)
+	{
+		expenseType = type;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+	}
+}

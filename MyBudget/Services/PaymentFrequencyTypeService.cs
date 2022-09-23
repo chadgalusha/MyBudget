@@ -1,4 +1,5 @@
-﻿using MyBudget.Helpers;
+﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 using Serilog;
 using SQLite;
@@ -7,99 +8,36 @@ namespace MyBudget.Services
 {
     public class PaymentFrequencyTypeService
     {
-        private readonly string _dbPath;
-        private SQLiteAsyncConnection _connection;
+        private readonly PaymentFrequencyTypeDataAccess _paymentFrequencyTypeDataAccess;
 
-        public PaymentFrequencyTypeService()
+        public PaymentFrequencyTypeService(PaymentFrequencyTypeDataAccess paymentFrequencyTypeDataAccess)
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _paymentFrequencyTypeDataAccess = paymentFrequencyTypeDataAccess;
         }
 
-        public async Task InitializeAsync()
+        public async Task<PaymentFrequencyTypes> GetById(int id)
         {
-            if (_connection != null)
-            {
-                return;
-            }
-
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<PaymentFrequencyTypes>();
-
-            if (await DoesTableHaveValuesAsync() == false)
-            {
-                await InitializeTableValuesAsync();
-            }
+            return await _paymentFrequencyTypeDataAccess.GetRecordByIdAsync(id);
         }
 
-        public async Task<List<PaymentFrequencyTypes>> GetListAsync()
+        public async Task<List<PaymentFrequencyTypes>> GetList()
         {
-            await InitializeAsync();
-            return await _connection.Table<PaymentFrequencyTypes>().ToListAsync();
+            return await _paymentFrequencyTypeDataAccess.GetListAsync();
         }
 
-        public async Task<PaymentFrequencyTypes> CreatePaymentFrequencyTypeAsync(PaymentFrequencyTypes newType)
+        public async Task<PaymentFrequencyTypes> CreateRecord(PaymentFrequencyTypes newType)
         {
-            try
-            {
-                await _connection.InsertAsync(newType);
-                return newType;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Error inserting new record: {e.Message}");
-                return null;
-            }
+            return await _paymentFrequencyTypeDataAccess.CreateRecord(newType);
         }
 
-        public async Task<PaymentFrequencyTypes> UpdateTypeAsync(PaymentFrequencyTypes type)
+        public async Task<PaymentFrequencyTypes> UpdateRecord(PaymentFrequencyTypes type)
         {
-            try
-            {
-                await _connection.UpdateAsync(type);
-                return type;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Error updating record: {e.Message}");
-                return null;
-            }
+            return await _paymentFrequencyTypeDataAccess.UpdateRecordAsync(type);
         }
 
-        public async Task<PaymentFrequencyTypes> DeleteTypeAsync(PaymentFrequencyTypes type)
+        public async Task<PaymentFrequencyTypes> DeleteRecord(PaymentFrequencyTypes type)
         {
-            try
-            {
-                await _connection.DeleteAsync(type);
-                return type;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Error deleting type: {e.Message}");
-                return null;
-            }
-        }
-
-        // private methods
-
-        private async Task<bool> DoesTableHaveValuesAsync()
-        {
-            var listOfValues = await GetListAsync();
-            return listOfValues.Any();
-        }
-
-        private async Task InitializeTableValuesAsync()
-        {
-            var initialValuesArray = PaymentFrequencyTypes.InitialValues();
-
-            foreach (var value in initialValuesArray)
-            {
-                PaymentFrequencyTypes newType = new()
-                {
-                    PaymentFrequencyType = value
-                };
-
-                await CreatePaymentFrequencyTypeAsync(newType);
-            }
+            return await _paymentFrequencyTypeDataAccess.DeleteRecordAsync(type);
         }
     }
 }
