@@ -1,0 +1,49 @@
+﻿@page "/incomespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@inject IncomeService incomeService
+
+<h3 style="text-align:center">Incomes</h3>
+<p style="color:red">@Error</p>
+
+@code {
+	string Error = "";
+	List<Incomes> incomeList = new();
+	Incomes income = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		incomeList = await incomeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		income = new Incomes();
+		income.IncomeId = 0;
+		ShowPopup = true;
+	}
+
+	void EditRecord(Incomes incomeToEdit)
+	{
+		income = incomeToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+	}
+}

@@ -34,12 +34,15 @@ public static class MauiProgram
 		builder.Services.AddTransient<BankAccountTypeService>();
         builder.Services.AddTransient<IncomeTypeService>();
         builder.Services.AddTransient<ExpenseTypeService>();
+		builder.Services.AddTransient<IncomeService>();
 
 		// DataAccess Transients
 		builder.Services.AddTransient<PaymentFrequencyTypeDataAccess>();
         builder.Services.AddTransient<BankAccountTypeDataAccess>();
         builder.Services.AddTransient<IncomeTypeDataAccess>();
         builder.Services.AddTransient<ExpenseTypeDataAccess>();
+		builder.Services.AddTransient<IncomeDataAccess>();
+        builder.Services.AddTransient<ExpenseDataAccess>();
 
         return builder.Build();
 	}

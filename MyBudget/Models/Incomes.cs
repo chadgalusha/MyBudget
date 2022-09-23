@@ -14,5 +14,9 @@ namespace MyBudget.Models
         public int IncomeTypeId { get; set; }
 
         public int PaymentFrequencyTypeId { get; set; }
+
+        public decimal IncomeAmount { get; set; }
+
+        public DateOnly InitialIncomeDate { get; set; }
     }
 }

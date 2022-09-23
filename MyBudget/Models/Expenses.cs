@@ -14,5 +14,9 @@ namespace MyBudget.Models
         public int ExpenseTypeId { get; set; }
 
         public int PaymentFrequencyTypeId { get; set; }
+
+        public decimal ExpenseAmount { get; set; }
+
+        public DateOnly InitialExpenseDate { get; set; }
     }
 }
