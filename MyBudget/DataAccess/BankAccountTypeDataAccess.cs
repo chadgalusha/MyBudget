@@ -3,41 +3,33 @@ using MyBudget.Models;
 using Serilog;
 using SQLite;
 
-namespace MyBudget.Services
+namespace MyBudget.DataAccess
 {
-    public class PaymentFrequencyTypeService
+    public class BankAccountTypeDataAccess// : IDataAccess<BankAccountTypes>
     {
         private readonly string _dbPath;
         private SQLiteAsyncConnection _connection;
 
-        public PaymentFrequencyTypeService()
+        public BankAccountTypeDataAccess()
         {
             _dbPath = DatbasePath.GetDbPath();
         }
 
-        public async Task InitializeAsync()
-        {
-            if (_connection != null)
-            {
-                return;
-            }
-
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<PaymentFrequencyTypes>();
-
-            if (await DoesTableHaveValuesAsync() == false)
-            {
-                await InitializeTableValuesAsync();
-            }
-        }
-
-        public async Task<List<PaymentFrequencyTypes>> GetListAsync()
+        public async Task<BankAccountTypes> GetRecordByIdAsync(int id)
         {
             await InitializeAsync();
-            return await _connection.Table<PaymentFrequencyTypes>().ToListAsync();
+            return await _connection.Table<BankAccountTypes>()
+                .Where(b => b.BankAccountTypeId == id)
+                .FirstAsync();
         }
 
-        public async Task<PaymentFrequencyTypes> CreatePaymentFrequencyTypeAsync(PaymentFrequencyTypes newType)
+        public async Task<List<BankAccountTypes>> GetListAsync()
+        {
+            await InitializeAsync();
+            return await _connection.Table<BankAccountTypes>().ToListAsync();
+        }
+
+        public async Task<BankAccountTypes> CreateRecord(BankAccountTypes newType)
         {
             try
             {
@@ -51,7 +43,7 @@ namespace MyBudget.Services
             }
         }
 
-        public async Task<PaymentFrequencyTypes> UpdateTypeAsync(PaymentFrequencyTypes type)
+        public async Task<BankAccountTypes> UpdateRecordAsync(BankAccountTypes type)
         {
             try
             {
@@ -65,7 +57,7 @@ namespace MyBudget.Services
             }
         }
 
-        public async Task<PaymentFrequencyTypes> DeleteTypeAsync(PaymentFrequencyTypes type)
+        public async Task<BankAccountTypes> DeleteRecordAsync(BankAccountTypes type)
         {
             try
             {
@@ -81,6 +73,22 @@ namespace MyBudget.Services
 
         // private methods
 
+        private async Task InitializeAsync()
+        {
+            if (_connection != null)
+            {
+                return;
+            }
+
+            _connection = new SQLiteAsyncConnection(_dbPath);
+            await _connection.CreateTableAsync<BankAccountTypes>();
+
+            if (await DoesTableHaveValuesAsync() == false)
+            {
+                await InitializeTableValuesAsync();
+            }
+        }
+
         private async Task<bool> DoesTableHaveValuesAsync()
         {
             var listOfValues = await GetListAsync();
@@ -89,16 +97,16 @@ namespace MyBudget.Services
 
         private async Task InitializeTableValuesAsync()
         {
-            var initialValuesArray = PaymentFrequencyTypes.InitialValues();
+            var initialValuesArray = BankAccountTypes.InitialValues();
 
             foreach (var value in initialValuesArray)
             {
-                PaymentFrequencyTypes newType = new()
+                BankAccountTypes newType = new()
                 {
-                    PaymentFrequencyType = value
+                    BankAccountType = value
                 };
 
-                await CreatePaymentFrequencyTypeAsync(newType);
+                await CreateRecord(newType);
             }
         }
     }

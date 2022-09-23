@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebView.Maui;
+using MyBudget.DataAccess;
+using MyBudget.Models;
 using MyBudget.Services;
 using Serilog;
 
@@ -29,10 +31,12 @@ public static class MauiProgram
 		#if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
-
-		var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "database.sqlite");
-		//builder.Services.AddSingleton(s => ActivatorUtilities.CreateInstance<PaymentFrequencyTypeService>(s, dbPath));
+		// Service Transients
 		builder.Services.AddTransient<PaymentFrequencyTypeService>();
+		builder.Services.AddTransient<BankAccountTypeService>();
+
+		// DataAccess Transients
+		builder.Services.AddTransient<BankAccountTypeDataAccess>();
 
 		return builder.Build();
 	}

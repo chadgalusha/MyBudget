@@ -10,5 +10,11 @@ namespace MyBudget.Models
 
         [MaxLength(50), Unique]
         public string BankAccountType { get; set; }
+
+        public static string[] InitialValues()
+        {
+            string[] initialValues = {"Checking", "Savings", "Money-Market"};
+            return initialValues;
+        }
     }
 }
