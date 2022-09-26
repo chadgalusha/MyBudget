@@ -1,0 +1,3 @@
+2022-09-26 13:14:14.760 -05:00 [INF] Incomes table created: Created
+2022-09-26 13:14:19.994 -05:00 [INF] Incomes table created: Migrated
+2022-09-26 13:22:49.512 -05:00 [INF] Incomes table created: Migrated

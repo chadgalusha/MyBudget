@@ -8,7 +8,8 @@ namespace MyBudget.DataAccess
     public class IncomeDataAccess : IDataAccess<Incomes>
 	{
         private readonly string _dbPath;
-        private SQLiteAsyncConnection _connection;
+        private SQLiteAsyncConnection _asyncConnection;
+        private SQLiteConnection _connection;
 
         public IncomeDataAccess()
         {
@@ -18,7 +19,7 @@ namespace MyBudget.DataAccess
         public async Task<Incomes> GetRecordByIdAsync(int id)
         {
             await InitializeAsync();
-            return await _connection.Table<Incomes>()
+            return await _asyncConnection.Table<Incomes>()
                 .Where(i => i.IncomeId == id)
                 .FirstAsync();
         }
@@ -26,14 +27,14 @@ namespace MyBudget.DataAccess
         public async Task<List<Incomes>> GetListAsync()
         {
             await InitializeAsync();
-            return await _connection.Table<Incomes>().ToListAsync();
+            return await _asyncConnection.Table<Incomes>().ToListAsync();
         }
 
         public async Task<Incomes> CreateRecord(Incomes newIncome)
         {
             try
             {
-                await _connection.InsertAsync(newIncome).ContinueWith((i) =>
+                await _asyncConnection.InsertAsync(newIncome).ContinueWith((i) =>
                 {
                     Log.Information($"Income created: {newIncome.IncomeName}");
                 });
@@ -50,7 +51,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.UpdateAsync(income).ContinueWith((i) =>
+                await _asyncConnection.UpdateAsync(income).ContinueWith((i) =>
                 {
                     Log.Information($"Income updated: {income.IncomeId}, {income.IncomeName}");
                 });
@@ -67,7 +68,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.DeleteAsync(income).ContinueWith((i) =>
+                await _asyncConnection.DeleteAsync(income).ContinueWith((i) =>
                 {
                     Log.Information($"Income deleted: {income.IncomeId}, {income.IncomeName}");
                 });
@@ -80,19 +81,28 @@ namespace MyBudget.DataAccess
             }
         }
 
+        public bool DoesIncomeNameExist(string incomeName)
+        {
+            var result = _connection.Table<Incomes>()
+                .Where(i => i.IncomeName.ToLower() == incomeName.ToLower())
+                .Count();
+
+            return result > 0;
+        }
+
         // private methods
 
         private async Task InitializeAsync()
         {
-            if (_connection != null)
+            if (_asyncConnection != null)
             {
                 return;
             }
 
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<Incomes>().ContinueWith((results) =>
+            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
+            await _asyncConnection.CreateTableAsync<Incomes>().ContinueWith((results) =>
             {
-                Log.Information($"Expenses table created: {results.Result}");
+                Log.Information($"Incomes table created: {results.Result}");
             });
         }
     }

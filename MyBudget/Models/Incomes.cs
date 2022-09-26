@@ -17,6 +17,6 @@ namespace MyBudget.Models
 
         public decimal IncomeAmount { get; set; }
 
-        public DateOnly InitialIncomeDate { get; set; }
+        public DateTime InitialIncomeDate { get; set; }
     }
 }

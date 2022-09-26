@@ -1,5 +1,6 @@
 ﻿using MyBudget.DataAccess;
 using MyBudget.Models;
+using Serilog;
 
 namespace MyBudget.Services
 {
@@ -24,17 +25,67 @@ namespace MyBudget.Services
 
         public async Task<Incomes> CreateRecord(Incomes newIncome)
         {
-            return await _incomeDataAccess.CreateRecord(newIncome);
+            if (IsIncomeNameAlreadyUsed(newIncome.IncomeName) == true)
+			{
+				return new Incomes();
+			}
+
+			try
+			{
+				Incomes income = new()
+				{
+					IncomeName = newIncome.IncomeName,
+					IncomeTypeId = newIncome.IncomeTypeId,
+					PaymentFrequencyTypeId = newIncome.PaymentFrequencyTypeId,
+					IncomeAmount = newIncome.IncomeAmount,
+					InitialIncomeDate = newIncome.InitialIncomeDate
+				};
+
+				return await _incomeDataAccess.CreateRecord(income);
+			}
+			catch (Exception e)
+			{
+				Log.Error($"Error creating new Income: {e.Message}");
+				return new Incomes();
+			}
         }
 
         public async Task<Incomes> UpdateRecord(Incomes income)
         {
-            return await _incomeDataAccess.UpdateRecordAsync(income);
+            if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
+            {
+                return new Incomes();
+            }
+
+            try
+			{
+                return await _incomeDataAccess.UpdateRecordAsync(income);
+            }
+			catch (Exception e)
+			{
+				Log.Error($"Error updating Income: {e.Message}");
+				return new Incomes();
+			}
         }
 
         public async Task<Incomes> DeleteRecord(Incomes income)
         {
-            return await _incomeDataAccess.DeleteRecordAsync(income);
+			try
+			{
+                return await _incomeDataAccess.DeleteRecordAsync(income);
+            }
+			catch (Exception e)
+			{
+				Log.Error($"Error deleting Income: {e.Message}");
+				return new Incomes();
+			}
         }
+
+		// private methods
+
+		private bool IsIncomeNameAlreadyUsed(string incomeName)
+		{
+			return _incomeDataAccess.DoesIncomeNameExist(incomeName);
+		}
     }
 }

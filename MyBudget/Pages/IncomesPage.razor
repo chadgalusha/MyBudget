@@ -6,6 +6,103 @@
 <h3 style="text-align:center">Incomes</h3>
 <p style="color:red">@Error</p>
 
+@if (incomeList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Income Id</th>
+				<th>Income Name</th>
+				<th>Income Type</th>
+				<th>Payment Frequency</th>
+				<th>Income Amount</th>
+				<th>Initial Income Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var income in incomeList)
+			{
+				<tr>
+					<td>@income.IncomeId</td>
+					<td>@income.IncomeName</td>
+					<td>@income.IncomeTypeId</td>
+					<td>@income.PaymentFrequencyTypeId</td>
+					<td>@income.IncomeAmount</td>
+					<td>@income.InitialIncomeDate</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(income))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Income
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense Type</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current forecast -->
+					<div class="modal-body">
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="income.IncomeId" />
+						<input class="form-control" type="text"
+					   placeholder="Income Name"
+					   @bind="income.IncomeName" />
+					   <input class="form-control" type="text"
+					   placeholder="Income Type"
+					   @bind="income.IncomeTypeId" />
+						<input class="form-control" type="text"
+					   placeholder="Payment Frequency"
+					   @bind="income.PaymentFrequencyTypeId" />
+						<input class="form-control" type="number"
+					   placeholder="Income Amount"
+					   @bind="income.IncomeAmount" />
+						<input class="form-control" type="date"
+					   placeholder="Income Date"
+					   @bind="income.InitialIncomeDate" />
+						<br />
+						<!-- Button to save the forecast -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (income.IncomeId > 0)
+						{
+							<!-- Button to delete the forecast -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
 @code {
 	string Error = "";
 	List<Incomes> incomeList = new();
@@ -24,8 +121,11 @@
 
 	void AddNewRecord()
 	{
-		income = new Incomes();
-		income.IncomeId = 0;
+		income = new Incomes()
+			{
+				IncomeId = 0,
+				InitialIncomeDate = DateTime.Today.Date
+			};
 		ShowPopup = true;
 	}
 
