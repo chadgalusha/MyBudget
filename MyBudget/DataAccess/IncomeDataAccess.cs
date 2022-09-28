@@ -83,7 +83,8 @@ namespace MyBudget.DataAccess
 
         public bool DoesIncomeNameExist(string incomeName)
         {
-            var result = _connection.Table<Incomes>()
+            _connection = new SQLiteConnection(_dbPath);
+            int result = _connection.Table<Incomes>()
                 .Where(i => i.IncomeName.ToLower() == incomeName.ToLower())
                 .Count();
 

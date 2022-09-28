@@ -1,3 +1,20 @@
 2022-09-26 13:14:14.760 -05:00 [INF] Incomes table created: Created
 2022-09-26 13:14:19.994 -05:00 [INF] Incomes table created: Migrated
 2022-09-26 13:22:49.512 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 08:31:06.676 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:26:21.247 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:27:13.065 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:28:18.659 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:31:18.436 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:33:28.281 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:35:12.403 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:43:09.566 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:54:05.333 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:57:42.374 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 09:57:53.479 -05:00 [INF] Income created: Test
+2022-09-28 10:03:37.575 -05:00 [INF] Income created: test2
+2022-09-28 10:08:00.476 -05:00 [INF] Income deleted: 0, test2
+2022-09-28 10:08:02.781 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 10:09:27.990 -05:00 [INF] Incomes table created: Migrated
+2022-09-28 10:09:40.046 -05:00 [INF] Income deleted: 2, test2
+2022-09-28 10:09:44.498 -05:00 [INF] Incomes table created: Migrated
