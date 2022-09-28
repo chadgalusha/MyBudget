@@ -11,7 +11,7 @@ public static class MauiProgram
 		Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
 			.WriteTo.File(@"C:\Users\ChadGalusha\source\repos\MyBudget\MyBudget\Data\logs.txt",
-				fileSizeLimitBytes: 1000,
+				fileSizeLimitBytes: 5_000_000,
 				retainedFileCountLimit: 1,
 				outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
 			.CreateLogger();
