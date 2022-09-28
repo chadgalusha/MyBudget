@@ -84,11 +84,26 @@ namespace MyBudget.DataAccess
         public bool DoesIncomeNameExist(string incomeName)
         {
             _connection = new SQLiteConnection(_dbPath);
+
             int result = _connection.Table<Incomes>()
                 .Where(i => i.IncomeName.ToLower() == incomeName.ToLower())
                 .Count();
 
+            _connection.Close();
             return result > 0;
+        }
+
+        public string GetNameOfIncomeById(int id)
+        {
+            _connection = new SQLiteConnection(_dbPath);
+
+            string incomeName = _connection.Table<Incomes>()
+                .Where(i => i.IncomeId == id)
+                .Select(i => i.IncomeName)
+                .First();
+
+            _connection.Close();
+            return incomeName;
         }
 
         // private methods

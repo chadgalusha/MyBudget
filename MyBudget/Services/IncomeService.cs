@@ -52,12 +52,15 @@ namespace MyBudget.Services
 
         public async Task<Incomes> UpdateRecord(Incomes income)
         {
-            if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
-            {
-                return new Incomes();
+			if (IsUpdatedIncomeNameModified(income) == false)
+			{
+                if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
+                {
+                    return new Incomes();
+                }
             }
 
-            try
+			try
 			{
                 return await _incomeDataAccess.UpdateRecordAsync(income);
             }
@@ -86,6 +89,12 @@ namespace MyBudget.Services
 		private bool IsIncomeNameAlreadyUsed(string incomeName)
 		{
 			return _incomeDataAccess.DoesIncomeNameExist(incomeName);
+		}
+
+		private bool IsUpdatedIncomeNameModified(Incomes income)
+		{
+			var currentIncomeName = _incomeDataAccess.GetNameOfIncomeById(income.IncomeId);
+			return currentIncomeName.Equals(income.IncomeName);
 		}
     }
 }

@@ -1,6 +1,7 @@
 ﻿@page "/incomespage"
 @using MyBudget.Services
 @using MyBudget.Models
+@using MyBudget.Helpers
 @inject IncomeService incomeService
 @inject PaymentFrequencyTypeService paymentFrequencyTypeService
 @inject IncomeTypeService incomeTypeService
@@ -31,8 +32,8 @@ else
 				<tr>
 					<td>@income.IncomeId</td>
 					<td>@income.IncomeName</td>
-					<td>@income.IncomeTypeId</td>
-					<td>@income.PaymentFrequencyTypeId</td>
+					<td>@GetIncomeTypeName(income.IncomeTypeId, incomeTypesList)</td>
+					<td>@GetPaymentFrequencyTypeName(income.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
 					<td>$@income.IncomeAmount</td>
 					<td>@income.InitialIncomeDate</td>
 					<td>
@@ -74,9 +75,6 @@ else
 					   placeholder="Income Name"
 					   @bind="income.IncomeName" id="incomename"/>
 
-					   @*<input class="form-control" type="text"
-					   placeholder="Income Type"
-					   @bind="income.IncomeTypeId" />*@
 					   <label for="incometype">Income Type: </label>
 					   <select class="form-select" title="Income Type Required" @bind="income.IncomeTypeId" id="incometype">
 						   <option value="Select" disabled="disabled">Choose Income Type</option>
@@ -86,9 +84,6 @@ else
 							}
 					   </select>
 
-						@*<input class="form-control" type="text"
-					   placeholder="Payment Frequency"
-					   @bind="income.PaymentFrequencyTypeId" />*@
 					   <label for="paymentfrequency">Payment Frequency: </label>
 					   <select class="form-select" title="Payment Frequency Required" @bind="income.PaymentFrequencyTypeId" id="paymentfrequency">
 						   <option value="Select" disabled="disabled">Choose Payment Frequency</option>
@@ -181,8 +176,16 @@ else
 					IncomeAmount = income.IncomeAmount,
 					InitialIncomeDate = income.InitialIncomeDate
 				};
-				await incomeService.CreateRecord(newIncome);
-				incomeList.Add(newIncome);
+				var createdIncome = await incomeService.CreateRecord(newIncome);
+
+				if (createdIncome.IncomeName == null || createdIncome.IncomeName == "")
+				{
+					Error = "Duplicate Income name, please try again";
+				}
+				else
+				{
+					incomeList.Add(createdIncome);
+				}
 			}
 			else
 			{
@@ -209,5 +212,15 @@ else
 		{
 			Error = e.Message;
 		}
+	}
+
+	string GetIncomeTypeName(int id, List<IncomeTypes> incomeTypeList)
+	{
+		return ItemFromList.GetNameFromIncomeTypeList(id, incomeTypeList);
+	}
+
+	string GetPaymentFrequencyTypeName(int id, List<PaymentFrequencyTypes> paymentFrequencyTypeList)
+	{
+		return ItemFromList.GetNameFromPaymentFrequencyTypeList(id, paymentFrequencyTypeList);
 	}
 }
