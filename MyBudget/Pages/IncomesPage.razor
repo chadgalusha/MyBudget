@@ -2,6 +2,7 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject IncomeService incomeService
+@inject PaymentFrequencyTypeService paymentFrequencyTypeService
 
 <h3 style="text-align:center">Incomes</h3>
 <p style="color:red">@Error</p>
@@ -106,12 +107,14 @@ else
 @code {
 	string Error = "";
 	List<Incomes> incomeList = new();
+	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
 	Incomes income = new();
 	bool ShowPopup = false;
 
 	protected override async Task OnInitializedAsync()
 	{
 		incomeList = await incomeService.GetList();
+		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
 	}
 
 	void ClosePopup()
