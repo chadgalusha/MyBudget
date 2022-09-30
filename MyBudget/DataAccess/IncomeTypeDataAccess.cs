@@ -108,6 +108,7 @@ namespace MyBudget.DataAccess
             _connection.Close();
             return result > 0;
         }
+
         // private methods
 
         private async Task InitializeAsync()
