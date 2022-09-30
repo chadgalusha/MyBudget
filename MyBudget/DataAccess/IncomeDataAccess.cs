@@ -5,7 +5,7 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class IncomeDataAccess : IDataAccess<Incomes>
+    public class IncomeDataAccess : IIncomeDataAccess
 	{
         private readonly string _dbPath;
         private SQLiteAsyncConnection _asyncConnection;
@@ -83,11 +83,27 @@ namespace MyBudget.DataAccess
 
         public bool DoesIncomeNameExist(string incomeName)
         {
-            var result = _connection.Table<Incomes>()
+            _connection = new SQLiteConnection(_dbPath);
+
+            int result = _connection.Table<Incomes>()
                 .Where(i => i.IncomeName.ToLower() == incomeName.ToLower())
                 .Count();
 
+            _connection.Close();
             return result > 0;
+        }
+
+        public string GetNameOfIncomeById(int id)
+        {
+            _connection = new SQLiteConnection(_dbPath);
+
+            string incomeName = _connection.Table<Incomes>()
+                .Where(i => i.IncomeId == id)
+                .Select(i => i.IncomeName)
+                .First();
+
+            _connection.Close();
+            return incomeName;
         }
 
         // private methods

@@ -4,14 +4,11 @@ using Serilog;
 
 namespace MyBudget.Services
 {
-	public class IncomeService
+	public class IncomeService : IIncomeService
 	{
-		private readonly IncomeDataAccess _incomeDataAccess;
+		private readonly IIncomeDataAccess _incomeDataAccess;
 
-		public IncomeService(IncomeDataAccess incomeDataAccess)
-		{
-			_incomeDataAccess = incomeDataAccess;
-		}
+		public IncomeService(IIncomeDataAccess incomeDataAccess) => _incomeDataAccess = incomeDataAccess;
 
 		public async Task<Incomes> GetById(int id)
 		{
@@ -23,9 +20,9 @@ namespace MyBudget.Services
 			return await _incomeDataAccess.GetListAsync();
 		}
 
-        public async Task<Incomes> CreateRecord(Incomes newIncome)
-        {
-            if (IsIncomeNameAlreadyUsed(newIncome.IncomeName) == true)
+		public async Task<Incomes> CreateRecord(Incomes newIncome)
+		{
+			if (IsIncomeNameAlreadyUsed(newIncome.IncomeName) == true)
 			{
 				return new Incomes();
 			}
@@ -48,38 +45,41 @@ namespace MyBudget.Services
 				Log.Error($"Error creating new Income: {e.Message}");
 				return new Incomes();
 			}
-        }
+		}
 
-        public async Task<Incomes> UpdateRecord(Incomes income)
-        {
-            if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
-            {
-                return new Incomes();
-            }
-
-            try
+		public async Task<Incomes> UpdateRecord(Incomes income)
+		{
+			if (IsUpdatedIncomeNameModified(income) == false)
 			{
-                return await _incomeDataAccess.UpdateRecordAsync(income);
-            }
+				if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
+				{
+					return new Incomes() { IncomeId = -1 };
+				}
+			}
+
+			try
+			{
+				return await _incomeDataAccess.UpdateRecordAsync(income);
+			}
 			catch (Exception e)
 			{
 				Log.Error($"Error updating Income: {e.Message}");
 				return new Incomes();
 			}
-        }
+		}
 
-        public async Task<Incomes> DeleteRecord(Incomes income)
-        {
+		public async Task<Incomes> DeleteRecord(Incomes income)
+		{
 			try
 			{
-                return await _incomeDataAccess.DeleteRecordAsync(income);
-            }
+				return await _incomeDataAccess.DeleteRecordAsync(income);
+			}
 			catch (Exception e)
 			{
 				Log.Error($"Error deleting Income: {e.Message}");
 				return new Incomes();
 			}
-        }
+		}
 
 		// private methods
 
@@ -87,5 +87,11 @@ namespace MyBudget.Services
 		{
 			return _incomeDataAccess.DoesIncomeNameExist(incomeName);
 		}
-    }
+
+		private bool IsUpdatedIncomeNameModified(Incomes income)
+		{
+			string currentIncomeName = _incomeDataAccess.GetNameOfIncomeById(income.IncomeId);
+			return currentIncomeName.Equals(income.IncomeName);
+		}
+	}
 }

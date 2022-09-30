@@ -1,4 +1,5 @@
-﻿using MyBudget.DataAccess;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MyBudget.DataAccess;
 using MyBudget.Services;
 using Serilog;
 
@@ -34,15 +35,17 @@ public static class MauiProgram
 		builder.Services.AddTransient<BankAccountTypeService>();
         builder.Services.AddTransient<IncomeTypeService>();
         builder.Services.AddTransient<ExpenseTypeService>();
-		builder.Services.AddTransient<IncomeService>();
 
 		// DataAccess Transients
 		builder.Services.AddTransient<PaymentFrequencyTypeDataAccess>();
         builder.Services.AddTransient<BankAccountTypeDataAccess>();
         builder.Services.AddTransient<IncomeTypeDataAccess>();
         builder.Services.AddTransient<ExpenseTypeDataAccess>();
-		builder.Services.AddTransient<IncomeDataAccess>();
         builder.Services.AddTransient<ExpenseDataAccess>();
+
+		// dependency injection
+		builder.Services.AddScoped<IIncomeService, IncomeService>();
+		builder.Services.AddScoped<IIncomeDataAccess, IncomeDataAccess>();
 
         return builder.Build();
 	}
