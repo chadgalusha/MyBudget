@@ -54,7 +54,7 @@ else
 							<span aria-hidden="true">X</span>
 						</button>
 					</div>
-					<!-- Edit form for the current forecast -->
+					<!-- Edit form for the current expense type -->
 					<div class="modal-body">
 						<input class="form-control" type="number" disabled="disabled"
 					   @bind="expenseType.ExpenseTypeId" />
@@ -62,7 +62,7 @@ else
 					   placeholder="New Type"
 					   @bind="expenseType.ExpenseType" />
 						<br />
-						<!-- Button to save the forecast -->
+						<!-- Button to save the expense type -->
 						<button class="btn btn-success"
 						@onclick="SaveRecord">
 							Save
@@ -70,7 +70,7 @@ else
 						<!-- Only show delete button if not a new record -->
 						@if (expenseType.ExpenseTypeId > 0)
 						{
-							<!-- Button to delete the forecast -->
+							<!-- Button to delete the expense type -->
 							<button class="btn btn-danger"
 						@onclick="DeleteRecord">
 								Delete

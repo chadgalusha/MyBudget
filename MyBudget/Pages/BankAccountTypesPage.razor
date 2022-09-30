@@ -54,7 +54,7 @@ else
 							<span aria-hidden="true">X</span>
 						</button>
 					</div>
-					<!-- Edit form for the current forecast -->
+					<!-- Edit form for the current bank account type -->
 					<div class="modal-body">
 						<input class="form-control" type="number" disabled="disabled"
 					   @bind="bankAccountType.BankAccountTypeId" />
@@ -70,7 +70,7 @@ else
 						<!-- Only show delete button if not a new record -->
 						@if (bankAccountType.BankAccountTypeId > 0)
 						{
-							<!-- Button to delete the forecast -->
+							<!-- Button to delete the bank account type -->
 							<button class="btn btn-danger"
 						@onclick="DeleteRecord">
 								Delete

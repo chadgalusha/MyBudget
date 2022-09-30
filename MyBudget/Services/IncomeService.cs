@@ -56,7 +56,7 @@ namespace MyBudget.Services
 			{
                 if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
                 {
-                    return new Incomes();
+                    return new Incomes() { IncomeId = -1 };
                 }
             }
 
@@ -93,7 +93,7 @@ namespace MyBudget.Services
 
 		private bool IsUpdatedIncomeNameModified(Incomes income)
 		{
-			var currentIncomeName = _incomeDataAccess.GetNameOfIncomeById(income.IncomeId);
+			string currentIncomeName = _incomeDataAccess.GetNameOfIncomeById(income.IncomeId);
 			return currentIncomeName.Equals(income.IncomeName);
 		}
     }

@@ -35,7 +35,7 @@ else
 					<td>@GetIncomeTypeName(income.IncomeTypeId, incomeTypesList)</td>
 					<td>@GetPaymentFrequencyTypeName(income.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
 					<td>$@income.IncomeAmount</td>
-					<td>@income.InitialIncomeDate</td>
+					<td>@income.InitialIncomeDate.ToShortDateString()</td>
 					<td>
 						<button class="btn btn-primary"
 						@onclick="(() => EditRecord(income))">
@@ -176,6 +176,7 @@ else
 					IncomeAmount = income.IncomeAmount,
 					InitialIncomeDate = income.InitialIncomeDate
 				};
+
 				var createdIncome = await incomeService.CreateRecord(newIncome);
 
 				if (createdIncome.IncomeName == null || createdIncome.IncomeName == "")
@@ -189,7 +190,12 @@ else
 			}
 			else
 			{
-				await incomeService.UpdateRecord(income);
+				var updatedRecord = await incomeService.UpdateRecord(income);
+				if (updatedRecord.IncomeId == -1)
+				{
+					Error = "Name already used, please try again";
+					incomeList = await incomeService.GetList();
+				}
 			}
 		}
 		catch (Exception e)

@@ -1,5 +1,6 @@
 ﻿using MyBudget.DataAccess;
 using MyBudget.Models;
+using Serilog;
 
 namespace MyBudget.Services
 {
@@ -24,17 +25,82 @@ namespace MyBudget.Services
 
         public async Task<IncomeTypes> CreateRecord(IncomeTypes newType)
         {
-            return await _incomeTypeDataAccess.CreateRecord(newType);
+            if (IsIncomeTypeNameAlreadyUsed(newType.IncomeType) == true)
+            {
+                return new IncomeTypes() { IncomeTypeId = -1 };
+            }
+
+            try
+            {
+                IncomeTypes newIncomeType = new()
+                {
+                    IncomeType = newType.IncomeType
+                };
+
+                return await _incomeTypeDataAccess.CreateRecord(newIncomeType);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error creating new income type: {e.Message}");
+                return new IncomeTypes();
+            }
         }
 
-        public async Task<IncomeTypes> UpdateRecord(IncomeTypes type)
+        public async Task<IncomeTypes> UpdateRecord(IncomeTypes incomeType)
         {
-            return await _incomeTypeDataAccess.UpdateRecordAsync(type);
+            if (IsUpdatedIncomeTypeNameModified(incomeType) == true)
+            {
+                if (IsIncomeTypeNameAlreadyUsed(incomeType.IncomeType) == true)
+                {
+                    return new IncomeTypes() { IncomeTypeId = -1 };
+                }
+            }
+
+            try
+            {
+                return await _incomeTypeDataAccess.UpdateRecordAsync(incomeType);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error updating record: {e.Message}");
+                return new IncomeTypes() { IncomeTypeId = 0 };
+            }
         }
 
         public async Task<IncomeTypes> DeleteRecord(IncomeTypes type)
         {
-            return await _incomeTypeDataAccess.DeleteRecordAsync(type);
+            if (IsIncomeTypeUsedByIncome(type.IncomeTypeId) == true)
+            {
+                return new IncomeTypes() { IncomeTypeId = -1 };
+            }
+
+            try
+            {
+                return await _incomeTypeDataAccess.DeleteRecordAsync(type);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error deleting income type: {e.Message}");
+                return new IncomeTypes() { IncomeTypeId = 0 };
+            }
+        }
+
+        // private methods
+
+        private bool IsIncomeTypeNameAlreadyUsed(string incomeTypeName)
+        {
+            return _incomeTypeDataAccess.DoesIncomeTypeNameExist(incomeTypeName);
+        }
+
+        private bool IsUpdatedIncomeTypeNameModified(IncomeTypes incomeType)
+        {
+            string currentIncomeTypeName = _incomeTypeDataAccess.GetNameOfIncomeTypeById(incomeType.IncomeTypeId);
+            return currentIncomeTypeName.Equals(incomeType.IncomeType);
+        }
+
+        private bool IsIncomeTypeUsedByIncome(int incomeTypeId)
+        {
+            return _incomeTypeDataAccess.IsIncomeTypeUsedByIncome(incomeTypeId);
         }
     }
 }

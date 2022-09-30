@@ -54,7 +54,7 @@ else
 							<span aria-hidden="true">X</span>
 						</button>
 					</div>
-					<!-- Edit form for the current forecast -->
+					<!-- Edit form for the current income type -->
 					<div class="modal-body">
 						<input class="form-control" type="number" disabled="disabled"
 					   @bind="incomeType.IncomeTypeId" />
@@ -62,7 +62,7 @@ else
 					   placeholder="New Type"
 					   @bind="incomeType.IncomeType" />
 						<br />
-						<!-- Button to save the forecast -->
+						<!-- Button to save the income type -->
 						<button class="btn btn-success"
 						@onclick="SaveRecord">
 							Save
@@ -70,7 +70,7 @@ else
 						<!-- Only show delete button if not a new record -->
 						@if (incomeType.IncomeTypeId > 0)
 						{
-							<!-- Button to delete the forecast -->
+							<!-- Button to delete the income type -->
 							<button class="btn btn-danger"
 						@onclick="DeleteRecord">
 								Delete
@@ -116,11 +116,65 @@ else
 	{
 		ShowPopup = false;
 		Error = "";
+
+		try
+		{
+			if (incomeType.IncomeTypeId == 0)
+			{
+				IncomeTypes newIncomeType = new()
+					{
+						IncomeType = incomeType.IncomeType
+					};
+
+				var createdIncomeType = await incomeTypeService.CreateRecord(newIncomeType);
+
+				if (createdIncomeType.IncomeTypeId == -1)
+				{
+					Error = "Duplicate income type name, please try again";
+				}
+				else
+				{
+					incomeTypesList.Add(createdIncomeType);
+				}
+			}
+			else
+			{
+				var updatedRecord = await incomeTypeService.UpdateRecord(incomeType);
+				if (updatedRecord.IncomeTypeId == -1)
+				{
+					Error = "Duplicate income type name, please try again";
+					incomeTypesList = await incomeTypeService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
 	}
 
 	async Task DeleteRecord()
 	{
 		ShowPopup = false;
 		Error = "";
+
+		try
+		{
+			var deleteIncomeTypeResult = await incomeTypeService.DeleteRecord(incomeType);
+
+			if (deleteIncomeTypeResult.IncomeTypeId == -1)
+			{
+				Error = "Income type in use by 1 or more incomes";
+			}
+
+			if (deleteIncomeTypeResult.IncomeTypeId != -1)
+			{
+				incomeTypesList.Remove(incomeType);
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
 	}
 }

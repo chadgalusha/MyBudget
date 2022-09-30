@@ -8,7 +8,8 @@ namespace MyBudget.DataAccess
     public class IncomeTypeDataAccess : IDataAccess<IncomeTypes>
     {
         private readonly string _dbPath;
-        private SQLiteAsyncConnection _connection;
+        private SQLiteAsyncConnection _asyncConnection;
+        private SQLiteConnection _connection;
 
         public IncomeTypeDataAccess()
         {
@@ -18,7 +19,7 @@ namespace MyBudget.DataAccess
         public async Task<IncomeTypes> GetRecordByIdAsync(int id)
         {
             await InitializeAsync();
-            return await _connection.Table<IncomeTypes>()
+            return await _asyncConnection.Table<IncomeTypes>()
                 .Where(i => i.IncomeTypeId == id)
                 .FirstAsync();
         }
@@ -26,14 +27,14 @@ namespace MyBudget.DataAccess
         public async Task<List<IncomeTypes>> GetListAsync()
         {
             await InitializeAsync();
-            return await _connection.Table<IncomeTypes>().ToListAsync();
+            return await _asyncConnection.Table<IncomeTypes>().ToListAsync();
         }
 
         public async Task<IncomeTypes> CreateRecord(IncomeTypes newType)
         {
             try
             {
-                await _connection.InsertAsync(newType);
+                await _asyncConnection.InsertAsync(newType);
                 return newType;
             }
             catch (Exception e)
@@ -47,7 +48,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.UpdateAsync(type);
+                await _asyncConnection.UpdateAsync(type);
                 return type;
             }
             catch (Exception e)
@@ -61,7 +62,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.DeleteAsync(type);
+                await _asyncConnection.DeleteAsync(type);
                 return type;
             }
             catch (Exception e)
@@ -71,17 +72,53 @@ namespace MyBudget.DataAccess
             }
         }
 
+        public bool DoesIncomeTypeNameExist(string incomeTypeName)
+        {
+            _connection = new SQLiteConnection(_dbPath);
+
+            int result = _connection.Table<IncomeTypes>()
+                .Where(i => i.IncomeType.ToLower() == incomeTypeName.ToLower())
+                .Count();
+
+            _connection.Close();
+            return result > 0;
+        }
+
+        public string GetNameOfIncomeTypeById(int id)
+        {
+            _connection = new SQLiteConnection(_dbPath);
+
+            string incomeTypeName = _connection.Table<IncomeTypes>()
+                .Where(i => i.IncomeTypeId == id)
+                .Select(i => i.IncomeType)
+                .First();
+
+            _connection.Close();
+            return incomeTypeName;
+        }
+
+        public bool IsIncomeTypeUsedByIncome(int incomeTypeId)
+        {
+            _connection = new SQLiteConnection(_dbPath);
+
+            int result = _connection.Table<Incomes>()
+                .Where(i => i.IncomeTypeId == incomeTypeId)
+                .Count();
+
+            _connection.Close();
+            return result > 0;
+        }
         // private methods
 
         private async Task InitializeAsync()
         {
-            if (_connection != null)
+            if (_asyncConnection != null)
             {
                 return;
             }
 
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<IncomeTypes>();
+            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
+            await _asyncConnection.CreateTableAsync<IncomeTypes>();
 
             if (await DoesTableHaveValuesAsync() == false)
             {
