@@ -3,8 +3,8 @@
 @using MyBudget.Models
 @using MyBudget.Helpers
 @inject IIncomeService incomeService
-@inject PaymentFrequencyTypeService paymentFrequencyTypeService
-@inject IncomeTypeService incomeTypeService
+@inject IPaymentFrequencyTypeService paymentFrequencyTypeService
+@inject IIncomeTypeService incomeTypeService
 
 <h3 style="text-align:center">Incomes</h3>
 <p style="color:red">@Error</p>
@@ -219,6 +219,8 @@ else
 			Error = e.Message;
 		}
 	}
+
+	// helper methods
 
 	string GetIncomeTypeName(int id, List<IncomeTypes> incomeTypeList)
 	{

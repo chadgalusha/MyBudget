@@ -1,7 +1,7 @@
 ﻿@page "/incometypespage"
 @using MyBudget.Services
 @using MyBudget.Models
-@inject IncomeTypeService incomeTypeService
+@inject IIncomeTypeService incomeTypeService
 
 <h3 style="text-align:center">Income Types</h3>
 <p style="color:red">@Error</p>
@@ -128,13 +128,17 @@ else
 
 				var createdIncomeType = await incomeTypeService.CreateRecord(newIncomeType);
 
-				if (createdIncomeType.IncomeTypeId == -1)
+				switch (createdIncomeType.IncomeTypeId)
 				{
-					Error = "Duplicate income type name, please try again";
-				}
-				else
-				{
-					incomeTypesList.Add(createdIncomeType);
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					case -1:
+						Error = "Duplicate income type name, please try again";
+						break;
+					default:
+						incomeTypesList.Add(createdIncomeType);
+						break;
 				}
 			}
 			else

@@ -5,10 +5,11 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class ExpenseDataAccess
-	{
+    public class ExpenseDataAccess : IExpenseDataAccess
+    {
         private readonly string _dbPath;
-        private SQLiteAsyncConnection _connection;
+        private SQLiteAsyncConnection _asyncConnection;
+        private SQLiteConnection _connection;
 
         public ExpenseDataAccess()
         {
@@ -18,7 +19,7 @@ namespace MyBudget.DataAccess
         public async Task<Expenses> GetRecordByIdAsync(int id)
         {
             await InitializeAsync();
-            return await _connection.Table<Expenses>()
+            return await _asyncConnection.Table<Expenses>()
                 .Where(i => i.ExpensesId == id)
                 .FirstAsync();
         }
@@ -26,14 +27,14 @@ namespace MyBudget.DataAccess
         public async Task<List<Expenses>> GetListAsync()
         {
             await InitializeAsync();
-            return await _connection.Table<Expenses>().ToListAsync();
+            return await _asyncConnection.Table<Expenses>().ToListAsync();
         }
 
         public async Task<Expenses> CreateRecord(Expenses newExpense)
         {
             try
             {
-                await _connection.InsertAsync(newExpense).ContinueWith((e) =>
+                await _asyncConnection.InsertAsync(newExpense).ContinueWith((e) =>
                 {
                     Log.Information($"Expense created: {newExpense.ExpensesName}");
                 });
@@ -50,7 +51,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.UpdateAsync(expense).ContinueWith((e) =>
+                await _asyncConnection.UpdateAsync(expense).ContinueWith((e) =>
                 {
                     Log.Information($"Expense updated: {expense.ExpensesId}, {expense.ExpensesName}");
                 });
@@ -67,7 +68,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.DeleteAsync(expense).ContinueWith((e) =>
+                await _asyncConnection.DeleteAsync(expense).ContinueWith((e) =>
                 {
                     Log.Information($"Expense deleted: {expense.ExpensesId}, {expense.ExpensesName}");
                 });
@@ -80,17 +81,44 @@ namespace MyBudget.DataAccess
             }
         }
 
+        public bool DoesExpenseNameExist(string expenseName)
+        {
+            int result;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                result = _connection.Table<Expenses>()
+                    .Where(e => e.ExpensesName.ToLower() == expenseName.ToLower())
+                    .Count();
+            }
+
+            return result > 0;
+        }
+
+        public string GetNameOfExpenseById(int id)
+        {
+            string expenseName;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                expenseName = _connection.Table<Expenses>()
+                    .Where(e => e.ExpensesId == id)
+                    .Select(e => e.ExpensesName)
+                    .First();
+            }
+
+            return expenseName;
+        }
+
         // private methods
 
         private async Task InitializeAsync()
         {
-            if (_connection != null)
+            if (_asyncConnection != null)
             {
                 return;
             }
 
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<Expenses>().ContinueWith((results) =>
+            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
+            await _asyncConnection.CreateTableAsync<Expenses>().ContinueWith((results) =>
             {
                 Log.Information($"Expenses table created: {results.Result}");
             });

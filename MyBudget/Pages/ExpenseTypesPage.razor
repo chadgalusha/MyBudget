@@ -1,7 +1,7 @@
 ﻿@page "/expensetypespage"
 @using MyBudget.Services
 @using MyBudget.Models
-@inject ExpenseTypeService expenseTypeService
+@inject IExpenseTypeService expenseTypeService
 
 <h3 style="text-align:center">Expense Types</h3>
 <p style="color:red">@Error</p>
@@ -116,11 +116,69 @@ else
 	{
 		ShowPopup = false;
 		Error = "";
+
+		try
+		{
+			if (expenseType.ExpenseTypeId == 0)
+			{
+				ExpenseTypes newExpenseType = new()
+				{
+					ExpenseType = expenseType.ExpenseType
+				};
+
+				var createdExpenseType = await expenseTypeService.CreateRecord(newExpenseType);
+
+				switch (createdExpenseType.ExpenseTypeId)
+				{
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					case -1:
+						Error = "Duplicate expense type name, please try again";
+						break;
+					default:
+						expenseTypeList.Add(createdExpenseType);
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await expenseTypeService.UpdateRecord(expenseType);
+				if (updatedRecord.ExpenseTypeId == -1)
+				{
+					Error = "Duplicate expense type name, please try again";
+					expenseTypeList = await expenseTypeService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
 	}
 
 	async Task DeleteRecord()
 	{
 		ShowPopup = false;
 		Error = "";
+
+		try
+		{
+			var deleteExpenseTypeResult = await expenseTypeService.DeleteRecord(expenseType);
+
+			if (deleteExpenseTypeResult.ExpenseTypeId == -1)
+			{
+				Error = "Expense type in use by 1 or more expenses";
+			}
+
+			if (deleteExpenseTypeResult.ExpenseTypeId != -1)
+			{
+				expenseTypeList.Remove(expenseType);
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
 	}
 }

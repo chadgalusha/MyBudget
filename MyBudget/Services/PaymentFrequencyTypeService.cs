@@ -1,16 +1,13 @@
 ﻿using MyBudget.DataAccess;
-using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
-using SQLite;
 
 namespace MyBudget.Services
 {
-    public class PaymentFrequencyTypeService
+    public class PaymentFrequencyTypeService : IPaymentFrequencyTypeService
     {
-        private readonly PaymentFrequencyTypeDataAccess _paymentFrequencyTypeDataAccess;
+        private readonly IDataAccess<PaymentFrequencyTypes> _paymentFrequencyTypeDataAccess;
 
-        public PaymentFrequencyTypeService(PaymentFrequencyTypeDataAccess paymentFrequencyTypeDataAccess)
+        public PaymentFrequencyTypeService(IDataAccess<PaymentFrequencyTypes> paymentFrequencyTypeDataAccess)
         {
             _paymentFrequencyTypeDataAccess = paymentFrequencyTypeDataAccess;
         }

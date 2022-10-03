@@ -1,15 +1,16 @@
 ﻿using MyBudget.DataAccess;
 using MyBudget.Models;
+using Serilog;
 
 namespace MyBudget.Services
 {
-    public class ExpenseTypeService
+    public class ExpenseTypeService : IExpenseTypeService
     {
-        private readonly ExpenseTypeDataAccess _expenseTypeDataAccess;
+        private readonly IExpenseTypeDataAccess _expenseTypeDataAccess;
 
-        public ExpenseTypeService(ExpenseTypeDataAccess incomeTypeDataAccess)
+        public ExpenseTypeService(IExpenseTypeDataAccess expenseTypeDataAccess)
         {
-            _expenseTypeDataAccess = incomeTypeDataAccess;
+            _expenseTypeDataAccess = expenseTypeDataAccess;
         }
 
         public async Task<ExpenseTypes> GetById(int id)
@@ -24,17 +25,82 @@ namespace MyBudget.Services
 
         public async Task<ExpenseTypes> CreateRecord(ExpenseTypes newType)
         {
-            return await _expenseTypeDataAccess.CreateRecord(newType);
+            if (IsExpenseTypeNameAlreadyUsed(newType.ExpenseType) == true)
+            {
+                return new ExpenseTypes() { ExpenseTypeId = -1 };
+            }
+
+            try
+            {
+                ExpenseTypes newExpenseType = new()
+                {
+                    ExpenseType = newType.ExpenseType
+                };
+
+                return await _expenseTypeDataAccess.CreateRecord(newExpenseType);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error creating new expense type: {e.Message}");
+                return new ExpenseTypes() { ExpenseTypeId = 0 };
+            }
         }
 
-        public async Task<ExpenseTypes> UpdateRecord(ExpenseTypes type)
+        public async Task<ExpenseTypes> UpdateRecord(ExpenseTypes expenseType)
         {
-            return await _expenseTypeDataAccess.UpdateRecordAsync(type);
+            if (IsUpdatedExpenseTypeNameModified(expenseType) == true)
+            {
+                if (IsExpenseTypeNameAlreadyUsed(expenseType.ExpenseType) == true)
+                {
+                    return new ExpenseTypes() { ExpenseTypeId = -1 };
+                }
+            }
+
+            try
+            {
+                return await _expenseTypeDataAccess.UpdateRecordAsync(expenseType);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error updating expense type: {e.Message}");
+                return new ExpenseTypes() { ExpenseTypeId = 0 };
+            }
         }
 
         public async Task<ExpenseTypes> DeleteRecord(ExpenseTypes type)
         {
-            return await _expenseTypeDataAccess.DeleteRecordAsync(type);
+            if (IsExpenseTypeUsedByExpense(type.ExpenseTypeId) == true)
+            {
+                return new ExpenseTypes() { ExpenseTypeId = -1 };
+            }
+
+            try
+            {
+                return await _expenseTypeDataAccess.DeleteRecordAsync(type);
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Error deleting expense type: {e.Message}");
+                return new ExpenseTypes() { ExpenseTypeId = 0 };
+            }
+        }
+
+        // private methods
+
+        private bool IsExpenseTypeNameAlreadyUsed(string expenseTypeName)
+        {
+            return _expenseTypeDataAccess.DoesExpenseTypeNameExist(expenseTypeName);
+        }
+
+        private bool IsUpdatedExpenseTypeNameModified(ExpenseTypes expenseType)
+        {
+            string currentExpenseTypeName = _expenseTypeDataAccess.GetNameOfExpenseTypeById(expenseType.ExpenseTypeId);
+            return currentExpenseTypeName.Equals(expenseType.ExpenseType);
+        }
+
+        private bool IsExpenseTypeUsedByExpense(int expenseTypeId)
+        {
+            return _expenseTypeDataAccess.IsExpenseTypeUsedByExpense(expenseTypeId);
         }
     }
 }

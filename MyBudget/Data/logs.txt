@@ -65,3 +65,14 @@
 2022-09-30 18:02:40.022 -05:00 [INF] Incomes table created: Migrated
 2022-09-30 18:08:18.831 -05:00 [INF] Incomes table created: Migrated
 2022-09-30 18:09:12.450 -05:00 [INF] Incomes table created: Migrated
+2022-10-03 08:45:38.161 -05:00 [INF] Incomes table created: Migrated
+2022-10-03 16:32:03.035 -05:00 [INF] Expenses table created: Created
+2022-10-03 16:32:19.933 -05:00 [INF] Incomes table created: Migrated
+2022-10-03 16:32:40.614 -05:00 [INF] Expense created: Test Expense
+2022-10-03 16:34:42.192 -05:00 [INF] Expenses table created: Migrated
+2022-10-03 16:35:11.191 -05:00 [INF] Expense created: teste2
+2022-10-03 16:35:19.997 -05:00 [INF] Expense deleted: 0, teste2
+2022-10-03 16:35:22.816 -05:00 [INF] Incomes table created: Migrated
+2022-10-03 16:38:35.680 -05:00 [INF] Expenses table created: Migrated
+2022-10-03 16:38:38.905 -05:00 [INF] Expense deleted: 2, teste2
+2022-10-03 16:38:40.119 -05:00 [INF] Incomes table created: Migrated
