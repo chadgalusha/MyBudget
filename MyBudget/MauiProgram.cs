@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyBudget.DataAccess;
+using MyBudget.Models;
 using MyBudget.Services;
 using Serilog;
 
@@ -31,21 +32,26 @@ public static class MauiProgram
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
 		// Service Transients
-		builder.Services.AddTransient<PaymentFrequencyTypeService>();
-		builder.Services.AddTransient<BankAccountTypeService>();
-        builder.Services.AddTransient<IncomeTypeService>();
-        builder.Services.AddTransient<ExpenseTypeService>();
+        //builder.Services.AddTransient<ExpenseTypeService>();
 
 		// DataAccess Transients
-		builder.Services.AddTransient<PaymentFrequencyTypeDataAccess>();
-        builder.Services.AddTransient<BankAccountTypeDataAccess>();
-        builder.Services.AddTransient<IncomeTypeDataAccess>();
-        builder.Services.AddTransient<ExpenseTypeDataAccess>();
-        builder.Services.AddTransient<ExpenseDataAccess>();
+        //builder.Services.AddTransient<ExpenseTypeDataAccess>();
 
-		// dependency injection
-		builder.Services.AddScoped<IIncomeService, IncomeService>();
-		builder.Services.AddScoped<IIncomeDataAccess, IncomeDataAccess>();
+        // dependency injection data access
+        builder.Services.AddScoped<IDataAccess<BankAccountTypes>, BankAccountTypeDataAccess>();
+        builder.Services.AddScoped<IExpenseTypeDataAccess, ExpenseTypeDataAccess>();
+        builder.Services.AddScoped<IIncomeDataAccess, IncomeDataAccess>();
+		builder.Services.AddScoped<IIncomeTypeDataAccess, IncomeTypeDataAccess>();
+		builder.Services.AddScoped<IDataAccess<PaymentFrequencyTypes>, PaymentFrequencyTypeDataAccess>();
+		builder.Services.AddScoped<IExpenseDataAccess, ExpenseDataAccess>();
+		
+        // dependency injection services
+        builder.Services.AddScoped<IBankAccountTypeService, BankAccountTypeService>();
+        builder.Services.AddScoped<IExpenseTypeService, ExpenseTypeService>();
+        builder.Services.AddScoped<IIncomeService, IncomeService>();
+        builder.Services.AddScoped<IIncomeTypeService, IncomeTypeService>();
+        builder.Services.AddScoped<IPaymentFrequencyTypeService, PaymentFrequencyTypeService>();
+		builder.Services.AddScoped<IExpenseService, ExpenseService>();
 
         return builder.Build();
 	}

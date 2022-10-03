@@ -17,6 +17,6 @@ namespace MyBudget.Models
 
         public decimal ExpenseAmount { get; set; }
 
-        public DateOnly InitialExpenseDate { get; set; }
+        public DateTime InitialExpenseDate { get; set; }
     }
 }

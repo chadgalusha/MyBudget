@@ -5,10 +5,11 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class ExpenseTypeDataAccess : IDataAccess<ExpenseTypes>
+    public class ExpenseTypeDataAccess : IExpenseTypeDataAccess
     {
         private readonly string _dbPath;
-        private SQLiteAsyncConnection _connection;
+        private SQLiteAsyncConnection _asyncConnection;
+        private SQLiteConnection _connection;
 
         public ExpenseTypeDataAccess()
         {
@@ -18,7 +19,7 @@ namespace MyBudget.DataAccess
         public async Task<ExpenseTypes> GetRecordByIdAsync(int id)
         {
             await InitializeAsync();
-            return await _connection.Table<ExpenseTypes>()
+            return await _asyncConnection.Table<ExpenseTypes>()
                 .Where(e => e.ExpenseTypeId == id)
                 .FirstAsync();
         }
@@ -26,14 +27,14 @@ namespace MyBudget.DataAccess
         public async Task<List<ExpenseTypes>> GetListAsync()
         {
             await InitializeAsync();
-            return await _connection.Table<ExpenseTypes>().ToListAsync();
+            return await _asyncConnection.Table<ExpenseTypes>().ToListAsync();
         }
 
         public async Task<ExpenseTypes> CreateRecord(ExpenseTypes newType)
         {
             try
             {
-                await _connection.InsertAsync(newType);
+                await _asyncConnection.InsertAsync(newType);
                 return newType;
             }
             catch (Exception e)
@@ -47,7 +48,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.UpdateAsync(type);
+                await _asyncConnection.UpdateAsync(type);
                 return type;
             }
             catch (Exception e)
@@ -61,7 +62,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.DeleteAsync(type);
+                await _asyncConnection.DeleteAsync(type);
                 return type;
             }
             catch (Exception e)
@@ -71,17 +72,57 @@ namespace MyBudget.DataAccess
             }
         }
 
+        public bool DoesExpenseTypeNameExist(string expenseTypeName)
+        {
+            int result;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                result = _connection.Table<ExpenseTypes>()
+                    .Where(e => e.ExpenseType.ToLower() == expenseTypeName.ToLower())
+                    .Count();
+            }
+
+            return result > 0;
+        }
+
+        public string GetNameOfExpenseTypeById(int id)
+        {
+            string expenseTypeName;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                expenseTypeName = _connection.Table<ExpenseTypes>()
+                    .Where(e => e.ExpenseTypeId == id)
+                    .Select(e => e.ExpenseType)
+                    .First();
+            }
+
+            return expenseTypeName;
+        }
+
+        public bool IsExpenseTypeUsedByExpense(int expenseTypeId)
+        {
+            int result;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                result = _connection.Table<Expenses>()
+                    .Where(e => e.ExpenseTypeId == expenseTypeId)
+                    .Count();
+            }
+
+            return result > 0;
+        }
+
         // private methods
 
         private async Task InitializeAsync()
         {
-            if (_connection != null)
+            if (_asyncConnection != null)
             {
                 return;
             }
 
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<ExpenseTypes>();
+            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
+            await _asyncConnection.CreateTableAsync<ExpenseTypes>();
 
             if (await DoesTableHaveValuesAsync() == false)
             {

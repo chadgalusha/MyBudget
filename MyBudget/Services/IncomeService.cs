@@ -8,7 +8,10 @@ namespace MyBudget.Services
 	{
 		private readonly IIncomeDataAccess _incomeDataAccess;
 
-		public IncomeService(IIncomeDataAccess incomeDataAccess) => _incomeDataAccess = incomeDataAccess;
+		public IncomeService(IIncomeDataAccess incomeDataAccess)
+		{
+			_incomeDataAccess = incomeDataAccess;
+		}
 
 		public async Task<Incomes> GetById(int id)
 		{

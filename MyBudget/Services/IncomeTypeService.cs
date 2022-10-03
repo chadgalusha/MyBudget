@@ -4,11 +4,11 @@ using Serilog;
 
 namespace MyBudget.Services
 {
-    public class IncomeTypeService
+    public class IncomeTypeService : IIncomeTypeService
     {
-        private readonly IncomeTypeDataAccess _incomeTypeDataAccess;
+        private readonly IIncomeTypeDataAccess _incomeTypeDataAccess;
 
-        public IncomeTypeService(IncomeTypeDataAccess incomeTypeDataAccess)
+        public IncomeTypeService(IIncomeTypeDataAccess incomeTypeDataAccess)
         {
             _incomeTypeDataAccess = incomeTypeDataAccess;
         }
@@ -42,7 +42,7 @@ namespace MyBudget.Services
             catch (Exception e)
             {
                 Log.Error($"Error creating new income type: {e.Message}");
-                return new IncomeTypes();
+                return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }
 
@@ -62,7 +62,7 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating record: {e.Message}");
+                Log.Error($"Error updating income type: {e.Message}");
                 return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }

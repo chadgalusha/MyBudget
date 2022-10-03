@@ -17,5 +17,12 @@ namespace MyBudget.Helpers
 				.Select(a => a.PaymentFrequencyType)
 				.First();
 		}
+
+		public static string GetNameFromExpenseTypeList(int id, List<ExpenseTypes> list)
+		{
+			return list.Where(a => a.ExpenseTypeId == id)
+				.Select(a => a.ExpenseType)
+				.First();
+		}
 	}
 }
