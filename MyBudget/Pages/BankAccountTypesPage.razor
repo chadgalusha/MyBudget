@@ -1,7 +1,7 @@
 ﻿@page "/bankaccounttypespage"
 @using MyBudget.Services
 @using MyBudget.Models
-@inject BankAccountTypeService bankAccountTypesService
+@inject IBankAccountTypeService bankAccountTypesService
 
 <h3 style="text-align:center">Bank Account Types</h3>
 <p style="color:red">@Error</p>
@@ -62,7 +62,7 @@ else
 					   placeholder="New Type"
 					   @bind="bankAccountType.BankAccountType" />
 						<br />
-						<!-- Button to save the forecast -->
+						<!-- Button to save the bank account type -->
 						<button class="btn btn-success"
 						@onclick="SaveRecord">
 							Save

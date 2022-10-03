@@ -36,7 +36,6 @@ public static class MauiProgram
 
 		// DataAccess Transients
         //builder.Services.AddTransient<ExpenseTypeDataAccess>();
-        builder.Services.AddTransient<ExpenseDataAccess>();
 
         // dependency injection data access
         builder.Services.AddScoped<IDataAccess<BankAccountTypes>, BankAccountTypeDataAccess>();
