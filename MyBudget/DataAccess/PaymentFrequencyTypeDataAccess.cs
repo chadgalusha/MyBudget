@@ -5,7 +5,7 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-	public class PaymentFrequencyTypeDataAccess : IDataAccess<PaymentFrequencyTypes>
+	public class PaymentFrequencyTypeDataAccess : ITypeDataAccess<PaymentFrequencyTypes>
 	{
         private readonly string _dbPath;
         private SQLiteAsyncConnection _connection;
@@ -108,6 +108,21 @@ namespace MyBudget.DataAccess
 
                 await CreateRecord(newType);
             }
+        }
+
+        public bool DoesTypeNameExist(string typeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetNameOfTypeByID(int typeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsTypeUsedAndCannotBeDeleted(int typeId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

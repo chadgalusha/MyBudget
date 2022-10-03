@@ -3,11 +3,11 @@ using MyBudget.Models;
 
 namespace MyBudget.Services
 {
-    public class BankAccountTypeService : IBankAccountTypeService
+    public class BankAccountTypeService : ITypeService<BankAccountTypes>
     {
-        private readonly IDataAccess<BankAccountTypes> _bankAccountTypeDataAccess;
+        private readonly ITypeDataAccess<BankAccountTypes> _bankAccountTypeDataAccess;
 
-        public BankAccountTypeService(IDataAccess<BankAccountTypes> bankAccountTypeDataAccess)
+        public BankAccountTypeService(ITypeDataAccess<BankAccountTypes> bankAccountTypeDataAccess)
         {
             _bankAccountTypeDataAccess = bankAccountTypeDataAccess;
         }

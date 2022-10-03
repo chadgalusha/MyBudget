@@ -4,11 +4,11 @@ using Serilog;
 
 namespace MyBudget.Services
 {
-    public class ExpenseTypeService : IExpenseTypeService
+    public class ExpenseTypeService : ITypeService<ExpenseTypes>
     {
-        private readonly IExpenseTypeDataAccess _expenseTypeDataAccess;
+        private readonly ITypeDataAccess<ExpenseTypes> _expenseTypeDataAccess;
 
-        public ExpenseTypeService(IExpenseTypeDataAccess expenseTypeDataAccess)
+        public ExpenseTypeService(ITypeDataAccess<ExpenseTypes> expenseTypeDataAccess)
         {
             _expenseTypeDataAccess = expenseTypeDataAccess;
         }
@@ -89,18 +89,18 @@ namespace MyBudget.Services
 
         private bool IsExpenseTypeNameAlreadyUsed(string expenseTypeName)
         {
-            return _expenseTypeDataAccess.DoesExpenseTypeNameExist(expenseTypeName);
+            return _expenseTypeDataAccess.DoesTypeNameExist(expenseTypeName);
         }
 
         private bool IsUpdatedExpenseTypeNameModified(ExpenseTypes expenseType)
         {
-            string currentExpenseTypeName = _expenseTypeDataAccess.GetNameOfExpenseTypeById(expenseType.ExpenseTypeId);
+            string currentExpenseTypeName = _expenseTypeDataAccess.GetNameOfTypeByID(expenseType.ExpenseTypeId);
             return currentExpenseTypeName.Equals(expenseType.ExpenseType);
         }
 
         private bool IsExpenseTypeUsedByExpense(int expenseTypeId)
         {
-            return _expenseTypeDataAccess.IsExpenseTypeUsedByExpense(expenseTypeId);
+            return _expenseTypeDataAccess.IsTypeUsedAndCannotBeDeleted(expenseTypeId);
         }
     }
 }

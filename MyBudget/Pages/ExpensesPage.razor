@@ -3,8 +3,8 @@
 @using MyBudget.Models
 @using MyBudget.Helpers
 @inject IExpenseService expenseService
-@inject IPaymentFrequencyTypeService paymentFrequencyTypeService
-@inject IExpenseTypeService expenseTypeService
+@inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
+@inject ITypeService<ExpenseTypes> expenseTypeService
 
 <h3 style="text-align:center">Expenses</h3>
 <p style="color:red">@Error</p>

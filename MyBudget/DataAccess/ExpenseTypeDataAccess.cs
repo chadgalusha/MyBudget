@@ -5,7 +5,7 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class ExpenseTypeDataAccess : IExpenseTypeDataAccess
+    public class ExpenseTypeDataAccess : ITypeDataAccess<ExpenseTypes>
     {
         private readonly string _dbPath;
         private SQLiteAsyncConnection _asyncConnection;
@@ -72,7 +72,7 @@ namespace MyBudget.DataAccess
             }
         }
 
-        public bool DoesExpenseTypeNameExist(string expenseTypeName)
+        public bool DoesTypeNameExist(string expenseTypeName)
         {
             int result;
             using (_connection = new SQLiteConnection(_dbPath))
@@ -85,7 +85,7 @@ namespace MyBudget.DataAccess
             return result > 0;
         }
 
-        public string GetNameOfExpenseTypeById(int id)
+        public string GetNameOfTypeByID(int id)
         {
             string expenseTypeName;
             using (_connection = new SQLiteConnection(_dbPath))
@@ -99,7 +99,7 @@ namespace MyBudget.DataAccess
             return expenseTypeName;
         }
 
-        public bool IsExpenseTypeUsedByExpense(int expenseTypeId)
+        public bool IsTypeUsedAndCannotBeDeleted(int expenseTypeId)
         {
             int result;
             using (_connection = new SQLiteConnection(_dbPath))

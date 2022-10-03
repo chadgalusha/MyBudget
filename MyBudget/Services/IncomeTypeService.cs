@@ -4,11 +4,11 @@ using Serilog;
 
 namespace MyBudget.Services
 {
-    public class IncomeTypeService : IIncomeTypeService
+    public class IncomeTypeService : ITypeService<IncomeTypes>
     {
-        private readonly IIncomeTypeDataAccess _incomeTypeDataAccess;
+        private readonly ITypeDataAccess<IncomeTypes> _incomeTypeDataAccess;
 
-        public IncomeTypeService(IIncomeTypeDataAccess incomeTypeDataAccess)
+        public IncomeTypeService(ITypeDataAccess<IncomeTypes> incomeTypeDataAccess)
         {
             _incomeTypeDataAccess = incomeTypeDataAccess;
         }
@@ -89,18 +89,18 @@ namespace MyBudget.Services
 
         private bool IsIncomeTypeNameAlreadyUsed(string incomeTypeName)
         {
-            return _incomeTypeDataAccess.DoesIncomeTypeNameExist(incomeTypeName);
+            return _incomeTypeDataAccess.DoesTypeNameExist(incomeTypeName);
         }
 
         private bool IsUpdatedIncomeTypeNameModified(IncomeTypes incomeType)
         {
-            string currentIncomeTypeName = _incomeTypeDataAccess.GetNameOfIncomeTypeById(incomeType.IncomeTypeId);
+            string currentIncomeTypeName = _incomeTypeDataAccess.GetNameOfTypeByID(incomeType.IncomeTypeId);
             return currentIncomeTypeName.Equals(incomeType.IncomeType);
         }
 
         private bool IsIncomeTypeUsedByIncome(int incomeTypeId)
         {
-            return _incomeTypeDataAccess.IsIncomeTypeUsedByIncome(incomeTypeId);
+            return _incomeTypeDataAccess.IsTypeUsedAndCannotBeDeleted(incomeTypeId);
         }
     }
 }
