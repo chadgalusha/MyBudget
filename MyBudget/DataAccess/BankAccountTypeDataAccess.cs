@@ -5,7 +5,7 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class BankAccountTypeDataAccess : IDataAccess<BankAccountTypes>
+    public class BankAccountTypeDataAccess : ITypeDataAccess<BankAccountTypes>
     {
         private readonly string _dbPath;
         private SQLiteAsyncConnection _connection;
@@ -69,6 +69,21 @@ namespace MyBudget.DataAccess
                 Log.Error($"Error deleting type: {e.Message}");
                 return null;
             }
+        }
+
+        public bool DoesTypeNameExist(string typeName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetNameOfTypeByID(int typeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsTypeUsedAndCannotBeDeleted(int typeId)
+        {
+            throw new NotImplementedException();
         }
 
         // private methods

@@ -1,7 +1,7 @@
 ﻿@page "/expensetypespage"
 @using MyBudget.Services
 @using MyBudget.Models
-@inject IExpenseTypeService expenseTypeService
+@inject ITypeService<ExpenseTypes> expenseTypeService
 
 <h3 style="text-align:center">Expense Types</h3>
 <p style="color:red">@Error</p>

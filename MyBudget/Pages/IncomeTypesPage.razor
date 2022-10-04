@@ -1,7 +1,7 @@
 ﻿@page "/incometypespage"
 @using MyBudget.Services
 @using MyBudget.Models
-@inject IIncomeTypeService incomeTypeService
+@inject ITypeService<IncomeTypes> incomeTypeService
 
 <h3 style="text-align:center">Income Types</h3>
 <p style="color:red">@Error</p>
@@ -47,7 +47,7 @@ else
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h3 class="modal-title">Edit Bank Account Type</h3>
+						<h3 class="modal-title">Edit Income Type</h3>
 						<!-- Button to close the popup -->
 						<button type="button" class="close"
 						@onclick="ClosePopup">

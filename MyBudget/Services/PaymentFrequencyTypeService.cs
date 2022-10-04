@@ -3,11 +3,11 @@ using MyBudget.Models;
 
 namespace MyBudget.Services
 {
-    public class PaymentFrequencyTypeService : IPaymentFrequencyTypeService
+    public class PaymentFrequencyTypeService : ITypeService<PaymentFrequencyTypes>
     {
-        private readonly IDataAccess<PaymentFrequencyTypes> _paymentFrequencyTypeDataAccess;
+        private readonly ITypeDataAccess<PaymentFrequencyTypes> _paymentFrequencyTypeDataAccess;
 
-        public PaymentFrequencyTypeService(IDataAccess<PaymentFrequencyTypes> paymentFrequencyTypeDataAccess)
+        public PaymentFrequencyTypeService(ITypeDataAccess<PaymentFrequencyTypes> paymentFrequencyTypeDataAccess)
         {
             _paymentFrequencyTypeDataAccess = paymentFrequencyTypeDataAccess;
         }

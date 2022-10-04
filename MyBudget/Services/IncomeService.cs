@@ -4,11 +4,11 @@ using Serilog;
 
 namespace MyBudget.Services
 {
-	public class IncomeService : IIncomeService
+	public class IncomeService : IService<Incomes>
 	{
-		private readonly IIncomeDataAccess _incomeDataAccess;
+		private readonly IDataAccess<Incomes> _incomeDataAccess;
 
-		public IncomeService(IIncomeDataAccess incomeDataAccess)
+		public IncomeService(IDataAccess<Incomes> incomeDataAccess)
 		{
 			_incomeDataAccess = incomeDataAccess;
 		}
@@ -52,7 +52,7 @@ namespace MyBudget.Services
 
 		public async Task<Incomes> UpdateRecord(Incomes income)
 		{
-			if (IsUpdatedIncomeNameModified(income) == false)
+			if (IsUpdatedIncomeNameModified(income) == true)
 			{
 				if (IsIncomeNameAlreadyUsed(income.IncomeName) == true)
 				{
@@ -84,17 +84,20 @@ namespace MyBudget.Services
 			}
 		}
 
-		// private methods
+        #region Private Methods
 
-		private bool IsIncomeNameAlreadyUsed(string incomeName)
+        private bool IsIncomeNameAlreadyUsed(string incomeName)
 		{
-			return _incomeDataAccess.DoesIncomeNameExist(incomeName);
+			return _incomeDataAccess.DoesNameExist(incomeName);
 		}
 
+		// return false if NOT modified
 		private bool IsUpdatedIncomeNameModified(Incomes income)
 		{
-			string currentIncomeName = _incomeDataAccess.GetNameOfIncomeById(income.IncomeId);
-			return currentIncomeName.Equals(income.IncomeName);
+			string currentIncomeName = _incomeDataAccess.GetNameById(income.IncomeId);
+			return !currentIncomeName.Equals(income.IncomeName);
 		}
-	}
+
+        #endregion
+    }
 }

@@ -2,9 +2,9 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @using MyBudget.Helpers
-@inject IIncomeService incomeService
-@inject IPaymentFrequencyTypeService paymentFrequencyTypeService
-@inject IIncomeTypeService incomeTypeService
+@inject IService<Incomes> incomeService
+@inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
+@inject ITypeService<IncomeTypes> incomeTypeService
 
 <h3 style="text-align:center">Incomes</h3>
 <p style="color:red">@Error</p>
@@ -58,7 +58,7 @@ else
 			<div class="modal-dialog">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h3 class="modal-title">Edit Expense Type</h3>
+						<h3 class="modal-title">Edit Income</h3>
 						<!-- Button to close the popup -->
 						<button type="button" class="close"
 						@onclick="ClosePopup">
