@@ -5,7 +5,7 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class ExpenseDataAccess : IExpenseDataAccess
+    public class ExpenseDataAccess : IDataAccess<Expenses>
     {
         private readonly string _dbPath;
         private SQLiteAsyncConnection _asyncConnection;
@@ -81,7 +81,7 @@ namespace MyBudget.DataAccess
             }
         }
 
-        public bool DoesExpenseNameExist(string expenseName)
+        public bool DoesNameExist(string expenseName)
         {
             int result;
             using (_connection = new SQLiteConnection(_dbPath))
@@ -94,7 +94,7 @@ namespace MyBudget.DataAccess
             return result > 0;
         }
 
-        public string GetNameOfExpenseById(int id)
+        public string GetNameById(int id)
         {
             string expenseName;
             using (_connection = new SQLiteConnection(_dbPath))
@@ -102,7 +102,7 @@ namespace MyBudget.DataAccess
                 expenseName = _connection.Table<Expenses>()
                     .Where(e => e.ExpensesId == id)
                     .Select(e => e.ExpensesName)
-                    .First();
+                    .SingleOrDefault();
             }
 
             return expenseName;

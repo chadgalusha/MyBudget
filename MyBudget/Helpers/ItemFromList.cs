@@ -8,21 +8,28 @@ namespace MyBudget.Helpers
 		{
 			return list.Where(a => a.IncomeTypeId == id)
 				.Select(a => a.IncomeType)
-				.First();
+				.SingleOrDefault();
 		}
 
 		public static string GetNameFromPaymentFrequencyTypeList(int id, List<PaymentFrequencyTypes> list)
 		{
 			return list.Where(a => a.PaymentFrequencyTypeId == id)
 				.Select(a => a.PaymentFrequencyType)
-				.First();
+				.SingleOrDefault();
 		}
 
 		public static string GetNameFromExpenseTypeList(int id, List<ExpenseTypes> list)
 		{
 			return list.Where(a => a.ExpenseTypeId == id)
 				.Select(a => a.ExpenseType)
-				.First();
+				.SingleOrDefault();
+		}
+
+		public static string GetNameFromBankAccountTypeList(int id, List<BankAccountTypes> list)
+		{
+			return list.Where(a => a.BankAccountTypeId == id)
+				.Select(a => a.BankAccountType)
+				.SingleOrDefault();
 		}
 	}
 }

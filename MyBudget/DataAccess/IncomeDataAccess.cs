@@ -2,10 +2,11 @@
 using MyBudget.Models;
 using Serilog;
 using SQLite;
+using System.Linq;
 
 namespace MyBudget.DataAccess
 {
-    public class IncomeDataAccess : IIncomeDataAccess
+    public class IncomeDataAccess : IDataAccess<Incomes>
 	{
         private readonly string _dbPath;
         private SQLiteAsyncConnection _asyncConnection;
@@ -81,28 +82,30 @@ namespace MyBudget.DataAccess
             }
         }
 
-        public bool DoesIncomeNameExist(string incomeName)
+        public bool DoesNameExist(string incomeName)
         {
-            _connection = new SQLiteConnection(_dbPath);
+            int result;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                result = _connection.Table<Incomes>()
+                    .Where(i => i.IncomeName.ToLower() == incomeName.ToLower())
+                    .Count();
+            }
 
-            int result = _connection.Table<Incomes>()
-                .Where(i => i.IncomeName.ToLower() == incomeName.ToLower())
-                .Count();
-
-            _connection.Close();
             return result > 0;
         }
 
-        public string GetNameOfIncomeById(int id)
+        public string GetNameById(int id)
         {
-            _connection = new SQLiteConnection(_dbPath);
+            string incomeName;
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                incomeName = _connection.Table<Incomes>()
+                    .Where(i => i.IncomeId == id)
+                    .Select(i => i.IncomeName)
+                    .SingleOrDefault();
+            }
 
-            string incomeName = _connection.Table<Incomes>()
-                .Where(i => i.IncomeId == id)
-                .Select(i => i.IncomeName)
-                .First();
-
-            _connection.Close();
             return incomeName;
         }
 

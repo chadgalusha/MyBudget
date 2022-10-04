@@ -86,3 +86,25 @@
 2022-10-03 17:48:06.903 -05:00 [INF] Incomes table created: Migrated
 2022-10-03 18:06:30.521 -05:00 [INF] Expenses table created: Migrated
 2022-10-03 18:06:31.408 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 08:08:01.897 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 08:08:02.910 -05:00 [INF] Expenses table created: Migrated
+2022-10-04 08:20:23.318 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 08:20:23.774 -05:00 [INF] Expenses table created: Migrated
+2022-10-04 13:20:45.458 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 13:20:45.698 -05:00 [INF] Expenses table created: Migrated
+2022-10-04 13:25:11.153 -05:00 [INF] Bank Account table created: Created
+2022-10-04 13:27:19.716 -05:00 [INF] Bank Account table created: Migrated
+2022-10-04 13:27:34.515 -05:00 [INF] Bank account created: Test-Checking
+2022-10-04 13:29:04.678 -05:00 [INF] Bank Account table created: Migrated
+2022-10-04 13:29:39.488 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 13:33:20.958 -05:00 [INF] Bank Account table created: Migrated
+2022-10-04 13:33:25.072 -05:00 [INF] Bank account updated: 1, Test-Checking
+2022-10-04 13:40:24.301 -05:00 [INF] Bank Account table created: Migrated
+2022-10-04 13:40:29.405 -05:00 [INF] Bank account updated: 1, Test-Checking
+2022-10-04 13:40:35.618 -05:00 [INF] Expenses table created: Migrated
+2022-10-04 13:40:42.678 -05:00 [INF] Expense updated: 1, Test Expense
+2022-10-04 13:40:43.941 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 13:40:46.702 -05:00 [INF] Income updated: 3, test2
+2022-10-04 13:47:28.765 -05:00 [INF] Bank Account table created: Migrated
+2022-10-04 13:47:32.547 -05:00 [INF] Incomes table created: Migrated
+2022-10-04 13:47:35.068 -05:00 [INF] Expenses table created: Migrated

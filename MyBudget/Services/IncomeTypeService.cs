@@ -85,22 +85,25 @@ namespace MyBudget.Services
             }
         }
 
-        // private methods
+        #region Private Methods
 
         private bool IsIncomeTypeNameAlreadyUsed(string incomeTypeName)
         {
             return _incomeTypeDataAccess.DoesTypeNameExist(incomeTypeName);
         }
 
+        // return false if NOT modified
         private bool IsUpdatedIncomeTypeNameModified(IncomeTypes incomeType)
         {
             string currentIncomeTypeName = _incomeTypeDataAccess.GetNameOfTypeByID(incomeType.IncomeTypeId);
-            return currentIncomeTypeName.Equals(incomeType.IncomeType);
+            return !currentIncomeTypeName.Equals(incomeType.IncomeType);
         }
 
         private bool IsIncomeTypeUsedByIncome(int incomeTypeId)
         {
             return _incomeTypeDataAccess.IsTypeUsedAndCannotBeDeleted(incomeTypeId);
         }
+
+        #endregion
     }
 }

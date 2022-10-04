@@ -4,11 +4,11 @@ using Serilog;
 
 namespace MyBudget.Services
 {
-	public class ExpenseService : IExpenseService
+	public class ExpenseService : IService<Expenses>
 	{
-		private readonly IExpenseDataAccess _expenseDataAccess;
+		private readonly IDataAccess<Expenses> _expenseDataAccess;
 
-		public ExpenseService(IExpenseDataAccess expenseDataAccess)
+		public ExpenseService(IDataAccess<Expenses> expenseDataAccess)
 		{
 			_expenseDataAccess = expenseDataAccess;
 		}
@@ -84,17 +84,19 @@ namespace MyBudget.Services
 			}
 		}
 
-		// private methods
+        #region Private Methods
 
-		private bool IsExpenseNameAlreadyUsed(string expenseName)
+        private bool IsExpenseNameAlreadyUsed(string expenseName)
 		{
-			return _expenseDataAccess.DoesExpenseNameExist(expenseName);
+			return _expenseDataAccess.DoesNameExist(expenseName);
 		}
 
 		private bool IsUpdatedExpenseNameModified(Expenses expense)
 		{
-			string currentExpenseName = _expenseDataAccess.GetNameOfExpenseById(expense.ExpensesId);
-			return currentExpenseName.Equals(expense.ExpensesName);
+			string currentExpenseName = _expenseDataAccess.GetNameById(expense.ExpensesId);
+			return !currentExpenseName.Equals(expense.ExpensesName);
 		}
-	}
+
+        #endregion
+    }
 }

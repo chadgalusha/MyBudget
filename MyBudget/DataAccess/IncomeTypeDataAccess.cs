@@ -91,7 +91,7 @@ namespace MyBudget.DataAccess
             string incomeTypeName = _connection.Table<IncomeTypes>()
                 .Where(i => i.IncomeTypeId == id)
                 .Select(i => i.IncomeType)
-                .First();
+                .SingleOrDefault();
 
             _connection.Close();
             return incomeTypeName;

@@ -93,7 +93,7 @@ namespace MyBudget.DataAccess
                 expenseTypeName = _connection.Table<ExpenseTypes>()
                     .Where(e => e.ExpenseTypeId == id)
                     .Select(e => e.ExpenseType)
-                    .First();
+                    .SingleOrDefault();
             }
 
             return expenseTypeName;

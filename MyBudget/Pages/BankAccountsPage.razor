@@ -1,0 +1,209 @@
+﻿@page "/bankaccountspage"
+@using MyBudget.Services
+@using MyBudget.Models
+@using MyBudget.Helpers
+@inject IService<BankAccounts> bankAccountService
+@inject ITypeService<BankAccountTypes> bankAccountTypeService
+
+<h3 style="text-align:center">Bank Accounts</h3>
+<p style="color:red">@Error</p>
+
+@if (bankAccountsList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Bank Account Id</th>
+				<th>Bank Account Name</th>
+				<th>Bank Account Type</th>
+				<th>Balance</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var bankAccount in bankAccountsList)
+			{
+				<tr>
+					<td>@bankAccount.BankAccountId</td>
+					<td>@bankAccount.BankAccountName</td>
+					<td>@GetBankAccountTypeName(bankAccount.BankAccountTypeId, bankAccountTypeList)</td>
+					<td>$@bankAccount.Balance</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(bankAccount))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Bank Account
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Bank Account</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current bank account -->
+					<div class="modal-body">
+						<label for="bankaccountid">Bank Account Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="bankAccount.BankAccountId" id="bankaccountid" />
+						<label for="bankaccountname">Bank Account Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Bank Account Name"
+					   @bind="bankAccount.BankAccountName" id="bankaccountname" />
+
+						<label for="bankaccounttype">Bank Account Type: </label>
+						<select class="form-select" title="Bank Account Type Required" @bind="bankAccount.BankAccountTypeId" id="bankaccounttype">
+							<option value="Select" disabled="disabled">Choose Bank Account Type</option>
+							@foreach (var bankAccountType in bankAccountTypeList)
+							{
+								<option value="@bankAccountType.BankAccountTypeId">@bankAccountType.BankAccountType</option>
+							}
+						</select>
+
+						<label for="bankaccountbalance">Balance: </label>
+						<input class="form-control" type="number"
+					   @bind="bankAccount.Balance" id="bankaccountbalance" />
+						<br />
+						<!-- Button to save the bank account -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new bank account -->
+						@if (bankAccount.BankAccountId >= 0)
+						{
+							<!-- Button to delete the bank account -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	string Error = "";
+	List<BankAccounts> bankAccountsList = new();
+	List<BankAccountTypes> bankAccountTypeList = new();
+	BankAccounts bankAccount = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		bankAccountsList = await bankAccountService.GetList();
+		bankAccountTypeList = await bankAccountTypeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		bankAccount = new BankAccounts()
+		{
+			BankAccountId = 0,
+		};
+		ShowPopup = true;
+	}
+
+	void EditRecord(BankAccounts bankAccountToEdit)
+	{
+		bankAccount = bankAccountToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (bankAccount.BankAccountId == 0)
+			{
+				BankAccounts newBankAccount = new()
+				{
+					BankAccountName = bankAccount.BankAccountName,
+					BankAccountTypeId = bankAccount.BankAccountTypeId,
+					Balance = bankAccount.Balance
+				};
+
+				var createdBankAccount = await bankAccountService.CreateRecord(newBankAccount);
+
+				switch (createdBankAccount.BankAccountId)
+				{
+					case -1:
+						Error = "Duplicate bank account name, please try again";
+						break;
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					default:
+						bankAccountsList.Add(createdBankAccount);
+						break;
+				}
+			}
+			else
+			{
+				var updatedBankAccount = await bankAccountService.UpdateRecord(bankAccount);
+				if (updatedBankAccount.BankAccountId == -1)
+				{
+					Error = "Name already used, please try again";
+					bankAccountsList = await bankAccountService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			await bankAccountService.DeleteRecord(bankAccount);
+			bankAccountsList.Remove(bankAccount);
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	// helper methods
+
+	string GetBankAccountTypeName(int id, List<BankAccountTypes> bankAccountTypeList)
+	{
+		return ItemFromList.GetNameFromBankAccountTypeList(id, bankAccountTypeList);
+	}
+}

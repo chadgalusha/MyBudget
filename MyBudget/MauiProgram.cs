@@ -38,16 +38,18 @@ public static class MauiProgram
 		builder.Services.AddScoped<ITypeDataAccess<PaymentFrequencyTypes>, PaymentFrequencyTypeDataAccess>();
 		builder.Services.AddScoped<ITypeDataAccess<BankAccountTypes>, BankAccountTypeDataAccess>();
         // dependency injection data access
-        builder.Services.AddScoped<IIncomeDataAccess, IncomeDataAccess>();
-		builder.Services.AddScoped<IExpenseDataAccess, ExpenseDataAccess>();
+        builder.Services.AddScoped<IDataAccess<Incomes>, IncomeDataAccess>();
+		builder.Services.AddScoped<IDataAccess<Expenses>, ExpenseDataAccess>();
+		builder.Services.AddScoped <IDataAccess<BankAccounts>, BankAccountDataAccess>();
         // dependency inject type service
         builder.Services.AddScoped<ITypeService<IncomeTypes>, IncomeTypeService>();
 		builder.Services.AddScoped<ITypeService<ExpenseTypes>, ExpenseTypeService>();
 		builder.Services.AddScoped<ITypeService<PaymentFrequencyTypes>, PaymentFrequencyTypeService>();
 		builder.Services.AddScoped<ITypeService<BankAccountTypes>, BankAccountTypeService>();
         // dependency injection services
-        builder.Services.AddScoped<IIncomeService, IncomeService>();
-		builder.Services.AddScoped<IExpenseService, ExpenseService>();
+        builder.Services.AddScoped<IService<Incomes>, IncomeService>();
+		builder.Services.AddScoped<IService<Expenses>, ExpenseService>();
+		builder.Services.AddScoped<IService<BankAccounts>, BankAccountService>();
 
         return builder.Build();
 	}

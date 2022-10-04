@@ -85,22 +85,25 @@ namespace MyBudget.Services
             }
         }
 
-        // private methods
+        #region Private Methods
 
         private bool IsExpenseTypeNameAlreadyUsed(string expenseTypeName)
         {
             return _expenseTypeDataAccess.DoesTypeNameExist(expenseTypeName);
         }
 
+        // return false if NOT modified
         private bool IsUpdatedExpenseTypeNameModified(ExpenseTypes expenseType)
         {
             string currentExpenseTypeName = _expenseTypeDataAccess.GetNameOfTypeByID(expenseType.ExpenseTypeId);
-            return currentExpenseTypeName.Equals(expenseType.ExpenseType);
+            return !currentExpenseTypeName.Equals(expenseType.ExpenseType);
         }
 
         private bool IsExpenseTypeUsedByExpense(int expenseTypeId)
         {
             return _expenseTypeDataAccess.IsTypeUsedAndCannotBeDeleted(expenseTypeId);
         }
+
+        #endregion
     }
 }
