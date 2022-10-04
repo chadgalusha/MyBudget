@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace BudgetApplication.Models
+namespace MyBudget.Models
 {
     [Table("BankAccountTypes")]
     public class BankAccountTypes
@@ -10,5 +10,11 @@ namespace BudgetApplication.Models
 
         [MaxLength(50), Unique]
         public string BankAccountType { get; set; }
+
+        public static string[] InitialValues()
+        {
+            string[] initialValues = {"Checking", "Savings", "Money-Market"};
+            return initialValues;
+        }
     }
 }

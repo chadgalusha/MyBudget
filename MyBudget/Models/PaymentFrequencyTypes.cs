@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace BudgetApplication.Models
+namespace MyBudget.Models
 {
     [Table("PaymentFrequencyTypes")]
     public class PaymentFrequencyTypes
@@ -10,5 +10,12 @@ namespace BudgetApplication.Models
 
         [MaxLength(50), Unique]
         public string PaymentFrequencyType { get; set; }
+
+        public static string[] InitialValues() 
+        {
+            string[] initialValues = {"Yearly", "Bi-Yearly", "Quarterly", "Monthly", "Bi-Monthly",
+                                      "Bi-Weekly", "Weekly", "Occasional", "Single"};
+            return initialValues;
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace BudgetApplication.Models
+namespace MyBudget.Models
 {
     [Table("IncomeTypes")]
     public class IncomeTypes
@@ -10,5 +10,11 @@ namespace BudgetApplication.Models
 
         [MaxLength(50), Unique]
         public string IncomeType { get; set; }
+
+        public static string[] InitialValues()
+        {
+            string[] initialValues = { "Primary", "Secondary", "Occasional", "One-Time" };
+            return initialValues;
+        }
     }
 }

@@ -1,0 +1,184 @@
+﻿@page "/incometypespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@inject ITypeService<IncomeTypes> incomeTypeService
+
+<h3 style="text-align:center">Income Types</h3>
+<p style="color:red">@Error</p>
+
+@if (incomeTypesList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Income Type Id</th>
+				<th>Income Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var type in incomeTypesList)
+			{
+				<tr>
+					<td>@type.IncomeTypeId</td>
+					<td>@type.IncomeType</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(type))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Type
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Income Type</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current income type -->
+					<div class="modal-body">
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="incomeType.IncomeTypeId" />
+						<input class="form-control" type="text"
+					   placeholder="New Type"
+					   @bind="incomeType.IncomeType" />
+						<br />
+						<!-- Button to save the income type -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (incomeType.IncomeTypeId > 0)
+						{
+							<!-- Button to delete the income type -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	string Error = "";
+	List<IncomeTypes> incomeTypesList = new();
+	IncomeTypes incomeType = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		incomeTypesList = await incomeTypeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		incomeType = new IncomeTypes();
+		incomeType.IncomeTypeId = 0;
+		ShowPopup = true;
+	}
+
+	void EditRecord(IncomeTypes type)
+	{
+		incomeType = type;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (incomeType.IncomeTypeId == 0)
+			{
+				IncomeTypes newIncomeType = new()
+					{
+						IncomeType = incomeType.IncomeType
+					};
+
+				var createdIncomeType = await incomeTypeService.CreateRecord(newIncomeType);
+
+				switch (createdIncomeType.IncomeTypeId)
+				{
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					case -1:
+						Error = "Duplicate income type name, please try again";
+						break;
+					default:
+						incomeTypesList.Add(createdIncomeType);
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await incomeTypeService.UpdateRecord(incomeType);
+				if (updatedRecord.IncomeTypeId == -1)
+				{
+					Error = "Duplicate income type name, please try again";
+					incomeTypesList = await incomeTypeService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			var deleteIncomeTypeResult = await incomeTypeService.DeleteRecord(incomeType);
+
+			if (deleteIncomeTypeResult.IncomeTypeId == -1)
+			{
+				Error = "Income type in use by 1 or more incomes";
+			}
+
+			if (deleteIncomeTypeResult.IncomeTypeId != -1)
+			{
+				incomeTypesList.Remove(incomeType);
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+}

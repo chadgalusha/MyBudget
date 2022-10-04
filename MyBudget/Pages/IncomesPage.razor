@@ -1,0 +1,234 @@
+﻿@page "/incomespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@using MyBudget.Helpers
+@inject IService<Incomes> incomeService
+@inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
+@inject ITypeService<IncomeTypes> incomeTypeService
+
+<h3 style="text-align:center">Incomes</h3>
+<p style="color:red">@Error</p>
+
+@if (incomeList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Income Id</th>
+				<th>Income Name</th>
+				<th>Income Type</th>
+				<th>Payment Frequency</th>
+				<th>Income Amount</th>
+				<th>Initial Income Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var income in incomeList)
+			{
+				<tr>
+					<td>@income.IncomeId</td>
+					<td>@income.IncomeName</td>
+					<td>@GetIncomeTypeName(income.IncomeTypeId, incomeTypesList)</td>
+					<td>@GetPaymentFrequencyTypeName(income.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
+					<td>$@income.IncomeAmount</td>
+					<td>@income.InitialIncomeDate.ToShortDateString()</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(income))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Income
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Income</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current income -->
+					<div class="modal-body">
+						<label for="incomeid">Income Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="income.IncomeId" id="incomeid" />
+					   <label for="incomename">Income Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Income Name"
+					   @bind="income.IncomeName" id="incomename"/>
+
+					   <label for="incometype">Income Type: </label>
+					   <select class="form-select" title="Income Type Required" @bind="income.IncomeTypeId" id="incometype">
+						   <option value="Select" disabled="disabled">Choose Income Type</option>
+						   @foreach (var incomeType in incomeTypesList)
+							{
+								<option value="@incomeType.IncomeTypeId">@incomeType.IncomeType</option>
+							}
+					   </select>
+
+					   <label for="paymentfrequency">Payment Frequency: </label>
+					   <select class="form-select" title="Payment Frequency Required" @bind="income.PaymentFrequencyTypeId" id="paymentfrequency">
+						   <option value="Select" disabled="disabled">Choose Payment Frequency</option>
+						   @foreach (var type in paymentFrequencyTypesList)
+							{
+								<option value="@type.PaymentFrequencyTypeId">@type.PaymentFrequencyType</option>
+							}
+					   </select>
+
+					   <label for="incomeamount">Income Amount: </label>
+						<input class="form-control" type="number"
+					   placeholder="Income Amount"
+					   @bind="income.IncomeAmount" id="incomeamount" min="0" />
+					   <label for="incomedate">Income Date:</label>
+						<input class="form-control" type="date"
+					   placeholder="Income Date"
+					   @bind="income.InitialIncomeDate" id="incomedate" />
+						<br />
+						<!-- Button to save the income -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (income.IncomeId >= 0)
+						{
+							<!-- Button to delete the income -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	string Error = "";
+	List<Incomes> incomeList = new();
+	List<IncomeTypes> incomeTypesList = new();
+	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
+	Incomes income = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		incomeList = await incomeService.GetList();
+		incomeTypesList = await incomeTypeService.GetList();
+		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		income = new Incomes()
+			{
+				IncomeId = 0,
+				InitialIncomeDate = DateTime.Today.Date
+			};
+		ShowPopup = true;
+	}
+
+	void EditRecord(Incomes incomeToEdit)
+	{
+		income = incomeToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (income.IncomeId == 0)
+			{
+				Incomes newIncome = new()
+				{
+					IncomeName = income.IncomeName,
+					IncomeTypeId = income.IncomeTypeId,
+					PaymentFrequencyTypeId = income.PaymentFrequencyTypeId,
+					IncomeAmount = income.IncomeAmount,
+					InitialIncomeDate = income.InitialIncomeDate
+				};
+
+				var createdIncome = await incomeService.CreateRecord(newIncome);
+
+				if (createdIncome.IncomeName == null || createdIncome.IncomeName == "")
+				{
+					Error = "Duplicate Income name, please try again";
+				}
+				else
+				{
+					incomeList.Add(createdIncome);
+				}
+			}
+			else
+			{
+				var updatedRecord = await incomeService.UpdateRecord(income);
+				if (updatedRecord.IncomeId == -1)
+				{
+					Error = "Name already used, please try again";
+					incomeList = await incomeService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			await incomeService.DeleteRecord(income);
+			incomeList.Remove(income);
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	// helper methods
+
+	string GetIncomeTypeName(int id, List<IncomeTypes> incomeTypeList)
+	{
+		return ItemFromList.GetNameFromIncomeTypeList(id, incomeTypeList);
+	}
+
+	string GetPaymentFrequencyTypeName(int id, List<PaymentFrequencyTypes> paymentFrequencyTypeList)
+	{
+		return ItemFromList.GetNameFromPaymentFrequencyTypeList(id, paymentFrequencyTypeList);
+	}
+}

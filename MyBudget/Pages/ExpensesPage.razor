@@ -1,0 +1,238 @@
+﻿@page "/expensespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@using MyBudget.Helpers
+@inject IService<Expenses> expenseService
+@inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
+@inject ITypeService<ExpenseTypes> expenseTypeService
+
+<h3 style="text-align:center">Expenses</h3>
+<p style="color:red">@Error</p>
+
+@if (expensesList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Expense Id</th>
+				<th>Expense Name</th>
+				<th>Expense Type</th>
+				<th>Payment Frequency</th>
+				<th>Expense Amount</th>
+				<th>Initial Expense Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var expense in expensesList)
+			{
+				<tr>
+					<td>@expense.ExpensesId</td>
+					<td>@expense.ExpensesName</td>
+					<td>@GetExpenseTypeName(expense.ExpenseTypeId, expenseTypesList)</td>
+					<td>@GetPaymentFrequencyTypeName(expense.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
+					<td>$@expense.ExpenseAmount</td>
+					<td>@expense.InitialExpenseDate.ToShortDateString()</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(expense))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Expense
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current expense -->
+					<div class="modal-body">
+						<label for="expenseid">Expense Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="expense.ExpensesId" id="expenseid" />
+						<label for="expensename">Expense Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Expense Name"
+					   @bind="expense.ExpensesName" id="expensename" />
+
+						<label for="expensetype">Expense Type: </label>
+						<select class="form-select" title="Expense Type Required" @bind="expense.ExpenseTypeId" id="expensetype">
+							<option value="Select" disabled="disabled">Choose Expense Type</option>
+							@foreach (var expenseType in expenseTypesList)
+							{
+								<option value="@expenseType.ExpenseTypeId">@expenseType.ExpenseType</option>
+							}
+						</select>
+
+						<label for="paymentfrequency">Payment Frequency: </label>
+						<select class="form-select" title="Payment Frequency Required" @bind="expense.PaymentFrequencyTypeId" id="paymentfrequency">
+							<option value="Select" disabled="disabled">Choose Payment Frequency</option>
+							@foreach (var type in paymentFrequencyTypesList)
+							{
+								<option value="@type.PaymentFrequencyTypeId">@type.PaymentFrequencyType</option>
+							}
+						</select>
+
+						<label for="expenseamount">Expense Amount: </label>
+						<input class="form-control" type="number"
+					   placeholder="Expense Amount"
+					   @bind="expense.ExpenseAmount" id="expenseamount" min="0" />
+						<label for="expensedate">Expense Date:</label>
+						<input class="form-control" type="date"
+					   placeholder="Expense Date"
+					   @bind="expense.InitialExpenseDate" id="expensedate" />
+						<br />
+						<!-- Button to save the expense -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (expense.ExpensesId >= 0)
+						{
+							<!-- Button to delete the expense -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	string Error = "";
+	List<Expenses> expensesList = new();
+	List<ExpenseTypes> expenseTypesList = new();
+	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
+	Expenses expense = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		expensesList = await expenseService.GetList();
+		expenseTypesList = await expenseTypeService.GetList();
+		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		expense = new Expenses()
+			{
+				ExpensesId = 0,
+				InitialExpenseDate = DateTime.Today.Date
+			};
+		ShowPopup = true;
+	}
+
+	void EditRecord(Expenses expenseToEdit)
+	{
+		expense = expenseToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (expense.ExpensesId == 0)
+			{
+				Expenses newExpense = new()
+				{
+					ExpensesName = expense.ExpensesName,
+					ExpenseTypeId = expense.ExpenseTypeId,
+					PaymentFrequencyTypeId = expense.PaymentFrequencyTypeId,
+					ExpenseAmount = expense.ExpenseAmount,
+					InitialExpenseDate = expense.InitialExpenseDate
+				};
+
+				var createdExpense = await expenseService.CreateRecord(newExpense);
+
+				switch (createdExpense.ExpensesId)
+				{
+					case -1:
+						Error = "Duplicate Expense name, please try again";
+						break;
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					default:
+						expensesList.Add(createdExpense);
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await expenseService.UpdateRecord(expense);
+				if (updatedRecord.ExpensesId == -1)
+				{
+					Error = "Name already used, please try again";
+					expensesList = await expenseService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			await expenseService.DeleteRecord(expense);
+			expensesList.Remove(expense);
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	// helper methods
+
+	string GetExpenseTypeName(int id, List<ExpenseTypes> expenseTypeList)
+	{
+		return ItemFromList.GetNameFromExpenseTypeList(id, expenseTypeList);
+	}
+
+	string GetPaymentFrequencyTypeName(int id, List<PaymentFrequencyTypes> paymentFrequencyTypeList)
+	{
+		return ItemFromList.GetNameFromPaymentFrequencyTypeList(id, paymentFrequencyTypeList);
+	}
+}

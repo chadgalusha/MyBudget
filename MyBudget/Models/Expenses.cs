@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace BudgetApplication.Models
+namespace MyBudget.Models
 {
     [Table("Expenses")]
     public class Expenses
@@ -14,5 +14,9 @@ namespace BudgetApplication.Models
         public int ExpenseTypeId { get; set; }
 
         public int PaymentFrequencyTypeId { get; set; }
+
+        public decimal ExpenseAmount { get; set; }
+
+        public DateTime InitialExpenseDate { get; set; }
     }
 }

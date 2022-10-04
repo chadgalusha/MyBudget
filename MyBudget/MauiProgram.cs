@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Components.WebView.Maui;
+﻿using Microsoft.Extensions.DependencyInjection;
+using MyBudget.DataAccess;
+using MyBudget.Models;
 using MyBudget.Services;
 using Serilog;
 
@@ -10,8 +12,8 @@ public static class MauiProgram
 	{
 		Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
-			.WriteTo.File(@"C:\Users\ChadGalusha\source\repos\BudgetApplication\BudgetApplication\AppData\logs.txt",
-				fileSizeLimitBytes: 1000,
+			.WriteTo.File(@"C:\Users\ChadGalusha\source\repos\MyBudget\MyBudget\Data\logs.txt",
+				fileSizeLimitBytes: 5_000_000,
 				retainedFileCountLimit: 1,
 				outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}")
 			.CreateLogger();
@@ -30,9 +32,25 @@ public static class MauiProgram
 		builder.Services.AddBlazorWebViewDeveloperTools();
 #endif
 
-		var dbPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "database.sqlite");
-		builder.Services.AddSingleton(s => ActivatorUtilities.CreateInstance<PaymentFrequencyTypeService>(s, dbPath));
+        // dependency inject type data access
+        builder.Services.AddScoped<ITypeDataAccess<IncomeTypes>, IncomeTypeDataAccess>();
+		builder.Services.AddScoped<ITypeDataAccess<ExpenseTypes>, ExpenseTypeDataAccess>();
+		builder.Services.AddScoped<ITypeDataAccess<PaymentFrequencyTypes>, PaymentFrequencyTypeDataAccess>();
+		builder.Services.AddScoped<ITypeDataAccess<BankAccountTypes>, BankAccountTypeDataAccess>();
+        // dependency injection data access
+        builder.Services.AddScoped<IDataAccess<Incomes>, IncomeDataAccess>();
+		builder.Services.AddScoped<IDataAccess<Expenses>, ExpenseDataAccess>();
+		builder.Services.AddScoped <IDataAccess<BankAccounts>, BankAccountDataAccess>();
+        // dependency inject type service
+        builder.Services.AddScoped<ITypeService<IncomeTypes>, IncomeTypeService>();
+		builder.Services.AddScoped<ITypeService<ExpenseTypes>, ExpenseTypeService>();
+		builder.Services.AddScoped<ITypeService<PaymentFrequencyTypes>, PaymentFrequencyTypeService>();
+		builder.Services.AddScoped<ITypeService<BankAccountTypes>, BankAccountTypeService>();
+        // dependency injection services
+        builder.Services.AddScoped<IService<Incomes>, IncomeService>();
+		builder.Services.AddScoped<IService<Expenses>, ExpenseService>();
+		builder.Services.AddScoped<IService<BankAccounts>, BankAccountService>();
 
-		return builder.Build();
+        return builder.Build();
 	}
 }

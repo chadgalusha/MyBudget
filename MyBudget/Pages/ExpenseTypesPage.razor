@@ -1,0 +1,184 @@
+﻿@page "/expensetypespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@inject ITypeService<ExpenseTypes> expenseTypeService
+
+<h3 style="text-align:center">Expense Types</h3>
+<p style="color:red">@Error</p>
+
+@if (expenseTypeList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Expense Type Id</th>
+				<th>Expense Type</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var type in expenseTypeList)
+			{
+				<tr>
+					<td>@type.ExpenseTypeId</td>
+					<td>@type.ExpenseType</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(type))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Type
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="-1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense Type</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for the current expense type -->
+					<div class="modal-body">
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="expenseType.ExpenseTypeId" />
+						<input class="form-control" type="text"
+					   placeholder="New Type"
+					   @bind="expenseType.ExpenseType" />
+						<br />
+						<!-- Button to save the expense type -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (expenseType.ExpenseTypeId > 0)
+						{
+							<!-- Button to delete the expense type -->
+							<button class="btn btn-danger"
+						@onclick="DeleteRecord">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	string Error = "";
+	List<ExpenseTypes> expenseTypeList = new();
+	ExpenseTypes expenseType = new();
+	bool ShowPopup = false;
+
+	protected override async Task OnInitializedAsync()
+	{
+		expenseTypeList = await expenseTypeService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		expenseType = new ExpenseTypes();
+		expenseType.ExpenseTypeId = 0;
+		ShowPopup = true;
+	}
+
+	void EditRecord(ExpenseTypes type)
+	{
+		expenseType = type;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (expenseType.ExpenseTypeId == 0)
+			{
+				ExpenseTypes newExpenseType = new()
+				{
+					ExpenseType = expenseType.ExpenseType
+				};
+
+				var createdExpenseType = await expenseTypeService.CreateRecord(newExpenseType);
+
+				switch (createdExpenseType.ExpenseTypeId)
+				{
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					case -1:
+						Error = "Duplicate expense type name, please try again";
+						break;
+					default:
+						expenseTypeList.Add(createdExpenseType);
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await expenseTypeService.UpdateRecord(expenseType);
+				if (updatedRecord.ExpenseTypeId == -1)
+				{
+					Error = "Duplicate expense type name, please try again";
+					expenseTypeList = await expenseTypeService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			var deleteExpenseTypeResult = await expenseTypeService.DeleteRecord(expenseType);
+
+			if (deleteExpenseTypeResult.ExpenseTypeId == -1)
+			{
+				Error = "Expense type in use by 1 or more expenses";
+			}
+
+			if (deleteExpenseTypeResult.ExpenseTypeId != -1)
+			{
+				expenseTypeList.Remove(expenseType);
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+}

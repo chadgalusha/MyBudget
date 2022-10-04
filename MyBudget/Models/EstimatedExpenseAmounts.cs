@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BudgetApplication.Models
+namespace MyBudget.Models
 {
     [Table("EstimatedExpensAmounts")]
     public class EstimatedExpenseAmounts
