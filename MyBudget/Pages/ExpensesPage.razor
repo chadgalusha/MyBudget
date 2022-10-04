@@ -228,11 +228,11 @@ else
 
 	string GetExpenseTypeName(int id, List<ExpenseTypes> expenseTypeList)
 	{
-		return ItemFromList.GetNameFromExpenseTypeList(id, expenseTypeList);
+		return ItemFromList.GetNameFromTypeList(id, expenseTypeList);
 	}
 
 	string GetPaymentFrequencyTypeName(int id, List<PaymentFrequencyTypes> paymentFrequencyTypeList)
 	{
-		return ItemFromList.GetNameFromPaymentFrequencyTypeList(id, paymentFrequencyTypeList);
+		return ItemFromList.GetNameFromTypeList(id, paymentFrequencyTypeList);
 	}
 }
