@@ -124,3 +124,34 @@
 2022-10-05 09:02:10.293 -05:00 [INF] Bank Account table created: Migrated
 2022-10-05 13:36:39.709 -05:00 [INF] Incomes table created: Migrated
 2022-10-05 13:36:44.677 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 16:24:48.887 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 16:25:12.685 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 16:26:35.324 -05:00 [INF] Income updated: 1, Capgemini
+2022-10-05 16:26:59.085 -05:00 [INF] Income updated: 3, Awaken
+2022-10-05 16:27:07.612 -05:00 [INF] Income deleted: 1, Capgemini
+2022-10-05 16:27:43.205 -05:00 [INF] Income created: Capgemini
+2022-10-05 16:29:31.278 -05:00 [INF] Income created: Building 429
+2022-10-05 16:56:27.350 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 16:57:25.431 -05:00 [INF] Expense updated: 1, Mortgage
+2022-10-05 16:58:01.788 -05:00 [INF] Expense updated: 3, Van Payment
+2022-10-05 16:58:10.630 -05:00 [INF] Expense updated: 1, Mortgage
+2022-10-05 16:58:12.683 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 16:58:48.302 -05:00 [INF] Bank account updated: 1, Checking - 2192
+2022-10-05 16:59:14.162 -05:00 [INF] Bank account created: Savings - 6207
+2022-10-05 16:59:47.391 -05:00 [INF] Bank account created: Savings - 8920
+2022-10-05 16:59:58.432 -05:00 [INF] Bank account updated: 1, Checking - 2192
+2022-10-05 17:10:07.140 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 17:10:15.914 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:10:20.369 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 17:10:47.395 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:11:01.898 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 17:12:48.498 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 17:12:53.630 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:12:55.118 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 17:13:43.275 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:13:48.434 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:13:59.005 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:14:01.633 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 17:19:37.061 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 17:21:47.394 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 17:23:09.680 -05:00 [INF] Incomes table created: Migrated

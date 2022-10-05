@@ -15,6 +15,7 @@ namespace MyBudget.Models
 
         public int PaymentFrequencyTypeId { get; set; }
 
+        [System.ComponentModel.DataAnnotations.Range(0, 999999999.99)]
         public decimal ExpenseAmount { get; set; }
 
         public DateTime InitialExpenseDate { get; set; }
