@@ -122,3 +122,5 @@
 2022-10-05 09:00:12.840 -05:00 [INF] Incomes table created: Migrated
 2022-10-05 09:00:13.631 -05:00 [INF] Expenses table created: Migrated
 2022-10-05 09:02:10.293 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 13:36:39.709 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 13:36:44.677 -05:00 [INF] Expenses table created: Migrated
