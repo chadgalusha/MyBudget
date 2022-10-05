@@ -1,35 +1,47 @@
 ﻿using MyBudget.Models;
+using System.Reflection;
 
 namespace MyBudget.Helpers
 {
 	public static class ItemFromList
 	{
-		public static string GetNameFromIncomeTypeList(int id, List<IncomeTypes> list)
+		public static string GetNameFromTypeList<T>(int id, List<T> list)
 		{
-			return list.Where(a => a.IncomeTypeId == id)
-				.Select(a => a.IncomeType)
-				.SingleOrDefault();
+			string name = "";
+
+			foreach (var obj in list)
+			{
+				var objId = GetTypeIdFromObject(obj);
+
+				if (objId == id)
+				{
+					name = GetNameFromObject(obj);
+				}
+			}
+
+			return name;
 		}
 
-		public static string GetNameFromPaymentFrequencyTypeList(int id, List<PaymentFrequencyTypes> list)
-		{
-			return list.Where(a => a.PaymentFrequencyTypeId == id)
-				.Select(a => a.PaymentFrequencyType)
-				.SingleOrDefault();
-		}
+		// private methods
 
-		public static string GetNameFromExpenseTypeList(int id, List<ExpenseTypes> list)
+		private static int GetTypeIdFromObject<T>(T obj)
 		{
-			return list.Where(a => a.ExpenseTypeId == id)
-				.Select(a => a.ExpenseType)
-				.SingleOrDefault();
-		}
+			var id = obj.GetType()
+                    .GetProperties()
+                    .First(a => a.Name.Contains("TypeId"))
+                    .GetValue(obj);
 
-		public static string GetNameFromBankAccountTypeList(int id, List<BankAccountTypes> list)
+			return Convert.ToInt32(id);
+        }
+
+		private static string GetNameFromObject<T>(T obj)
 		{
-			return list.Where(a => a.BankAccountTypeId == id)
-				.Select(a => a.BankAccountType)
-				.SingleOrDefault();
-		}
+			var name = obj.GetType()
+						.GetProperties()
+						.First(a => !a.Name.Contains("Id") && a.Name.Contains("Type"))
+						.GetValue(obj);
+
+			return name.ToString();
+        }
 	}
 }
