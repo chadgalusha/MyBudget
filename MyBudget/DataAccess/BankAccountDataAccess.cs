@@ -2,15 +2,10 @@
 using MyBudget.Models;
 using Serilog;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyBudget.DataAccess
 {
-	public class BankAccountDataAccess : IDataAccess<BankAccounts>
+    public class BankAccountDataAccess : IDataAccess<BankAccounts>
 	{
         private readonly string _dbPath;
         private SQLiteAsyncConnection _asyncConnection;
@@ -18,7 +13,7 @@ namespace MyBudget.DataAccess
 
         public BankAccountDataAccess()
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _dbPath = DatabaseHelper.GetDbPath();
         }
 
         public async Task<BankAccounts> GetRecordByIdAsync(int id)
@@ -123,10 +118,10 @@ namespace MyBudget.DataAccess
             }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            await _asyncConnection.CreateTableAsync<BankAccounts>().ContinueWith((results) =>
-            {
-                Log.Information($"Bank Account table created: {results.Result}");
-            });
+            //await _asyncConnection.CreateTableAsync<BankAccounts>().ContinueWith((results) =>
+            //{
+            //    Log.Information($"Bank Account table created: {results.Result}");
+            //});
         }
     }
 }

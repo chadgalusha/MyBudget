@@ -34,7 +34,7 @@ else
 					<td>@income.IncomeName</td>
 					<td>@GetIncomeTypeName(income.IncomeTypeId, incomeTypesList)</td>
 					<td>@GetPaymentFrequencyTypeName(income.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
-					<td>$@income.IncomeAmount.ToString("#.##")</td>
+					<td>$@income.IncomeAmount.ToString("0.00")</td>
 					<td>@income.InitialIncomeDate.ToShortDateString()</td>
 					<td>
 						<button class="btn btn-primary"

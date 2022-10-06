@@ -14,7 +14,7 @@ namespace MyBudget.DataAccess
 
         public IncomeDataAccess()
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _dbPath = DatabaseHelper.GetDbPath();
         }
 
         public async Task<Incomes> GetRecordByIdAsync(int id)
@@ -119,10 +119,10 @@ namespace MyBudget.DataAccess
             }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            await _asyncConnection.CreateTableAsync<Incomes>().ContinueWith((results) =>
-            {
-                Log.Information($"Incomes table created: {results.Result}");
-            });
+            //await _asyncConnection.CreateTableAsync<Incomes>().ContinueWith((results) =>
+            //{
+            //    Log.Information($"Incomes table created: {results.Result}");
+            //});
         }
     }
 }

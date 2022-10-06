@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 using MyBudget.Services;
 using Serilog;
@@ -10,7 +11,9 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-		Log.Logger = new LoggerConfiguration()
+		DatabaseHelper.CheckForDbTables();
+
+        Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
 			.WriteTo.File(@"C:\Users\ChadGalusha\source\repos\MyBudget\MyBudget\Data\logs.txt",
 				fileSizeLimitBytes: 5_000_000,
