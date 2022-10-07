@@ -18,13 +18,14 @@ namespace MyBudget.Helpers
                 const string query = "SELECT tbl_name FROM sqlite_master WHERE type = \"table\"";
                 var dbTables = connection.Query<sqlite_master>(query);
 
-                Type[] typeList = GetTypesInModels(Assembly.GetExecutingAssembly(), "MyBudget.Models");
+                Type[] typeArray = GetTypesInModels(Assembly.GetExecutingAssembly(), "MyBudget.Models");
 
-                var newTypeList = TablesToCreate(dbTables, typeList);
+                var newTypeArray = TablesToCreate(dbTables, typeArray);
 
-                if (newTypeList.Length > 0)
+                if (newTypeArray.Length > 0)
                 {
-                    connection.CreateTables(createFlags: CreateFlags.None, newTypeList);
+                    connection.CreateTables(createFlags: CreateFlags.None, newTypeArray);
+                    LogTablesCreated(newTypeArray);
                 }
             }
         }
@@ -52,6 +53,14 @@ namespace MyBudget.Helpers
             }
 
             return typeList.ToArray();
+        }
+
+        private static void LogTablesCreated(Type[] typeList)
+        {
+            foreach (var type in typeList)
+            {
+                Log.Information($"Table created: {type.Name}");
+            }
         }
     }
 
