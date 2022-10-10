@@ -4,9 +4,54 @@
 
 Welcome to your new app.
 
+<Chart Config="_config" @ref="_chart"></Chart>
+
 @code {
+	private BarChartConfig _config;
+	private Chart _chart;
 
-	public List<object> testData = new List<object>() { 3, 10, 6 };
-	public string[] xAxisItems = new string[] { "t1", "t2", "t3", "t4" };
+	protected override void OnInitialized()
+	{
+		_config = new BarChartConfig()
+		{
+			Options = new Options()
+			{
+				Plugins = new Plugins()
+				{
+					Legend = new Legend()
+					{
+						Align = LegendAlign.Center,
+						Display = false,
+						Position = LegendPosition.Right
+					}
+				},
+				Scales = new Scales()
+				{
+					X = new XAxes()
+					{
+						Stacked = true,
+						Ticks = new Ticks()
+						{
+							MaxRotation = 0,
+							MinRotation = 0
+						}
+					},
+					Y = new YAxes()
+					{
+						Stacked = true
+					}
+				}
+			}
+		};
 
+		_config.Data.Labels = MyBudget.Data.SampleData.MyBarText;
+		_config.Data.Datasets.Add(new BarDataset()
+		{
+			Label = "Value",
+			Data = MyBudget.Data.SampleData.MyBar.Select(a => a.Value).ToList(),
+			BackgroundColor = new List<string>() { "green", "red" },
+			BorderColor = new List<string>() { "black", "black" },
+			BorderWidth = 1
+		});
+	}
 }

@@ -30,7 +30,7 @@ else
 					<td>@bankAccount.BankAccountId</td>
 					<td>@bankAccount.BankAccountName</td>
 					<td>@GetBankAccountTypeName(bankAccount.BankAccountTypeId, bankAccountTypeList)</td>
-					<td>$@bankAccount.Balance</td>
+					<td>$@bankAccount.Balance.ToString("0.00")</td>
 					<td>
 						<button class="btn btn-primary"
 						@onclick="(() => EditRecord(bankAccount))">
