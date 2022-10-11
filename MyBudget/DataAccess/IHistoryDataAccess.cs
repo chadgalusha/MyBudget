@@ -7,5 +7,7 @@
         Task<T> CreateRecordAsync(T newType);
         Task<T> UpdateRecordAsync(T type);
         Task<T> DeleteRecordAsync(T type);
+        decimal[] GetHistoryArrayForMonth(int year, int month);
+        decimal[] GetHistoryArrayForYear(int year);
     }
 }

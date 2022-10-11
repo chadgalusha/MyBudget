@@ -1,11 +1,6 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyBudget.DataAccess
 {
@@ -85,6 +80,29 @@ namespace MyBudget.DataAccess
             {
                 MyBudgetLogger.ErrorDeleting(expenseHistory, e);
                 return new ExpenseHistory() { ExpenseHistoryId = 0 };
+            }
+        }
+
+        public decimal[] GetHistoryArrayForMonth(int year, int month)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                return _connection.Table<ExpenseHistory>()
+                    .Where(e => e.ExpenseDate.Year == year)
+                    .Where(e => e.ExpenseDate.Month == month)
+                    .Select(e => e.AmountPaid)
+                    .ToArray();
+            }
+        }
+
+        public decimal[] GetHistoryArrayForYear(int year)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                return _connection.Table<ExpenseHistory>()
+                    .Where(e => e.ExpenseDate.Year == year)
+                    .Select(e => e.AmountPaid)
+                    .ToArray();
             }
         }
 

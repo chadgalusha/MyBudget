@@ -84,7 +84,30 @@ namespace MyBudget.DataAccess
             }
         }
 
-        #region Private Methods
+        public decimal[] GetHistoryArrayForMonth(int year, int month)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                return _connection.Table<IncomeHistory>()
+                    .Where(i => i.IncomeDate.Year == year)
+                    .Where(i => i.IncomeDate.Month == month)
+                    .Select(i => i.IncomeAmount)
+                    .ToArray();
+            }
+        }
+
+        public decimal[] GetHistoryArrayForYear(int year)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                return _connection.Table<IncomeHistory>()
+                    .Where(i => i.IncomeDate.Year == year)
+                    .Select(i => i.IncomeAmount)
+                    .ToArray();
+            }
+        }
+
+        // PRIVATE METHODS
 
         private void Initialize()
         {
@@ -95,7 +118,5 @@ namespace MyBudget.DataAccess
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
         }
-
-        #endregion
     }
 }

@@ -43,6 +43,8 @@ public static class MauiProgram
         builder.Services.AddScoped<IDataAccess<Incomes>, IncomeDataAccess>();
 		builder.Services.AddScoped<IDataAccess<Expenses>, ExpenseDataAccess>();
 		builder.Services.AddScoped <IDataAccess<BankAccounts>, BankAccountDataAccess>();
+		builder.Services.AddScoped<IHistoryDataAccess<IncomeHistory>, IncomeHistoryDataAccess>();
+		builder.Services.AddScoped<IHistoryDataAccess<ExpenseHistory>, ExpenseHistoryDataAccess>();
         // dependency inject type service
         builder.Services.AddScoped<ITypeService<IncomeTypes>, IncomeTypeService>();
 		builder.Services.AddScoped<ITypeService<ExpenseTypes>, ExpenseTypeService>();
@@ -52,6 +54,8 @@ public static class MauiProgram
         builder.Services.AddScoped<IService<Incomes>, IncomeService>();
 		builder.Services.AddScoped<IService<Expenses>, ExpenseService>();
 		builder.Services.AddScoped<IService<BankAccounts>, BankAccountService>();
+		builder.Services.AddScoped<IHistoryService<IncomeHistory>, IncomeHistoryService>();
+		builder.Services.AddScoped<IHistoryService<ExpenseHistory>, ExpenseHistoryService>();
 
         return builder.Build();
 	}
