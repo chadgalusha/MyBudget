@@ -160,3 +160,8 @@
 2022-10-06 16:55:38.083 -05:00 [INF] Incomes table created: Migrated
 2022-10-06 16:55:39.897 -05:00 [INF] Expenses table created: Migrated
 2022-10-06 16:55:46.016 -05:00 [INF] Bank Account table created: Migrated
+2022-10-11 17:27:27.400 -05:00 [INF] MyBudget.Models.ExpenseHistory created: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense","ExpenseAmount":100,"AmountPaid":100,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 17:27:57.379 -05:00 [INF] MyBudget.Models.IncomeHistory created: {"IncomeHistoryId":1,"IncomeName":"Test Income","IncomeAmount":534,"IncomeDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 17:30:35.764 -05:00 [INF] MyBudget.Models.IncomeHistory updated: {"IncomeHistoryId":1,"IncomeName":"Test Income modified","IncomeAmount":534,"IncomeDate":"2022-10-11T00:00:00"}
+2022-10-11 17:33:58.257 -05:00 [INF] MyBudget.Models.IncomeHistory created: {"IncomeHistoryId":2,"IncomeName":"Test 2","IncomeAmount":14.56,"IncomeDate":"2022-10-05T00:00:00"}
+2022-10-11 17:49:37.229 -05:00 [INF] MyBudget.Models.IncomeHistory deleted: {"IncomeHistoryId":2,"IncomeName":"Test 2","IncomeAmount":14.56,"IncomeDate":"2022-10-05T00:00:00"}

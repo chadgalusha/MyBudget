@@ -89,7 +89,7 @@ else
 							Save
 						</button>&nbsp;
 						<!-- Only show delete button if not a new bank account -->
-						@if (bankAccount.BankAccountId >= 0)
+						@if (bankAccount.BankAccountId > 0)
 						{
 							<!-- Button to delete the bank account -->
 							<button class="btn btn-danger"

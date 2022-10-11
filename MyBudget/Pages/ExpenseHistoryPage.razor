@@ -1,0 +1,218 @@
+﻿@page "/expensehistorypage"
+@using MyBudget.Models
+@using MyBudget.Services
+@inject IHistoryService<ExpenseHistory> expenseHistoryService
+@inject IJSRuntime jsRuntime
+
+<h3 style="text-align:center">Expense History</h3>
+<p style="color:red">@Error</p>
+
+@if (expenseHistoryList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Expense History Id</th>
+				<th>Expense Name</th>
+				<th>Expense Amount</th>
+				<th>Amount Paid</th>
+				<th>Date Paid</th>
+				<th>Due Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var expenseHistory in expenseHistoryList)
+			{
+				<tr>
+					<td>@expenseHistory.ExpenseHistoryId</td>
+					<td>@expenseHistory.ExpenseName</td>
+					<td>$@expenseHistory.ExpenseAmount.ToString("0.00")</td>
+					<td>$@expenseHistory.AmountPaid.ToString("0.00")</td>
+					<td>@expenseHistory.ExpenseDate.ToShortDateString()</td>
+					<td>@expenseHistory.DueDate.ToShortDateString()</td>
+					<td>
+						<button class="btn btn-primary"
+						@onclick="(() => EditRecord(expenseHistory))">
+							Edit
+						</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+	<p>
+		<button class="btn btn-success" @onclick="AddNewRecord">
+			Add New Expense history
+		</button>
+	</p>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense History</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for current expense history -->
+					<div class="modal-body">
+						<label for="expensehistoryid">Expense History Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+						@bind="expenseHistory.ExpenseHistoryId" id="expensehistoryid" />
+						<label for="expensehistoryname">Expense History Name: </label>
+						<input class="form-control" type="text"
+						placeholder="Expense History Name"
+						@bind="expenseHistory.ExpenseName" id="expensehistoryname" />
+						<label for="expenseamount">Expense Amount: </label>
+						<input class="form-control" type="number"
+						placeholder="Expense Amount"
+						@bind="expenseHistory.ExpenseAmount" id="expenseamount" min="0" />
+						<label for="amountpaid">Amount Paid: </label>
+						<input class="form-control" type="number"
+						placeholder="Amount Paid"
+						@bind="expenseHistory.AmountPaid" id="amountpaid" min="0" />
+						<label for="expensedate">Expense Date:</label>
+						<input class="form-control" type="date"
+						placeholder="Expense Date"
+						@bind="expenseHistory.ExpenseDate" id="expensedate" />
+						<label for="duedate">Due Date:</label>
+						<input class="form-control" type="date"
+						placeholder="Due Date"
+						@bind="expenseHistory.DueDate" id="duedate" />
+
+						<br />
+						<!-- Button to save the expense history -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (expenseHistory.ExpenseHistoryId > 0)
+						{
+							<!-- Button to delete the expense history -->
+							<button class="btn btn-danger"
+						@onclick="DeleteConfirm">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+
+	string Error = "";
+	bool ShowPopup = false;
+	List<ExpenseHistory> expenseHistoryList = new();
+	ExpenseHistory expenseHistory = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		expenseHistoryList = await expenseHistoryService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		expenseHistory = new()
+		{
+			ExpenseHistoryId = 0,
+			ExpenseDate = DateTime.Today.Date,
+			DueDate = DateTime.Today.Date
+		};
+		ShowPopup = true;
+	}
+
+	void EditRecord(ExpenseHistory expenseHistoryToEdit)
+	{
+		expenseHistory = expenseHistoryToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (expenseHistory.ExpenseHistoryId == 0)
+			{
+				ExpenseHistory newExpenseHistory = new()
+				{
+					ExpenseName = expenseHistory.ExpenseName,
+					ExpenseAmount = expenseHistory.ExpenseAmount,
+					AmountPaid = expenseHistory.AmountPaid,
+					ExpenseDate = expenseHistory.ExpenseDate,
+					DueDate = expenseHistory.DueDate
+				};
+
+				var createdExpenseHistory = await expenseHistoryService.CreateRecord(newExpenseHistory);
+
+				switch (createdExpenseHistory.ExpenseHistoryId)
+				{
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					default:
+						expenseHistoryList.Add(createdExpenseHistory);
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await expenseHistoryService.UpdatRecord(expenseHistory);
+				if (updatedRecord.ExpenseHistoryId == 0)
+				{
+					Error = "Error updating expense history, please try again";
+					expenseHistoryList = await expenseHistoryService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteConfirm()
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord();
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			await expenseHistoryService.DeleteRecord(expenseHistory);
+			expenseHistoryList.Remove(expenseHistory);
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+}

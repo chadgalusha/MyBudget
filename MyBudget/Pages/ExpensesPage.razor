@@ -108,7 +108,7 @@ else
 							Save
 						</button>&nbsp;
 						<!-- Only show delete button if not a new record -->
-						@if (expense.ExpensesId >= 0)
+						@if (expense.ExpensesId > 0)
 						{
 							<!-- Button to delete the expense -->
 							<button class="btn btn-danger"
