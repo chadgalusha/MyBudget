@@ -7,47 +7,41 @@ namespace MyBudget.Helpers
     {
         // ERROR MESSAGES
 
-        public static void LogErrorCreating<T>(T type, Exception e)
+        public static void ErrorCreating<T>(T type, Exception e)
         {
-            var stringType = GetSerializedType(type);
-            Log.Error($"Error creating new {type.GetType()}: {e.Message} \n\tType data: {stringType}");
+            Log.Error($"Error creating new {type.GetType()}: {e.Message} \n\tType data: {GetJsonSerializedType(type)}");
         }
 
-        public static void LogErrorUpdating<T>(T type, Exception e)
+        public static void ErrorUpdating<T>(T type, Exception e)
         {
-            var stringType = GetSerializedType(type);
-            Log.Error($"Error updating {type.GetType()}: {e.Message} \n\tType data: {stringType}");
+            Log.Error($"Error updating {type.GetType()}: {e.Message} \n\tType data: {GetJsonSerializedType(type)}");
         }
 
-        public static void LoggErrorDeleting<T>(T type, Exception e)
+        public static void ErrorDeleting<T>(T type, Exception e)
         {
-            var stringType = GetSerializedType(type);
-            Log.Error($"Error deleting {type.GetType()}: {e.Message} \n\tType data: {stringType}");
+            Log.Error($"Error deleting {type.GetType()}: {e.Message} \n\tType data: {GetJsonSerializedType(type)}");
         }
 
-        //
+        // CRUD messages
 
-        public static void CreatedMessage<T>(T type)
+        public static void CreatedLogMessage<T>(T type)
         {
-            var stringType = GetSerializedType(type);
-            Log.Information($"{type.GetType()} created: {stringType}");
+            Log.Information($"{type.GetType()} created: {GetJsonSerializedType(type)}");
         }
 
-        public static void UpdatedMessage<T>(T type)
+        public static void UpdatedLogMessage<T>(T type)
         {
-            var stringType = GetSerializedType(type);
-            Log.Information($"{type.GetType()} updated: {stringType}");
+            Log.Information($"{type.GetType()} updated: {GetJsonSerializedType(type)}");
         }
 
-        public static void DeletedMessage<T>(T type)
+        public static void DeletedLogMessage<T>(T type)
         {
-            var stringType = GetSerializedType(type);
-            Log.Information($"{type.GetType()} deleted: {stringType}");
+            Log.Information($"{type.GetType()} deleted: {GetJsonSerializedType(type)}");
         }
 
         // PRIVATE METHODS
 
-        private static string GetSerializedType<T>(T type)
+        private static string GetJsonSerializedType<T>(T type)
         {
             return JsonSerializer.Serialize(type);
         }

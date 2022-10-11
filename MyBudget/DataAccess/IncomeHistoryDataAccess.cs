@@ -37,25 +37,51 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.InsertAsync(newIncomeHistory).ContinueWith((i) =>
                 {
-                    Log.Information($"New income history created: [Name: {newIncomeHistory.IncomeName}] [Date: {newIncomeHistory.IncomeDate}] [Amount: {newIncomeHistory.IncomeAmount}]");
+                    MyBudgetLogger.CreatedLogMessage(newIncomeHistory);
                 });
                 return newIncomeHistory;
             }
             catch (Exception e)
             {
-                Log.Error($"Error creating new income history: {e.Message}");
-                return new IncomeHistory() { IncomeHistoryId = -1 };
+                MyBudgetLogger.ErrorCreating(newIncomeHistory, e);
+                return new IncomeHistory() { IncomeHistoryId = 0 };
             }
         }
 
         public async Task<IncomeHistory> UpdateRecordAsync(IncomeHistory incomehistory)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _asyncConnection.UpdateAsync(incomehistory).ContinueWith((i) =>
+                {
+                    MyBudgetLogger.UpdatedLogMessage(incomehistory);
+                });
+                
+                return incomehistory;
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorUpdating(incomehistory, e);
+                return new IncomeHistory() { IncomeHistoryId = 0 };
+            }
         }
 
         public async Task<IncomeHistory> DeleteRecordAsync(IncomeHistory incomehistory)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _asyncConnection.DeleteAsync(incomehistory).ContinueWith((i) =>
+                {
+                    MyBudgetLogger.DeletedLogMessage(incomehistory);
+                });
+                
+                return incomehistory;
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorDeleting(incomehistory, e);
+                return new IncomeHistory() { IncomeHistoryId = 0 };
+            }
         }
 
         #region Private Methods
