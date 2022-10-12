@@ -165,3 +165,11 @@
 2022-10-11 17:30:35.764 -05:00 [INF] MyBudget.Models.IncomeHistory updated: {"IncomeHistoryId":1,"IncomeName":"Test Income modified","IncomeAmount":534,"IncomeDate":"2022-10-11T00:00:00"}
 2022-10-11 17:33:58.257 -05:00 [INF] MyBudget.Models.IncomeHistory created: {"IncomeHistoryId":2,"IncomeName":"Test 2","IncomeAmount":14.56,"IncomeDate":"2022-10-05T00:00:00"}
 2022-10-11 17:49:37.229 -05:00 [INF] MyBudget.Models.IncomeHistory deleted: {"IncomeHistoryId":2,"IncomeName":"Test 2","IncomeAmount":14.56,"IncomeDate":"2022-10-05T00:00:00"}
+2022-10-11 19:09:38.269 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":2,"ExpenseName":"test2","ExpenseAmount":76.23,"AmountPaid":76.23,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 19:11:40.404 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"test2 v","ExpenseAmount":76.23,"AmountPaid":76.23,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 19:11:57.576 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":2,"ExpenseName":"test2 v","ExpenseAmount":76.23,"AmountPaid":76.23,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 19:32:33.246 -05:00 [INF] IncomeHistory updated: {"IncomeHistoryId":1,"IncomeName":"Awaken","IncomeAmount":1373.77,"IncomeDate":"2022-09-30T00:00:00"}
+2022-10-11 19:32:56.492 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":3,"IncomeName":"Awaken","IncomeAmount":1373.75,"IncomeDate":"2022-09-16T00:00:00"}
+2022-10-11 19:33:42.812 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":4,"IncomeName":"Capgemini","IncomeAmount":2196.19,"IncomeDate":"2022-09-30T00:00:00"}
+2022-10-11 19:34:00.734 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":5,"IncomeName":"Capgemini","IncomeAmount":2196.19,"IncomeDate":"2022-09-16T00:00:00"}
+2022-10-11 19:35:20.572 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":3,"ExpenseName":"Test Expense for September 2022","ExpenseAmount":6500.00,"AmountPaid":6500.00,"ExpenseDate":"2022-09-23T00:00:00","DueDate":"2022-09-23T00:00:00"}

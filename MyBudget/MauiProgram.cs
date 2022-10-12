@@ -42,7 +42,7 @@ public static class MauiProgram
         // dependency injection data access
         builder.Services.AddScoped<IDataAccess<Incomes>, IncomeDataAccess>();
 		builder.Services.AddScoped<IDataAccess<Expenses>, ExpenseDataAccess>();
-		builder.Services.AddScoped <IDataAccess<BankAccounts>, BankAccountDataAccess>();
+		builder.Services.AddScoped<IDataAccess<BankAccounts>, BankAccountDataAccess>();
 		builder.Services.AddScoped<IHistoryDataAccess<IncomeHistory>, IncomeHistoryDataAccess>();
 		builder.Services.AddScoped<IHistoryDataAccess<ExpenseHistory>, ExpenseHistoryDataAccess>();
         // dependency inject type service
@@ -56,6 +56,7 @@ public static class MauiProgram
 		builder.Services.AddScoped<IService<BankAccounts>, BankAccountService>();
 		builder.Services.AddScoped<IHistoryService<IncomeHistory>, IncomeHistoryService>();
 		builder.Services.AddScoped<IHistoryService<ExpenseHistory>, ExpenseHistoryService>();
+		builder.Services.AddScoped<IIncomeAndExpensesViewModelService, IncomeAndExpensesViewModelService>();
 
         return builder.Build();
 	}

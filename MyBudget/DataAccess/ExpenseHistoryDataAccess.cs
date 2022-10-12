@@ -87,11 +87,13 @@ namespace MyBudget.DataAccess
         {
             using (_connection = new SQLiteConnection(_dbPath))
             {
-                return _connection.Table<ExpenseHistory>()
+                var result = _connection.Table<ExpenseHistory>()
+                    .ToArray()
                     .Where(e => e.ExpenseDate.Year == year)
                     .Where(e => e.ExpenseDate.Month == month)
-                    .Select(e => e.AmountPaid)
-                    .ToArray();
+                    .Select(e => e.AmountPaid);
+
+                return result.ToArray();
             }
         }
 
@@ -99,10 +101,12 @@ namespace MyBudget.DataAccess
         {
             using (_connection = new SQLiteConnection(_dbPath))
             {
-                return _connection.Table<ExpenseHistory>()
+                var result = _connection.Table<ExpenseHistory>()
+                    .ToArray()
                     .Where(e => e.ExpenseDate.Year == year)
-                    .Select(e => e.AmountPaid)
-                    .ToArray();
+                    .Select(e => e.AmountPaid);
+
+                return result.ToArray();
             }
         }
 

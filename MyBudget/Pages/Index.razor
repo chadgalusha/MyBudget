@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using MyBudget.ViewModels
+@using MyBudget.Services
+@inject IIncomeAndExpensesViewModelService service
 
 <h1>Hello, world!</h1>
 
@@ -44,14 +47,41 @@ Welcome to your new app.
 			}
 		};
 
-		_config.Data.Labels = MyBudget.Data.SampleData.MyBarText;
+		//_config.Data.Labels = MyBudget.Data.SampleData.MyBarText;
+		var lastMonthIncomeExpensesVM = LastMonthIncomeExpenseVM();
+		_config.Data.Labels = LastMonthVMDataLables(lastMonthIncomeExpensesVM);
+
 		_config.Data.Datasets.Add(new BarDataset()
 		{
 			Label = "Value",
-			Data = MyBudget.Data.SampleData.MyBar.Select(a => a.Value).ToList(),
+			//Data = MyBudget.Data.SampleData.MyBar.Select(a => a.Value).ToList(),
+			Data = LastMonthVMData(lastMonthIncomeExpensesVM),
 			BackgroundColor = new List<string>() { "green", "red" },
 			BorderColor = new List<string>() { "black", "black" },
 			BorderWidth = 1
 		});
+	}
+
+	IncomeAndExpensesViewModel LastMonthIncomeExpenseVM()
+	{
+		IncomeAndExpensesViewModel lastMonthViewModel = new()
+		{
+			Income = "Last Month Income",
+			IncomeAmount = service.LastMonthIncome(),
+			Expenses = "Last Month Expenses",
+			ExpensesAmount = service.LastMonthExpenses()
+		};
+
+		return lastMonthViewModel;
+	}
+
+	List<string> LastMonthVMDataLables(IncomeAndExpensesViewModel vm)
+	{
+		return new List<string>() { vm.Income, vm.Expenses };
+	}
+
+	List<decimal> LastMonthVMData(IncomeAndExpensesViewModel vm)
+	{
+		return new List<decimal>() { vm.IncomeAmount, vm.ExpensesAmount };
 	}
 }
