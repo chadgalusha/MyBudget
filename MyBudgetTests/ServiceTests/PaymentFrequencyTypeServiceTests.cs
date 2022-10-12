@@ -7,7 +7,7 @@ namespace MyBudgetTests.ServiceTests
     public class PaymentFrequencyTypeServiceTests
     {
         [Fact]
-        public async void Test_GetList()
+        public async void GetList_Test()
         {
             var paymentFrequencyTypeService = new Mock<ITypeService<PaymentFrequencyTypes>>();
             paymentFrequencyTypeService.Setup(p => p.GetList()).ReturnsAsync(FakeList);
@@ -20,7 +20,7 @@ namespace MyBudgetTests.ServiceTests
         }
 
         [Fact]
-        public async void Test_GetById()
+        public async void GetById_Test()
         {
             int testId = 1;
             PaymentFrequencyTypes? testType = FakeList().FirstOrDefault(p => p.PaymentFrequencyTypeId == testId);
@@ -35,7 +35,7 @@ namespace MyBudgetTests.ServiceTests
         }
 
         [Fact]
-        public async void Test_CreateRecord()
+        public async void CreateRecord_Test()
         {
             var newType = FakeNewType();
 
@@ -50,7 +50,7 @@ namespace MyBudgetTests.ServiceTests
         }
 
         [Fact]
-        public async void Test_UpdateRecord() 
+        public async void UpdateRecord_Test() 
         {
             var listTypes = FakeList();
             var updatedType = FakeUpdatedType();

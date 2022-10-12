@@ -51,7 +51,7 @@ namespace MyBudget.Services
 
         public decimal ThisYearExpenses()
         {
-            return _expenseHistoryService.GetAmountForLastYear();
+            return _expenseHistoryService.GetAmountForThisYear();
         }
     }
 }

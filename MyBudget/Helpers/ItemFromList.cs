@@ -1,7 +1,4 @@
-﻿using MyBudget.Models;
-using System.Reflection;
-
-namespace MyBudget.Helpers
+﻿namespace MyBudget.Helpers
 {
 	public static class ItemFromList
 	{
