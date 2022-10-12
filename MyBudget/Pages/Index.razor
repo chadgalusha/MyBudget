@@ -47,14 +47,12 @@ Welcome to your new app.
 			}
 		};
 
-		//_config.Data.Labels = MyBudget.Data.SampleData.MyBarText;
 		var lastMonthIncomeExpensesVM = LastMonthIncomeExpenseVM();
 		_config.Data.Labels = LastMonthVMDataLables(lastMonthIncomeExpensesVM);
 
 		_config.Data.Datasets.Add(new BarDataset()
 		{
 			Label = "Value",
-			//Data = MyBudget.Data.SampleData.MyBar.Select(a => a.Value).ToList(),
 			Data = LastMonthVMData(lastMonthIncomeExpensesVM),
 			BackgroundColor = new List<string>() { "green", "red" },
 			BorderColor = new List<string>() { "black", "black" },
