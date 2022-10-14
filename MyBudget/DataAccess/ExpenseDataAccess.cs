@@ -1,6 +1,5 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 using SQLite;
 
 namespace MyBudget.DataAccess
@@ -36,13 +35,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.InsertAsync(newExpense).ContinueWith((e) =>
                 {
-                    Log.Information($"Expense created: {newExpense.ExpensesName}");
+                    MyBudgetLogger.CreatedLogMessage(newExpense);
                 });
                 return newExpense;
             }
             catch (Exception e)
             {
-                Log.Error($"Error inserting new expense: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newExpense, e);
                 return null;
             }
         }
@@ -53,13 +52,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.UpdateAsync(expense).ContinueWith((e) =>
                 {
-                    Log.Information($"Expense updated: {expense.ExpensesId}, {expense.ExpensesName}");
+                    MyBudgetLogger.UpdatedLogMessage(expense);
                 });
                 return expense;
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating expense: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(expense, e);
                 return null;
             }
         }
@@ -70,13 +69,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.DeleteAsync(expense).ContinueWith((e) =>
                 {
-                    Log.Information($"Expense deleted: {expense.ExpensesId}, {expense.ExpensesName}");
+                    MyBudgetLogger.DeletedLogMessage(expense);
                 });
                 return expense;
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting expense: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(expense, e);
                 return null;
             }
         }

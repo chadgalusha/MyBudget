@@ -1,11 +1,10 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 using SQLite;
 
 namespace MyBudget.DataAccess
 {
-	public class PaymentFrequencyTypeDataAccess : ITypeDataAccess<PaymentFrequencyTypes>
+    public class PaymentFrequencyTypeDataAccess : ITypeDataAccess<PaymentFrequencyTypes>
 	{
         private readonly string _dbPath;
         private SQLiteAsyncConnection _connection;
@@ -33,12 +32,15 @@ namespace MyBudget.DataAccess
 		{
             try
             {
-                await _connection.InsertAsync(newType);
+                await _connection.InsertAsync(newType).ContinueWith((p) =>
+                {
+                    MyBudgetLogger.CreatedLogMessage(newType);
+                });
                 return newType;
             }
             catch (Exception e)
             {
-                Log.Error($"Error inserting new record: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newType, e);
                 return null;
             }
         }
@@ -47,12 +49,15 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.UpdateAsync(type);
+                await _connection.UpdateAsync(type).ContinueWith((p) =>
+                {
+                    MyBudgetLogger.UpdatedLogMessage(type);
+                });
                 return type;
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating record: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(type, e);
                 return null;
             }
         }
@@ -61,12 +66,15 @@ namespace MyBudget.DataAccess
 		{
             try
             {
-                await _connection.DeleteAsync(type);
+                await _connection.DeleteAsync(type).ContinueWith((p) =>
+                {
+                    MyBudgetLogger.DeletedLogMessage(type);
+                });
                 return type;
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting type: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(type, e);
                 return null;
             }
         }
