@@ -13,38 +13,59 @@
 }
 else
 {
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Income History Id</th>
-				<th>Income Name</th>
-				<th>Income Amount</th>
-				<th>Income Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var incomeHistory in incomeHistoryList)
-			{
+	<div class="table-responsive border rounded shadow-sm">
+		<table class="table table-striped">
+			<thead>
 				<tr>
-					<td>@incomeHistory.IncomeHistoryId</td>
-					<td>@incomeHistory.IncomeName</td>
-					<td>$@incomeHistory.IncomeAmount.ToString("0.00")</td>
-					<td>@incomeHistory.IncomeDate.ToShortDateString()</td>
-					<td>
-						<button class="btn btn-primary"
-						@onclick="(() => EditRecord(incomeHistory))">
-						Edit
-						</button>
-					</td>
+					<th>Income History Id</th>
+					<th>Income Name</th>
+					<th>Income Amount</th>
+					<th>Income Date</th>
+					<th></th>
 				</tr>
-			}
-		</tbody>
-	</table>
-	<p>
-		<button class="btn btn-success" @onclick="AddNewRecord">
-			Add New Income History
-		</button>
-	</p>
+			</thead>
+			<tbody>
+				@foreach (var incomeHistory in incomeHistoryList)
+				{
+					<tr>
+						<td>@incomeHistory.IncomeHistoryId</td>
+						<td>@incomeHistory.IncomeName</td>
+						<td>$@incomeHistory.IncomeAmount.ToString("0.00")</td>
+						<td>@incomeHistory.IncomeDate.ToShortDateString()</td>
+						<td>
+							<button class="btn btn-primary"
+							@onclick="(() => EditRecord(incomeHistory))">
+							Edit
+							</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1">Previous</a>
+				</li>
+				<li class="page-item"><a class="page-link" href="#">1</a></li>
+				<li class="page-item"><a class="page-link" href="#">2</a></li>
+				<li class="page-item"><a class="page-link" href="#">3</a></li>
+				<li class="page-item">
+					<a class="page-link" href="#">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div>
+		<p>
+			<button class="btn btn-success" @onclick="AddNewRecord">
+				Add New Income History
+			</button>
+		</p>
+	</div>
+	
 
 	@if (ShowPopup)
 	{

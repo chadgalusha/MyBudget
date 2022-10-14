@@ -100,3 +100,9 @@ a, .btn-link {
         width: 500px;
         margin: 20px 20px 20px 20px;
     }
+
+#table-styles {
+    border: 1px solid black;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
