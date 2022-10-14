@@ -124,3 +124,60 @@
 2022-10-05 09:02:10.293 -05:00 [INF] Bank Account table created: Migrated
 2022-10-05 13:36:39.709 -05:00 [INF] Incomes table created: Migrated
 2022-10-05 13:36:44.677 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 16:24:48.887 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 16:25:12.685 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 16:26:35.324 -05:00 [INF] Income updated: 1, Capgemini
+2022-10-05 16:26:59.085 -05:00 [INF] Income updated: 3, Awaken
+2022-10-05 16:27:07.612 -05:00 [INF] Income deleted: 1, Capgemini
+2022-10-05 16:27:43.205 -05:00 [INF] Income created: Capgemini
+2022-10-05 16:29:31.278 -05:00 [INF] Income created: Building 429
+2022-10-05 16:56:27.350 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 16:57:25.431 -05:00 [INF] Expense updated: 1, Mortgage
+2022-10-05 16:58:01.788 -05:00 [INF] Expense updated: 3, Van Payment
+2022-10-05 16:58:10.630 -05:00 [INF] Expense updated: 1, Mortgage
+2022-10-05 16:58:12.683 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 16:58:48.302 -05:00 [INF] Bank account updated: 1, Checking - 2192
+2022-10-05 16:59:14.162 -05:00 [INF] Bank account created: Savings - 6207
+2022-10-05 16:59:47.391 -05:00 [INF] Bank account created: Savings - 8920
+2022-10-05 16:59:58.432 -05:00 [INF] Bank account updated: 1, Checking - 2192
+2022-10-05 17:10:07.140 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 17:10:15.914 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:10:20.369 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 17:10:47.395 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:11:01.898 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 17:12:48.498 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 17:12:53.630 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:12:55.118 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 17:13:43.275 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:13:48.434 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:13:59.005 -05:00 [INF] Income updated: 6, Building 429
+2022-10-05 17:14:01.633 -05:00 [INF] Bank Account table created: Migrated
+2022-10-05 17:19:37.061 -05:00 [INF] Incomes table created: Migrated
+2022-10-05 17:21:47.394 -05:00 [INF] Expenses table created: Migrated
+2022-10-05 17:23:09.680 -05:00 [INF] Incomes table created: Migrated
+2022-10-06 08:48:21.028 -05:00 [INF] Incomes table created: Migrated
+2022-10-06 08:55:43.947 -05:00 [INF] Expenses table created: Migrated
+2022-10-06 16:55:38.083 -05:00 [INF] Incomes table created: Migrated
+2022-10-06 16:55:39.897 -05:00 [INF] Expenses table created: Migrated
+2022-10-06 16:55:46.016 -05:00 [INF] Bank Account table created: Migrated
+2022-10-11 17:27:27.400 -05:00 [INF] MyBudget.Models.ExpenseHistory created: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense","ExpenseAmount":100,"AmountPaid":100,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 17:27:57.379 -05:00 [INF] MyBudget.Models.IncomeHistory created: {"IncomeHistoryId":1,"IncomeName":"Test Income","IncomeAmount":534,"IncomeDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 17:30:35.764 -05:00 [INF] MyBudget.Models.IncomeHistory updated: {"IncomeHistoryId":1,"IncomeName":"Test Income modified","IncomeAmount":534,"IncomeDate":"2022-10-11T00:00:00"}
+2022-10-11 17:33:58.257 -05:00 [INF] MyBudget.Models.IncomeHistory created: {"IncomeHistoryId":2,"IncomeName":"Test 2","IncomeAmount":14.56,"IncomeDate":"2022-10-05T00:00:00"}
+2022-10-11 17:49:37.229 -05:00 [INF] MyBudget.Models.IncomeHistory deleted: {"IncomeHistoryId":2,"IncomeName":"Test 2","IncomeAmount":14.56,"IncomeDate":"2022-10-05T00:00:00"}
+2022-10-11 19:09:38.269 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":2,"ExpenseName":"test2","ExpenseAmount":76.23,"AmountPaid":76.23,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 19:11:40.404 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"test2 v","ExpenseAmount":76.23,"AmountPaid":76.23,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 19:11:57.576 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":2,"ExpenseName":"test2 v","ExpenseAmount":76.23,"AmountPaid":76.23,"ExpenseDate":"2022-10-11T00:00:00-05:00","DueDate":"2022-10-11T00:00:00-05:00"}
+2022-10-11 19:32:33.246 -05:00 [INF] IncomeHistory updated: {"IncomeHistoryId":1,"IncomeName":"Awaken","IncomeAmount":1373.77,"IncomeDate":"2022-09-30T00:00:00"}
+2022-10-11 19:32:56.492 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":3,"IncomeName":"Awaken","IncomeAmount":1373.75,"IncomeDate":"2022-09-16T00:00:00"}
+2022-10-11 19:33:42.812 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":4,"IncomeName":"Capgemini","IncomeAmount":2196.19,"IncomeDate":"2022-09-30T00:00:00"}
+2022-10-11 19:34:00.734 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":5,"IncomeName":"Capgemini","IncomeAmount":2196.19,"IncomeDate":"2022-09-16T00:00:00"}
+2022-10-11 19:35:20.572 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":3,"ExpenseName":"Test Expense for September 2022","ExpenseAmount":6500.00,"AmountPaid":6500.00,"ExpenseDate":"2022-09-23T00:00:00","DueDate":"2022-09-23T00:00:00"}
+2022-10-12 14:30:31.278 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":6,"IncomeName":"2021 Estimated Year Income","IncomeAmount":77537.52,"IncomeDate":"2021-12-30T00:00:00"}
+2022-10-12 14:31:41.824 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":4,"ExpenseName":"2021 Estimated Yearly expense","ExpenseAmount":76170.93,"AmountPaid":76170.93,"ExpenseDate":"2021-12-30T00:00:00","DueDate":"2021-12-30T00:00:00"}
+2022-10-14 09:47:18.668 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":7,"IncomeName":"Capgemini","IncomeAmount":2196.18,"IncomeDate":"2022-10-14T00:00:00-05:00"}
+2022-10-14 09:47:36.471 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":8,"IncomeName":"Awaken","IncomeAmount":1373.77,"IncomeDate":"2022-10-14T00:00:00-05:00"}
+2022-10-14 09:49:06.488 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":5,"ExpenseName":"Amazon","ExpenseAmount":33.93,"AmountPaid":33.93,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00"}
+2022-10-14 09:49:28.218 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":6,"ExpenseName":"Cafe 931","ExpenseAmount":20.80,"AmountPaid":20.80,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00"}
+2022-10-14 09:49:38.232 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense","ExpenseAmount":100,"AmountPaid":100,"ExpenseDate":"2022-10-11T00:00:00","DueDate":"2022-10-11T00:00:00"}
+2022-10-14 09:51:10.320 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.50,"AmountPaid":19.50,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00"}

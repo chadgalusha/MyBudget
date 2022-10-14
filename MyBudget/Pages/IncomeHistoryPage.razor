@@ -1,0 +1,224 @@
+﻿@page "/incomehistorypage"
+@using MyBudget.Models
+@using MyBudget.Services
+@inject IHistoryService<IncomeHistory> incomeHistoryService
+@inject IJSRuntime jsRuntime
+
+<h3 style="text-align:center">Income History</h3>
+<p style="color:red">@Error</p>
+
+@if (incomeHistoryList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<div class="table-responsive border rounded shadow-sm">
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Income History Id</th>
+					<th>Income Name</th>
+					<th>Income Amount</th>
+					<th>Income Date</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var incomeHistory in incomeHistoryList)
+				{
+					<tr>
+						<td>@incomeHistory.IncomeHistoryId</td>
+						<td>@incomeHistory.IncomeName</td>
+						<td>$@incomeHistory.IncomeAmount.ToString("0.00")</td>
+						<td>@incomeHistory.IncomeDate.ToShortDateString()</td>
+						<td>
+							<button class="btn btn-primary"
+							@onclick="(() => EditRecord(incomeHistory))">
+							Edit
+							</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+	<div>
+		<nav aria-label="Page navigation example">
+			<ul class="pagination justify-content-center">
+				<li class="page-item disabled">
+					<a class="page-link" href="#" tabindex="-1">Previous</a>
+				</li>
+				<li class="page-item"><a class="page-link" href="#">1</a></li>
+				<li class="page-item"><a class="page-link" href="#">2</a></li>
+				<li class="page-item"><a class="page-link" href="#">3</a></li>
+				<li class="page-item">
+					<a class="page-link" href="#">Next</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+	<div>
+		<p>
+			<button class="btn btn-success" @onclick="AddNewRecord">
+				Add New Income History
+			</button>
+		</p>
+	</div>
+	
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Income History</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for current income history -->
+					<div class="modal-body">
+						<label for="incomehistoryid">Income History Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="incomeHistory.IncomeHistoryId" id="incomehistoryid" />
+						<label for="incomehistoryname">Income History Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Income History Name"
+					   @bind="incomeHistory.IncomeName" id="incomehistoryname" />
+						<label for="incomeamount">Income Amount: </label>
+						<input class="form-control" type="number"
+					   placeholder="Income Amount"
+					   @bind="incomeHistory.IncomeAmount" id="incomeamount" min="0" />
+						<label for="incomedate">Income Date:</label>
+						<input class="form-control" type="date"
+					   placeholder="Income Date"
+					   @bind="incomeHistory.IncomeDate" id="incomedate" />
+
+						<br />
+						<!-- Button to save the income history -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (incomeHistory.IncomeHistoryId > 0)
+						{
+							<!-- Button to delete the income history -->
+							<button class="btn btn-danger"
+						@onclick="DeleteConfirm">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+
+	string Error = "";
+	bool ShowPopup = false;
+	List<IncomeHistory> incomeHistoryList = new();
+	IncomeHistory incomeHistory = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		incomeHistoryList = await incomeHistoryService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		incomeHistory = new()
+		{
+			IncomeHistoryId = 0,
+			IncomeDate = DateTime.Today.Date
+		};
+		ShowPopup = true;
+	}
+
+	void EditRecord(IncomeHistory incomeHistoryToEdit)
+	{
+		incomeHistory = incomeHistoryToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (incomeHistory.IncomeHistoryId == 0)
+			{
+				IncomeHistory newIncomeHistory = new()
+				{
+					IncomeName = incomeHistory.IncomeName,
+					IncomeAmount = incomeHistory.IncomeAmount,
+					IncomeDate = incomeHistory.IncomeDate
+				};
+
+				var createdIncomeHistory = await incomeHistoryService.CreateRecord(newIncomeHistory);
+
+				switch (createdIncomeHistory.IncomeHistoryId)
+				{
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					default:
+						incomeHistoryList.Add(createdIncomeHistory);
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await incomeHistoryService.UpdatRecord(incomeHistory);
+				if (updatedRecord.IncomeHistoryId == 0)
+				{
+					Error = "Error updating income history, please try again";
+					incomeHistoryList = await incomeHistoryService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteConfirm()
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord();
+		}
+	}
+
+	async Task DeleteRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			await incomeHistoryService.DeleteRecord(incomeHistory);
+			incomeHistoryList.Remove(incomeHistory);
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+}

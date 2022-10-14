@@ -15,7 +15,7 @@
 }
 else
 {
-	<table class="table">
+	<table class="table table-striped table-bordered shadow-sm">
 		<thead>
 			<tr>
 				<th>Expense Id</th>
@@ -34,7 +34,7 @@ else
 					<td>@expense.ExpensesName</td>
 					<td>@GetExpenseTypeName(expense.ExpenseTypeId, expenseTypesList)</td>
 					<td>@GetPaymentFrequencyTypeName(expense.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
-					<td>$@expense.ExpenseAmount</td>
+					<td>$@expense.ExpenseAmount.ToString("0.00")</td>
 					<td>@expense.InitialExpenseDate.ToShortDateString()</td>
 					<td>
 						<button class="btn btn-primary"
@@ -108,7 +108,7 @@ else
 							Save
 						</button>&nbsp;
 						<!-- Only show delete button if not a new record -->
-						@if (expense.ExpensesId >= 0)
+						@if (expense.ExpensesId > 0)
 						{
 							<!-- Button to delete the expense -->
 							<button class="btn btn-danger"

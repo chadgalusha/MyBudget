@@ -1,5 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using MyBudget.DataAccess;
+﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 using MyBudget.Services;
 using Serilog;
@@ -10,7 +10,9 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-		Log.Logger = new LoggerConfiguration()
+		DatabaseHelper.CheckForDbTables();
+
+        Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
 			.WriteTo.File(@"C:\Users\ChadGalusha\source\repos\MyBudget\MyBudget\Data\logs.txt",
 				fileSizeLimitBytes: 5_000_000,
@@ -26,7 +28,7 @@ public static class MauiProgram
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("materialdesignicons-webfont.ttf", "IconFontTypes");
             });
-
+		
 		builder.Services.AddMauiBlazorWebView();
 		#if DEBUG
 		builder.Services.AddBlazorWebViewDeveloperTools();
@@ -40,7 +42,9 @@ public static class MauiProgram
         // dependency injection data access
         builder.Services.AddScoped<IDataAccess<Incomes>, IncomeDataAccess>();
 		builder.Services.AddScoped<IDataAccess<Expenses>, ExpenseDataAccess>();
-		builder.Services.AddScoped <IDataAccess<BankAccounts>, BankAccountDataAccess>();
+		builder.Services.AddScoped<IDataAccess<BankAccounts>, BankAccountDataAccess>();
+		builder.Services.AddScoped<IHistoryDataAccess<IncomeHistory>, IncomeHistoryDataAccess>();
+		builder.Services.AddScoped<IHistoryDataAccess<ExpenseHistory>, ExpenseHistoryDataAccess>();
         // dependency inject type service
         builder.Services.AddScoped<ITypeService<IncomeTypes>, IncomeTypeService>();
 		builder.Services.AddScoped<ITypeService<ExpenseTypes>, ExpenseTypeService>();
@@ -50,6 +54,9 @@ public static class MauiProgram
         builder.Services.AddScoped<IService<Incomes>, IncomeService>();
 		builder.Services.AddScoped<IService<Expenses>, ExpenseService>();
 		builder.Services.AddScoped<IService<BankAccounts>, BankAccountService>();
+		builder.Services.AddScoped<IHistoryService<IncomeHistory>, IncomeHistoryService>();
+		builder.Services.AddScoped<IHistoryService<ExpenseHistory>, ExpenseHistoryService>();
+		builder.Services.AddScoped<IIncomeAndExpensesViewModelService, IncomeAndExpensesViewModelService>();
 
         return builder.Build();
 	}

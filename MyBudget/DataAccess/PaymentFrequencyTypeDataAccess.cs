@@ -12,7 +12,7 @@ namespace MyBudget.DataAccess
 
         public PaymentFrequencyTypeDataAccess()
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _dbPath = DatabaseHelper.GetDbPath();
         }
 
         public async Task<PaymentFrequencyTypes> GetRecordByIdAsync(int id)
@@ -81,7 +81,7 @@ namespace MyBudget.DataAccess
             }
 
             _connection = new SQLiteAsyncConnection(_dbPath);
-            await _connection.CreateTableAsync<PaymentFrequencyTypes>();
+            //await _connection.CreateTableAsync<PaymentFrequencyTypes>();
 
             if (await DoesTableHaveValuesAsync() == false)
             {

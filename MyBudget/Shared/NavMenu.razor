@@ -14,17 +14,35 @@
 				<span class="oi oi-home" aria-hidden="true"></span> Home
 			</NavLink>
 		</div>
-		<!-- nav link for Incomes -->
+		<!-- nav links for Incomes -->
 		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="incomespage">
+			<NavLink class="nav-link" @onclick="() => expandIncomesNav = !expandIncomesNav">
 				<span class="oi oi-dollar" aria-hidden="true" style="color:green"></span> Incomes
 			</NavLink>
+			@if (expandIncomesNav)
+			{
+				<NavLink class="nav-link" href="incomehistorypage">
+					<span class="oi spinner-border-sm" aria-hidden="true"></span> Income History
+				</NavLink>
+				<NavLink class="nav-link" href="incomespage">
+					<span class="oi spinner-border-sm" aria-hidden="true"></span> Current Incomes
+				</NavLink>
+			}
 		</div>
-		<!-- nav link for Expenses -->
+		<!-- nav links for Expenses -->
 		<div class="nav-item px-3">
-			<NavLink class="nav-link" href="expensespage">
+			<NavLink class="nav-link" @onclick="() => expandExpensesNav = !expandExpensesNav">
 				<span class="oi oi-dollar" style="color:red" aria-hidden="true"></span> Expenses
 			</NavLink>
+			@if (expandExpensesNav)
+			{
+				<NavLink class="nav-link" href="expensehistorypage">
+					<span class="oi spinner-border-sm" aria-hidden="true"></span> Expense History
+				</NavLink>
+				<NavLink class="nav-link" href="expensespage">
+					<span class="oi spinner-border-sm" aria-hidden="true"></span> Current Expenses
+				</NavLink>
+			}
 		</div>
 		<!-- nav link for Bank Accounts -->
 		<div class="nav-item px-3">
@@ -66,5 +84,7 @@
 		collapseNavMenu = !collapseNavMenu;
 	}
 
+	private bool expandIncomesNav;
+	private bool expandExpensesNav;
 	private bool expandSubNav;
 }
