@@ -175,3 +175,9 @@
 2022-10-11 19:35:20.572 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":3,"ExpenseName":"Test Expense for September 2022","ExpenseAmount":6500.00,"AmountPaid":6500.00,"ExpenseDate":"2022-09-23T00:00:00","DueDate":"2022-09-23T00:00:00"}
 2022-10-12 14:30:31.278 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":6,"IncomeName":"2021 Estimated Year Income","IncomeAmount":77537.52,"IncomeDate":"2021-12-30T00:00:00"}
 2022-10-12 14:31:41.824 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":4,"ExpenseName":"2021 Estimated Yearly expense","ExpenseAmount":76170.93,"AmountPaid":76170.93,"ExpenseDate":"2021-12-30T00:00:00","DueDate":"2021-12-30T00:00:00"}
+2022-10-14 09:47:18.668 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":7,"IncomeName":"Capgemini","IncomeAmount":2196.18,"IncomeDate":"2022-10-14T00:00:00-05:00"}
+2022-10-14 09:47:36.471 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":8,"IncomeName":"Awaken","IncomeAmount":1373.77,"IncomeDate":"2022-10-14T00:00:00-05:00"}
+2022-10-14 09:49:06.488 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":5,"ExpenseName":"Amazon","ExpenseAmount":33.93,"AmountPaid":33.93,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00"}
+2022-10-14 09:49:28.218 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":6,"ExpenseName":"Cafe 931","ExpenseAmount":20.80,"AmountPaid":20.80,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00"}
+2022-10-14 09:49:38.232 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense","ExpenseAmount":100,"AmountPaid":100,"ExpenseDate":"2022-10-11T00:00:00","DueDate":"2022-10-11T00:00:00"}
+2022-10-14 09:51:10.320 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.50,"AmountPaid":19.50,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00"}
