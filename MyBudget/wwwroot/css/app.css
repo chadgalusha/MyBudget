@@ -103,6 +103,10 @@ a, .btn-link {
 
 #table-styles {
     border: 1px solid black;
-    border-radius: 12px;
+    border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+#add-button {
+    margin-top: 6px;
 }
