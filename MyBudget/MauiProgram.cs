@@ -1,4 +1,5 @@
-﻿using MyBudget.DataAccess;
+﻿using MudBlazor.Services;
+using MyBudget.DataAccess;
 using MyBudget.Helpers;
 using MyBudget.Models;
 using MyBudget.Services;
@@ -59,6 +60,8 @@ public static class MauiProgram
 		builder.Services.AddTransient<IHistoryService<ExpenseHistory>, ExpenseHistoryService>();
 		builder.Services.AddTransient<IIncomeAndExpensesViewModelService, IncomeAndExpensesViewModelService>();
 		builder.Services.AddTransient<IService<ExpenseCategories>, ExpenseCategoriesService>();
+
+		builder.Services.AddMudServices();
 
         return builder.Build();
 	}

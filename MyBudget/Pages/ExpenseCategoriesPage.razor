@@ -13,89 +13,32 @@
 }
 else
 {
-	<div class="table-responsive border rounded shadow-sm">
-		<table class="table table-striped" id="paginated-table">
-			<thead>
-				<tr>
-					<th>Expense Category Id</th>
-					<th>Expense Category Name</th>
-					<th>Description</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var expCat in expenseCategoriesList)
-				{
-					<tr>
-						<td>@expCat.ExpenseCategoryId</td>
-						<td>@expCat.ExpenseCategoryName</td>
-						<td>@expCat.ExpenseCategoryDescription</td>
-						<td>
-							<button class="btn btn-primary"
-							@onclick="(() => EditRecord(expCat))">
-							Edit
-							</button>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-	</div>
-	<div style="margin-top: 5px;">
-		<p>
-			<button class="btn btn-success" @onclick="AddNewRecord">
-				Add new Expense Category
-			</button>
-		</p>
-	</div>
+	<MudTable Items="@ExpenseCategoryItems" Striped="true" id="table-styles" Filter="new Func<ExpenseCategories,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Expense Categories</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh>Expense Category Id</MudTh>
+			<MudTh>Expense Category Name</MudTh>
+			<MudTh>Expense Category Desc</MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Expense Category Id">@context.ExpenseCategoryId</MudTd>
+			<MudTd DataLabel="Expense Category Name">@context.ExpenseCategoryName</MudTd>
+			<MudTd DataLabel="Expense Category Desc">@context.ExpenseCategoryDescription</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
 
-	@if (ShowPopup)
-	{
-		<div class="modal" tabindex="1" style="display:block" role="dialog">
-			<div class="modal-dialog">
-				<div class="modal-content">
-					<div class="modal-header">
-						<h3 class="modal-title">Edit Expense Category</h3>
-						<!-- Button to close the popup -->
-						<button type="button" class="close"
-						@onclick="ClosePopup">
-							<span aria-hidden="true">X</span>
-						</button>
-					</div>
-					<!-- Edit form for current expense category -->
-					<div class="modal-body">
-						<label for="expensecategoryid">Expense Category Id: </label>
-						<input class="form-control" type="number" disabled="disabled"
-					   @bind="expenseCategory.ExpenseCategoryId" id="expensecategoryid" />
-						<label for="expensecategoryname">Expense Category Name: </label>
-						<input class="form-control" type="text"
-					   placeholder="Expense Category Name"
-					   @bind="expenseCategory.ExpenseCategoryName" id="expensecategoryname" />
-						<label for="expensecategorydesc">Expense Category Description: </label>
-						<input class="form-control" type="text"
-					   placeholder="Expense Category Name"
-					   @bind="expenseCategory.ExpenseCategoryDescription" id="expensecategorydesc" />
-
-						<br />
-						<!-- Button to save the expense category -->
-						<button class="btn btn-success"
-						@onclick="SaveRecord">
-							Save
-						</button>&nbsp;
-						<!-- Only show delete button if not a new record -->
-						@if (expenseCategory.ExpenseCategoryId > 0)
-						{
-							<!-- Button to delete the expense category -->
-							<button class="btn btn-danger"
-						@onclick="DeleteConfirm">
-								Delete
-							</button>
-						}
-					</div>
-				</div>
-			</div>
-		</div>
-	}
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
+			Add new expense category
+		</MudButton>
+	</div>
 }
 
 @code {
@@ -104,10 +47,14 @@ else
 	bool ShowPopup = false;
 	List<ExpenseCategories> expenseCategoriesList = new();
 	ExpenseCategories expenseCategory = new();
+	private string searchString1 = "";
+	private ExpenseCategories selectedItem1 = null;
+	private HashSet<ExpenseCategories> selectedItems = new();
+	private IEnumerable<ExpenseCategories> ExpenseCategoryItems = new List<ExpenseCategories>();
 
 	protected override async Task OnInitializedAsync()
 	{
-		expenseCategoriesList = await expenseCategoriesService.GetList();
+		ExpenseCategoryItems = await expenseCategoriesService.GetList();
 	}
 
 	void ClosePopup()
@@ -142,4 +89,18 @@ else
 	{
 	}
 
+	// Search Functions
+
+	private bool FilterFunc1(ExpenseCategories exc) => FilterFunc(exc, searchString1);
+
+	private bool FilterFunc(ExpenseCategories exc, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (exc.ExpenseCategoryName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		if ($"{exc.ExpenseCategoryDescription}".Contains(searchString))
+			return true;
+		return false;
+	}
 }
