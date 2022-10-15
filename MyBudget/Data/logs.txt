@@ -181,3 +181,18 @@
 2022-10-14 09:49:28.218 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":6,"ExpenseName":"Cafe 931","ExpenseAmount":20.80,"AmountPaid":20.80,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00"}
 2022-10-14 09:49:38.232 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense","ExpenseAmount":100,"AmountPaid":100,"ExpenseDate":"2022-10-11T00:00:00","DueDate":"2022-10-11T00:00:00"}
 2022-10-14 09:51:10.320 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.50,"AmountPaid":19.50,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00"}
+2022-10-14 15:01:45.813 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":1,"ExpenseCategoryName":"Home \u0026 Utility","ExpenseCategoryDescription":"Mortgage, rent, electricity, water, gas"}
+2022-10-14 15:01:45.835 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":2,"ExpenseCategoryName":"Giving","ExpenseCategoryDescription":"Charitable giving"}
+2022-10-14 15:01:45.843 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":3,"ExpenseCategoryName":"Grocery","ExpenseCategoryDescription":"Food shopping"}
+2022-10-14 15:01:45.851 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":4,"ExpenseCategoryName":"Transportation","ExpenseCategoryDescription":"Gas and maintenance for vehicles"}
+2022-10-14 15:01:45.860 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":5,"ExpenseCategoryName":"Health","ExpenseCategoryDescription":"Medical, Dental, etc."}
+2022-10-14 15:01:45.868 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":6,"ExpenseCategoryName":"Finance","ExpenseCategoryDescription":"Payments for credit cards, service charges, loan payments"}
+2022-10-14 15:01:45.878 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":7,"ExpenseCategoryName":"Insurance","ExpenseCategoryDescription":"Life insuruance, vehicle insurance, etc."}
+2022-10-14 15:01:45.886 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":8,"ExpenseCategoryName":"Dine Out","ExpenseCategoryDescription":"Restaurants, fast food, coffee"}
+2022-10-14 15:01:45.895 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":9,"ExpenseCategoryName":"Shopping \u0026 Entertainment","ExpenseCategoryDescription":"Entertainment spending, gifts, hobbies, frivolous spending"}
+2022-10-14 15:01:45.904 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":10,"ExpenseCategoryName":"Education","ExpenseCategoryDescription":"School material and services"}
+2022-10-14 15:01:45.913 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":11,"ExpenseCategoryName":"Travel","ExpenseCategoryDescription":"Airline luggage fees, hotels, car rentals"}
+2022-10-14 15:01:45.922 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":12,"ExpenseCategoryName":"Business Expense","ExpenseCategoryDescription":"Office supplies, print, business expenses"}
+2022-10-14 15:01:45.933 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":13,"ExpenseCategoryName":"Misc Cach \u0026 Checks","ExpenseCategoryDescription":"ATM, money checks, etc."}
+2022-10-14 15:01:45.943 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":14,"ExpenseCategoryName":"Pet Care","ExpenseCategoryDescription":"Health and other spending for pets besides food"}
+2022-10-14 15:01:45.952 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":15,"ExpenseCategoryName":"No Category","ExpenseCategoryDescription":"Spending that defies categorization"}

@@ -25,6 +25,7 @@ namespace MyBudget.DataAccess
 
         public async Task<List<ExpenseCategories>> GetListAsync()
         {
+            await InitializeAsync();
             return await _asyncConnection.Table<ExpenseCategories>().ToListAsync();
         }
 

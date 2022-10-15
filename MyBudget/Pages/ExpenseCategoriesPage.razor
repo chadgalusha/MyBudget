@@ -1,0 +1,145 @@
+﻿@page "/expensecategoriespage"
+@using MyBudget.Services
+@using MyBudget.Models
+@inject IService<ExpenseCategories> expenseCategoriesService
+@inject IJSRuntime jsRuntime
+
+<h3 style="text-align:center">Expense Categories</h3>
+<p style="color:red">@Error</p>
+
+@if (expenseCategoriesList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<div class="table-responsive border rounded shadow-sm">
+		<table class="table table-striped" id="paginated-table">
+			<thead>
+				<tr>
+					<th>Expense Category Id</th>
+					<th>Expense Category Name</th>
+					<th>Description</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var expCat in expenseCategoriesList)
+				{
+					<tr>
+						<td>@expCat.ExpenseCategoryId</td>
+						<td>@expCat.ExpenseCategoryName</td>
+						<td>@expCat.ExpenseCategoryDescription</td>
+						<td>
+							<button class="btn btn-primary"
+							@onclick="(() => EditRecord(expCat))">
+							Edit
+							</button>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+	<div style="margin-top: 5px;">
+		<p>
+			<button class="btn btn-success" @onclick="AddNewRecord">
+				Add new Expense Category
+			</button>
+		</p>
+	</div>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense Category</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for current expense category -->
+					<div class="modal-body">
+						<label for="expensecategoryid">Expense Category Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="expenseCategory.ExpenseCategoryId" id="expensecategoryid" />
+						<label for="expensecategoryname">Expense Category Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Expense Category Name"
+					   @bind="expenseCategory.ExpenseCategoryName" id="expensecategoryname" />
+						<label for="expensecategorydesc">Expense Category Description: </label>
+						<input class="form-control" type="text"
+					   placeholder="Expense Category Name"
+					   @bind="expenseCategory.ExpenseCategoryDescription" id="expensecategorydesc" />
+
+						<br />
+						<!-- Button to save the expense category -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (expenseCategory.ExpenseCategoryId > 0)
+						{
+							<!-- Button to delete the expense category -->
+							<button class="btn btn-danger"
+						@onclick="DeleteConfirm">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+
+	string Error = "";
+	bool ShowPopup = false;
+	List<ExpenseCategories> expenseCategoriesList = new();
+	ExpenseCategories expenseCategory = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		expenseCategoriesList = await expenseCategoriesService.GetList();
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		expenseCategory = new();
+		expenseCategory.ExpenseCategoryId = 0;
+		ShowPopup = true;
+	}
+
+	void EditRecord(ExpenseCategories editExpenseCategory)
+	{
+		expenseCategory = editExpenseCategory;
+		ShowPopup = true;
+	}
+
+	void SaveRecord()
+	{
+	}
+
+	async Task DeleteConfirm()
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed) { await DeleteRecord(); }
+	}
+
+	async Task DeleteRecord()
+	{
+	}
+
+}
