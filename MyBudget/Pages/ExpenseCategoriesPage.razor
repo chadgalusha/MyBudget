@@ -23,11 +23,18 @@ else
 			<MudTh>Expense Category Id</MudTh>
 			<MudTh>Expense Category Name</MudTh>
 			<MudTh>Expense Category Desc</MudTh>
+			<MudTh></MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Expense Category Id">@context.ExpenseCategoryId</MudTd>
 			<MudTd DataLabel="Expense Category Name">@context.ExpenseCategoryName</MudTd>
 			<MudTd DataLabel="Expense Category Desc">@context.ExpenseCategoryDescription</MudTd>
+			<MudTd>
+				<MudButton Variant="Variant.Filled" Color="Color.Info"
+				@onclick="(() => EditRecord(context))">
+					Edit
+				</MudButton>
+			</MudTd>
 		</RowTemplate>
 		<PagerContent>
 			<MudTablePager />
@@ -39,6 +46,54 @@ else
 			Add new expense category
 		</MudButton>
 	</div>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Expense Category</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for current expense category -->
+					<div class="modal-body">
+						<label for="expensecategoryid">Expense Category Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="expenseCategory.ExpenseCategoryId" id="expensecategoryid" />
+						<label for="expensecategoryname">Expense Category Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Expense Category Name"
+					   @bind="expenseCategory.ExpenseCategoryName" id="expensecategoryname" />
+						<label for="expensecategorydesc">Expense Category Description: </label>
+						<input class="form-control" type="text"
+					   placeholder="Expense Category Name"
+					   @bind="expenseCategory.ExpenseCategoryDescription" id="expensecategorydesc" />
+
+						<br />
+						<!-- Button to save the expense category -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (expenseCategory.ExpenseCategoryId > 0)
+						{
+							<!-- Button to delete the expense category -->
+							<button class="btn btn-danger"
+						@onclick="DeleteConfirm">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
 }
 
 @code {
@@ -77,6 +132,8 @@ else
 
 	void SaveRecord()
 	{
+		ShowPopup = false;
+		Error = "";
 	}
 
 	async Task DeleteConfirm()
@@ -87,6 +144,8 @@ else
 
 	async Task DeleteRecord()
 	{
+		ShowPopup = false;
+		Error = "";
 	}
 
 	// Search Functions
