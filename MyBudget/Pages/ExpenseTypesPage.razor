@@ -2,6 +2,7 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject ITypeService<ExpenseTypes> expenseTypeService
+@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expense Types</h3>
 <p style="color:red">@Error</p>
@@ -12,34 +13,35 @@
 }
 else
 {
-	<table class="table table-striped table-bordered shadow-sm">
-		<thead>
-			<tr>
-				<th>Expense Type Id</th>
-				<th>Expense Type</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var type in expenseTypeList)
-			{
-				<tr>
-					<td>@type.ExpenseTypeId</td>
-					<td>@type.ExpenseType</td>
-					<td>
-						<button class="btn btn-primary"
-						@onclick="(() => EditRecord(type))">
-							Edit
-						</button>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-	<p>
-		<button class="btn btn-success" @onclick="AddNewRecord">
-			Add New Type
-		</button>
-	</p>
+	<MudTable Items="@ExpenseTypeItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<ExpenseTypes, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Expense Type</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh>Expense Type Id</MudTh>
+			<MudTh>Expense Type</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Expense Type Id">@context.ExpenseTypeId</MudTd>
+			<MudTd DataLabel="Expense Type">@context.ExpenseType</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
+			Add New Expense Type
+		</MudButton>
+	</div>
 
 	@if (ShowPopup)
 	{
@@ -72,7 +74,7 @@ else
 						{
 							<!-- Button to delete the expense type -->
 							<button class="btn btn-danger"
-						@onclick="DeleteRecord">
+						@onclick="() => DeleteRecord(expenseType)">
 								Delete
 							</button>
 						}
@@ -89,9 +91,15 @@ else
 	ExpenseTypes expenseType = new();
 	bool ShowPopup = false;
 
+	private string searchString1 = "";
+	private ExpenseTypes selectedItem1 = null;
+	private HashSet<ExpenseTypes> selectedItems = new();
+	private IEnumerable<ExpenseTypes> ExpenseTypeItems = new List<ExpenseTypes>();
+
 	protected override async Task OnInitializedAsync()
 	{
 		expenseTypeList = await expenseTypeService.GetList();
+		ExpenseTypeItems = expenseTypeList;
 	}
 
 	void ClosePopup()
@@ -137,7 +145,8 @@ else
 						Error = "Duplicate expense type name, please try again";
 						break;
 					default:
-						expenseTypeList.Add(createdExpenseType);
+						expenseTypeList = await expenseTypeService.GetList();
+						ExpenseTypeItems = expenseTypeList;
 						break;
 				}
 			}
@@ -157,14 +166,23 @@ else
 		}
 	}
 
-	async Task DeleteRecord()
+	async Task DeleteConfirm(ExpenseTypes type)
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord(type);
+		}
+	}
+
+	async Task DeleteRecord(ExpenseTypes type)
 	{
 		ShowPopup = false;
 		Error = "";
 
 		try
 		{
-			var deleteExpenseTypeResult = await expenseTypeService.DeleteRecord(expenseType);
+			var deleteExpenseTypeResult = await expenseTypeService.DeleteRecord(type);
 
 			if (deleteExpenseTypeResult.ExpenseTypeId == -1)
 			{
@@ -173,12 +191,27 @@ else
 
 			if (deleteExpenseTypeResult.ExpenseTypeId != -1)
 			{
-				expenseTypeList.Remove(expenseType);
+				expenseTypeList.Remove(type);
+				expenseTypeList = await expenseTypeService.GetList();
+				ExpenseTypeItems = expenseTypeList;
 			}
 		}
 		catch (Exception e)
 		{
 			Error = e.Message;
-		}
+		}	
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(ExpenseTypes type) => FilterFunc(type, searchString1);
+
+	private bool FilterFunc(ExpenseTypes type, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (type.ExpenseType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		return false;
 	}
 }

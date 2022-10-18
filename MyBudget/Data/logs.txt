@@ -216,3 +216,6 @@
 2022-10-18 09:50:14.306 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.5,"AmountPaid":19.5,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00","ExpenseCategoryId":0}
 2022-10-18 09:50:30.394 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.5,"AmountPaid":19.5,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
 2022-10-18 09:50:53.010 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":5,"ExpenseName":"Amazon","ExpenseAmount":33.93,"AmountPaid":33.93,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00","ExpenseCategoryId":9}
+2022-10-18 15:10:48.611 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":7,"IncomeType":"Test"}
+2022-10-18 15:10:52.913 -05:00 [INF] IncomeTypes updated: {"IncomeTypeId":7,"IncomeType":"Testz"}
+2022-10-18 15:11:06.296 -05:00 [INF] IncomeTypes deleted: {"IncomeTypeId":7,"IncomeType":"Testz"}
