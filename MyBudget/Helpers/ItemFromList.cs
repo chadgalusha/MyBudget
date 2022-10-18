@@ -1,4 +1,6 @@
-﻿namespace MyBudget.Helpers
+﻿using MyBudget.Models;
+
+namespace MyBudget.Helpers
 {
 	public static class ItemFromList
 	{
@@ -17,6 +19,13 @@
 			}
 
 			return name;
+		}
+
+		public static string GetExpenseCategoryName(int id, List<ExpenseCategories> expenseCategoriesList)
+		{
+			return expenseCategoriesList.Where(e => e.ExpenseCategoryId == id)
+				.Select(e => e.ExpenseCategoryName)
+				.FirstOrDefault("");
 		}
 
 		// private methods

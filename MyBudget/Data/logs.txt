@@ -201,3 +201,18 @@
 2022-10-17 20:54:43.219 -05:00 [INF] BankAccounts deleted: {"BankAccountId":4,"BankAccountName":"Test Bank Account","BankAccountTypeId":1,"Balance":65}
 2022-10-17 20:57:44.977 -05:00 [INF] BankAccounts created: {"BankAccountId":5,"BankAccountName":"Test Bank Account","BankAccountTypeId":2,"Balance":1234}
 2022-10-17 20:58:32.633 -05:00 [INF] BankAccounts deleted: {"BankAccountId":5,"BankAccountName":"Test Bank Account","BankAccountTypeId":2,"Balance":1234}
+2022-10-18 07:59:27.023 -05:00 [INF] BankAccounts created: {"BankAccountId":6,"BankAccountName":"Test","BankAccountTypeId":3,"Balance":234}
+2022-10-18 08:00:44.720 -05:00 [INF] BankAccounts created: {"BankAccountId":7,"BankAccountName":"test2","BankAccountTypeId":1,"Balance":3333}
+2022-10-18 08:01:00.997 -05:00 [INF] BankAccounts deleted: {"BankAccountId":7,"BankAccountName":"test2","BankAccountTypeId":1,"Balance":3333}
+2022-10-18 08:01:51.266 -05:00 [INF] BankAccounts updated: {"BankAccountId":6,"BankAccountName":"Test","BankAccountTypeId":3,"Balance":255}
+2022-10-18 08:01:57.264 -05:00 [INF] BankAccounts updated: {"BankAccountId":6,"BankAccountName":"Test","BankAccountTypeId":2,"Balance":255}
+2022-10-18 08:02:02.570 -05:00 [INF] BankAccounts updated: {"BankAccountId":6,"BankAccountName":"Test","BankAccountTypeId":1,"Balance":255}
+2022-10-18 08:03:19.084 -05:00 [INF] BankAccounts deleted: {"BankAccountId":6,"BankAccountName":"Test","BankAccountTypeId":1,"Balance":255}
+2022-10-18 08:03:43.427 -05:00 [INF] BankAccounts created: {"BankAccountId":8,"BankAccountName":"test","BankAccountTypeId":1,"Balance":532523}
+2022-10-18 08:07:11.635 -05:00 [INF] BankAccounts deleted: {"BankAccountId":8,"BankAccountName":"test","BankAccountTypeId":1,"Balance":532523}
+2022-10-18 08:07:24.563 -05:00 [INF] BankAccounts created: {"BankAccountId":9,"BankAccountName":"test test test","BankAccountTypeId":1,"Balance":2435}
+2022-10-18 08:07:36.775 -05:00 [INF] BankAccounts updated: {"BankAccountId":9,"BankAccountName":"test test","BankAccountTypeId":1,"Balance":2435}
+2022-10-18 08:07:39.786 -05:00 [INF] BankAccounts deleted: {"BankAccountId":9,"BankAccountName":"test test","BankAccountTypeId":1,"Balance":2435}
+2022-10-18 09:50:14.306 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.5,"AmountPaid":19.5,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00","ExpenseCategoryId":0}
+2022-10-18 09:50:30.394 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","ExpenseAmount":19.5,"AmountPaid":19.5,"ExpenseDate":"2022-10-03T00:00:00","DueDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
+2022-10-18 09:50:53.010 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":5,"ExpenseName":"Amazon","ExpenseAmount":33.93,"AmountPaid":33.93,"ExpenseDate":"2022-10-13T00:00:00","DueDate":"2022-10-13T00:00:00","ExpenseCategoryId":9}

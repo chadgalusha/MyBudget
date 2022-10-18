@@ -20,5 +20,7 @@ namespace MyBudget.Models
         public DateTime ExpenseDate { get; set; }
 
         public DateTime DueDate { get; set; }
+
+        public int ExpenseCategoryId { get; set; }
     }
 }
