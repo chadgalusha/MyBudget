@@ -26,6 +26,7 @@
 </div>
 
 @code {
+
 	private BarChartConfig _lastMonthConfig;
 	private BarChartConfig _thisMonthConfig;
 	private BarChartConfig _lastYearConfig;
@@ -49,6 +50,8 @@
 		_thisYearConfig = GetBarCharConfiguration(_thisYearConfig);
 		var thisYearIncomeExpenseVM = ThisYearIncomeExpenseVM();
 		SetBarChartLabelsAndData(_thisYearConfig, thisYearIncomeExpenseVM);
+		var newlastMonthIncomeExpense = LastMonthIncomeExpenseVM();
+		var newthisMonthIncomeExpense = ThisMonthIncomeExpenseVM();
 	}
 
 	IncomeAndExpensesViewModel LastMonthIncomeExpenseVM()

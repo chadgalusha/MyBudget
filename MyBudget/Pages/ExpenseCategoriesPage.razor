@@ -13,7 +13,7 @@
 }
 else
 {
-	<MudTable Items="@ExpenseCategoryItems" Striped="true" id="table-styles" Filter="new Func<ExpenseCategories,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+	<MudTable Items="@ExpenseCategoryItems" Striped="true" class="table-styles" Filter="new Func<ExpenseCategories,bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1" Dense="true">
 		<ToolBarContent>
 			<MudText Typo="Typo.h6">Expense Categories</MudText>
 			<MudSpacer />
@@ -30,10 +30,8 @@ else
 			<MudTd DataLabel="Expense Category Name">@context.ExpenseCategoryName</MudTd>
 			<MudTd DataLabel="Expense Category Desc">@context.ExpenseCategoryDescription</MudTd>
 			<MudTd>
-				<MudButton Variant="Variant.Filled" Color="Color.Info"
-				@onclick="(() => EditRecord(context))">
-					Edit
-				</MudButton>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm())" class="mud-table-button" Color="Color.Error" />
 			</MudTd>
 		</RowTemplate>
 		<PagerContent>

@@ -196,3 +196,8 @@
 2022-10-14 15:01:45.933 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":13,"ExpenseCategoryName":"Misc Cach \u0026 Checks","ExpenseCategoryDescription":"ATM, money checks, etc."}
 2022-10-14 15:01:45.943 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":14,"ExpenseCategoryName":"Pet Care","ExpenseCategoryDescription":"Health and other spending for pets besides food"}
 2022-10-14 15:01:45.952 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":15,"ExpenseCategoryName":"No Category","ExpenseCategoryDescription":"Spending that defies categorization"}
+2022-10-17 20:53:42.174 -05:00 [INF] BankAccounts created: {"BankAccountId":4,"BankAccountName":"Test Bank Account","BankAccountTypeId":1,"Balance":6542}
+2022-10-17 20:54:26.301 -05:00 [INF] BankAccounts updated: {"BankAccountId":4,"BankAccountName":"Test Bank Account","BankAccountTypeId":1,"Balance":65}
+2022-10-17 20:54:43.219 -05:00 [INF] BankAccounts deleted: {"BankAccountId":4,"BankAccountName":"Test Bank Account","BankAccountTypeId":1,"Balance":65}
+2022-10-17 20:57:44.977 -05:00 [INF] BankAccounts created: {"BankAccountId":5,"BankAccountName":"Test Bank Account","BankAccountTypeId":2,"Balance":1234}
+2022-10-17 20:58:32.633 -05:00 [INF] BankAccounts deleted: {"BankAccountId":5,"BankAccountName":"Test Bank Account","BankAccountTypeId":2,"Balance":1234}
