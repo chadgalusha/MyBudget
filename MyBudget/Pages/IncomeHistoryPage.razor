@@ -15,7 +15,12 @@ else
 {
 	<MudTable Items="@IncomeHistoryItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<IncomeHistory, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
 		<ToolBarContent>
-			<MudText Typo="Typo.h6">Income History</MudText>
+			<MudDatePicker Label="Month-Year Selector" @bind-Date="_yearMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="MM/yyyy"/>
+			@if (_yearMonth != null)
+			{
+				<MudIcon Icon="@Icons.TwoTone.Search" Title="Search" Color="Color.Primary" class="date-search-button" @onclick="SearchByDateFilter" />
+				<MudIcon Icon="@Icons.TwoTone.Cancel" Title="Clear" Color="Color.Warning" class="date-search-button" @onclick="ClearDateFilter" />
+			}
 			<MudSpacer />
 			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 		</ToolBarContent>
@@ -111,6 +116,8 @@ else
 	private IncomeHistory selectedItem1 = null;
 	private HashSet<IncomeHistory> selectedItems = new();
 	private IEnumerable<IncomeHistory> IncomeHistoryItems = new List<IncomeHistory>();
+
+	DateTime? _yearMonth;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -225,5 +232,28 @@ else
 		if ($"{incomeHistory.IncomeDate.ToShortDateString()}".Contains(searchString))
 			return true;
 		return false;
+	}
+
+	// Date Filter Functions
+
+	void SearchByDateFilter()
+	{
+		if (_yearMonth == null)
+			return;
+
+		IncomeHistoryItems = incomeHistoryList;
+
+		int month = _yearMonth.Value.Month;
+		int year = _yearMonth.Value.Year;
+
+		IncomeHistoryItems = IncomeHistoryItems.ToList()
+								.Where(i => i.IncomeDate.Month == month)
+								.Where(i => i.IncomeDate.Year == year);
+	}
+
+	void ClearDateFilter()
+	{
+		_yearMonth = null;
+		IncomeHistoryItems = incomeHistoryList;
 	}
 }
