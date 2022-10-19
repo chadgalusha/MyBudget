@@ -25,12 +25,12 @@ else
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh Style="display:none;">Expense History Id</MudTh>
-			<MudTh>Expense Name</MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseName)">Expense Name</MudTableSortLabel></MudTh>
 			<MudTh>Amount Due</MudTh>
 			<MudTh>Amount Paid</MudTh>
-			<MudTh>Date Paid</MudTh>
+			<MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseDate)">Date Paid</MudTableSortLabel></MudTh>
 			<MudTh>Due Date</MudTh>
-			<MudTh>Expense Category</MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseCategoryId)">Expense Category</MudTableSortLabel></MudTh>
 			<MudTh></MudTh>
 		</HeaderContent>
 		<RowTemplate>
@@ -262,7 +262,7 @@ else
 			return true;
 		if ($"{exh.ExpenseAmount} {exh.AmountPaid}".Contains(searchString))
 			return true;
-		if ($"{exh.DueDate} {exh.ExpenseDate}".Contains(searchString))
+		if ($"{exh.DueDate.ToShortDateString()} {exh.ExpenseDate.ToShortDateString()}".Contains(searchString))
 			return true;
 		if ($"{exh.ExpenseCategoryId}".Contains(searchString))
 			return true;
