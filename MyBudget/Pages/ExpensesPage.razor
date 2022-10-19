@@ -5,6 +5,7 @@
 @inject IService<Expenses> expenseService
 @inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
 @inject ITypeService<ExpenseTypes> expenseTypeService
+@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expenses</h3>
 <p style="color:red">@Error</p>
@@ -15,42 +16,43 @@
 }
 else
 {
-	<table class="table table-striped table-bordered shadow-sm">
-		<thead>
-			<tr>
-				<th>Expense Id</th>
-				<th>Expense Name</th>
-				<th>Expense Type</th>
-				<th>Payment Frequency</th>
-				<th>Estimated Expense Amount</th>
-				<th>Initial Expense Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var expense in expensesList)
-			{
-				<tr>
-					<td>@expense.ExpensesId</td>
-					<td>@expense.ExpensesName</td>
-					<td>@GetExpenseTypeName(expense.ExpenseTypeId, expenseTypesList)</td>
-					<td>@GetPaymentFrequencyTypeName(expense.PaymentFrequencyTypeId, paymentFrequencyTypesList)</td>
-					<td>$@expense.ExpenseAmount.ToString("0.00")</td>
-					<td>@expense.InitialExpenseDate.ToShortDateString()</td>
-					<td>
-						<button class="btn btn-primary"
-						@onclick="(() => EditRecord(expense))">
-							Edit
-						</button>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-	<p>
-		<button class="btn btn-success" @onclick="AddNewRecord">
+	<MudTable Items="@ExpenseItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<Expenses, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Expenses</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh Style="display:none;">Expense Id</MudTh>
+			<MudTh>Expense Name</MudTh>
+			<MudTh>Expense Type Id</MudTh>
+			<MudTh>Payment Frequency Type Id</MudTh>
+			<MudTh>Expense Amount</MudTh>
+			<MudTh>Expense Initial Date</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Expense Id">@context.ExpensesId</MudTd>
+			<MudTd DataLabel="Expense Name">@context.ExpensesName</MudTd>
+			<MudTd DataLabel="Expense Type Id">@GetExpenseTypeName(context.ExpenseTypeId, expenseTypesList)</MudTd>
+			<MudTd DataLabel="Payment Frequency Type Id">@GetPaymentFrequencyTypeName(context.PaymentFrequencyTypeId, paymentFrequencyTypesList)</MudTd>
+			<MudTd DataLabel="Expense Amount">@context.ExpenseAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Expense Initial Date">@context.InitialExpenseDate.ToShortDateString()</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
 			Add New Expense
-		</button>
-	</p>
+		</MudButton>
+	</div>
 
 	@if (ShowPopup)
 	{
@@ -112,7 +114,7 @@ else
 						{
 							<!-- Button to delete the expense -->
 							<button class="btn btn-danger"
-						@onclick="DeleteRecord">
+						@onclick="() => DeleteRecord(expense)">
 								Delete
 							</button>
 						}
@@ -131,9 +133,15 @@ else
 	Expenses expense = new();
 	bool ShowPopup = false;
 
+	private string searchString1 = "";
+	private Expenses selectedItem1 = null;
+	private HashSet<Expenses> selectedItems = new();
+	private IEnumerable<Expenses> ExpenseItems = new List<Expenses>();
+
 	protected override async Task OnInitializedAsync()
 	{
 		expensesList = await expenseService.GetList();
+		ExpenseItems = expensesList;
 		expenseTypesList = await expenseTypeService.GetList();
 		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
 	}
@@ -188,7 +196,8 @@ else
 						Error = "Error processing request, please try again";
 						break;
 					default:
-						expensesList.Add(createdExpense);
+						expensesList = await expenseService.GetList();
+						ExpenseItems = expensesList;
 						break;
 				}
 			}
@@ -208,7 +217,16 @@ else
 		}
 	}
 
-	async Task DeleteRecord()
+	async Task DeleteConfirm(Expenses expense)
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord(expense);
+		}
+	}
+
+	async Task DeleteRecord(Expenses expense)
 	{
 		ShowPopup = false;
 		Error = "";
@@ -216,7 +234,8 @@ else
 		try
 		{
 			await expenseService.DeleteRecord(expense);
-			expensesList.Remove(expense);
+			expensesList = await expenseService.GetList();
+			ExpenseItems = expensesList;
 		}
 		catch (Exception e)
 		{
@@ -234,5 +253,24 @@ else
 	string GetPaymentFrequencyTypeName(int id, List<PaymentFrequencyTypes> paymentFrequencyTypeList)
 	{
 		return ItemFromList.GetNameFromTypeList(id, paymentFrequencyTypeList);
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(Expenses expense) => FilterFunc(expense, searchString1);
+
+	private bool FilterFunc(Expenses expense, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (expense.ExpensesName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		if ($"{expense.ExpenseAmount.ToString("0.00")}".Contains(searchString))
+			return true;
+		if ($"{expense.ExpenseTypeId} {expense.PaymentFrequencyTypeId}".Contains(searchString))
+			return true;
+		if ($"{expense.InitialExpenseDate.ToShortDateString()}".Contains(searchString))
+			return true;
+		return false;
 	}
 }

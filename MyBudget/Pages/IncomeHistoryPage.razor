@@ -13,59 +13,39 @@
 }
 else
 {
-	<div class="table-responsive border rounded shadow-sm">
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Income History Id</th>
-					<th>Income Name</th>
-					<th>Income Amount</th>
-					<th>Income Date</th>
-					<th></th>
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var incomeHistory in incomeHistoryList)
-				{
-					<tr>
-						<td>@incomeHistory.IncomeHistoryId</td>
-						<td>@incomeHistory.IncomeName</td>
-						<td>$@incomeHistory.IncomeAmount.ToString("0.00")</td>
-						<td>@incomeHistory.IncomeDate.ToShortDateString()</td>
-						<td>
-							<button class="btn btn-primary"
-							@onclick="(() => EditRecord(incomeHistory))">
-							Edit
-							</button>
-						</td>
-					</tr>
-				}
-			</tbody>
-		</table>
+	<MudTable Items="@IncomeHistoryItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<IncomeHistory, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Income History</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh Style="display:none;">Income History Id</MudTh>
+			<MudTh>Income Name</MudTh>
+			<MudTh>Income Amount</MudTh>
+			<MudTh>Income Date</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Income History Id" Style="display:none;">@context.IncomeHistoryId</MudTd>
+			<MudTd DataLabel="Income Name">@context.IncomeName</MudTd>
+			<MudTd DataLabel="Income Amount">$@context.IncomeAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Income Date">$@context.IncomeDate.ToShortDateString()</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
+			Add New Income History
+		</MudButton>
 	</div>
-	<div>
-		<nav aria-label="Page navigation example">
-			<ul class="pagination justify-content-center">
-				<li class="page-item disabled">
-					<a class="page-link" href="#" tabindex="-1">Previous</a>
-				</li>
-				<li class="page-item"><a class="page-link" href="#">1</a></li>
-				<li class="page-item"><a class="page-link" href="#">2</a></li>
-				<li class="page-item"><a class="page-link" href="#">3</a></li>
-				<li class="page-item">
-					<a class="page-link" href="#">Next</a>
-				</li>
-			</ul>
-		</nav>
-	</div>
-	<div>
-		<p>
-			<button class="btn btn-success" @onclick="AddNewRecord">
-				Add New Income History
-			</button>
-		</p>
-	</div>
-	
 
 	@if (ShowPopup)
 	{
@@ -109,7 +89,7 @@ else
 						{
 							<!-- Button to delete the income history -->
 							<button class="btn btn-danger"
-						@onclick="DeleteConfirm">
+						@onclick="() => DeleteConfirm(incomeHistory)">
 								Delete
 							</button>
 						}
@@ -127,9 +107,15 @@ else
 	List<IncomeHistory> incomeHistoryList = new();
 	IncomeHistory incomeHistory = new();
 
+	private string searchString1 = "";
+	private IncomeHistory selectedItem1 = null;
+	private HashSet<IncomeHistory> selectedItems = new();
+	private IEnumerable<IncomeHistory> IncomeHistoryItems = new List<IncomeHistory>();
+
 	protected override async Task OnInitializedAsync()
 	{
 		incomeHistoryList = await incomeHistoryService.GetList();
+		IncomeHistoryItems = incomeHistoryList;
 	}
 
 	void ClosePopup()
@@ -177,7 +163,8 @@ else
 						Error = "Error processing request, please try again";
 						break;
 					default:
-						incomeHistoryList.Add(createdIncomeHistory);
+						incomeHistoryList = await incomeHistoryService.GetList();
+						IncomeHistoryItems = incomeHistoryList;
 						break;
 				}
 			}
@@ -197,16 +184,16 @@ else
 		}
 	}
 
-	async Task DeleteConfirm()
+	async Task DeleteConfirm(IncomeHistory incomeHistory)
 	{
 		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
 		if (confirmed)
 		{
-			await DeleteRecord();
+			await DeleteRecord(incomeHistory);
 		}
 	}
 
-	async Task DeleteRecord()
+	async Task DeleteRecord(IncomeHistory incomeHistory)
 	{
 		ShowPopup = false;
 		Error = "";
@@ -214,11 +201,29 @@ else
 		try
 		{
 			await incomeHistoryService.DeleteRecord(incomeHistory);
-			incomeHistoryList.Remove(incomeHistory);
+			incomeHistoryList = await incomeHistoryService.GetList();
+			IncomeHistoryItems = incomeHistoryList;
 		}
 		catch (Exception e)
 		{
 			Error = e.Message;
 		}
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(IncomeHistory incomeHistory) => FilterFunc(incomeHistory, searchString1);
+
+	private bool FilterFunc(IncomeHistory incomeHistory, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (incomeHistory.IncomeName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		if ($"{incomeHistory.IncomeAmount.ToString("0.00")}".Contains(searchString))
+			return true;
+		if ($"{incomeHistory.IncomeDate.ToShortDateString()}".Contains(searchString))
+			return true;
+		return false;
 	}
 }
