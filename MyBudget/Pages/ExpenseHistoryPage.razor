@@ -1,7 +1,9 @@
 ﻿@page "/expensehistorypage"
 @using MyBudget.Models
 @using MyBudget.Services
+@using MyBudget.Helpers
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
+@inject IService<ExpenseCategories> expenseCategoryService
 @inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expense History</h3>
@@ -13,42 +15,45 @@
 }
 else
 {
-	<table class="table table-striped table-bordered shadow-sm">
-		<thead>
-			<tr>
-				<th>Expense History Id</th>
-				<th>Expense Name</th>
-				<th>Expense Amount</th>
-				<th>Amount Paid</th>
-				<th>Date Paid</th>
-				<th>Due Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var expenseHistory in expenseHistoryList)
-			{
-				<tr>
-					<td>@expenseHistory.ExpenseHistoryId</td>
-					<td>@expenseHistory.ExpenseName</td>
-					<td>$@expenseHistory.ExpenseAmount.ToString("0.00")</td>
-					<td>$@expenseHistory.AmountPaid.ToString("0.00")</td>
-					<td>@expenseHistory.ExpenseDate.ToShortDateString()</td>
-					<td>@expenseHistory.DueDate.ToShortDateString()</td>
-					<td>
-						<button class="btn btn-primary"
-						@onclick="(() => EditRecord(expenseHistory))">
-							Edit
-						</button>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-	<p>
-		<button class="btn btn-success" @onclick="AddNewRecord">
-			Add New Expense history
-		</button>
-	</p>
+	<MudTable Items="@ExpenseHistoryItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<ExpenseHistory, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Expense History</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh Style="display:none;">Expense History Id</MudTh>
+			<MudTh>Expense Name</MudTh>
+			<MudTh>Amount Due</MudTh>
+			<MudTh>Amount Paid</MudTh>
+			<MudTh>Date Paid</MudTh>
+			<MudTh>Due Date</MudTh>
+			<MudTh>Expense Category</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Expense History Id" Style="display:none;">@context.ExpenseHistoryId</MudTd>
+			<MudTd DataLabel="Expense Name">@context.ExpenseName</MudTd>
+			<MudTd DataLabel="Amount due">$@context.ExpenseAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Amount Paid">$@context.AmountPaid.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Date Paid">@context.ExpenseDate.ToShortDateString()</MudTd>
+			<MudTd DataLabel="Due Date">@context.DueDate.ToShortDateString()</MudTd>
+			<MudTd DataLabel="Expense Category">@GetExpenseCategoryName(context.ExpenseCategoryId, expenseCategoryList)</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
+			Add New Expense History
+		</MudButton>
+	</div>
 
 	@if (ShowPopup)
 	{
@@ -89,6 +94,15 @@ else
 						placeholder="Due Date"
 						@bind="expenseHistory.DueDate" id="duedate" />
 
+						<label for="expensecategory">Expense Category: </label>
+						<select class="form-select" title="Expense Category" @bind="expenseHistory.ExpenseCategoryId" id="expensecategory">
+							<option value="Select" disabled="disabled">Chose Expense Category</option>
+							@foreach (var expenseCategory in expenseCategoryList)
+							{
+								<option value="@expenseCategory.ExpenseCategoryId">@expenseCategory.ExpenseCategoryName</option>
+							}
+						</select>
+
 						<br />
 						<!-- Button to save the expense history -->
 						<button class="btn btn-success"
@@ -100,7 +114,7 @@ else
 						{
 							<!-- Button to delete the expense history -->
 							<button class="btn btn-danger"
-						@onclick="DeleteConfirm">
+						@onclick="() => DeleteConfirm(expenseHistory)">
 								Delete
 							</button>
 						}
@@ -116,11 +130,19 @@ else
 	string Error = "";
 	bool ShowPopup = false;
 	List<ExpenseHistory> expenseHistoryList = new();
+	List<ExpenseCategories> expenseCategoryList = new();
 	ExpenseHistory expenseHistory = new();
+
+	private string searchString1 = "";
+	private ExpenseHistory selectedItem1 = null;
+	private HashSet<ExpenseHistory> selectedItems = new();
+	private IEnumerable<ExpenseHistory> ExpenseHistoryItems = new List<ExpenseHistory>();
 
 	protected override async Task OnInitializedAsync()
 	{
 		expenseHistoryList = await expenseHistoryService.GetList();
+		ExpenseHistoryItems = expenseHistoryList;
+		expenseCategoryList = await expenseCategoryService.GetList();
 	}
 
 	void ClosePopup()
@@ -171,7 +193,8 @@ else
 						Error = "Error processing request, please try again";
 						break;
 					default:
-						expenseHistoryList.Add(createdExpenseHistory);
+						expenseHistoryList = await expenseHistoryService.GetList();
+						ExpenseHistoryItems = expenseHistoryList;
 						break;
 				}
 			}
@@ -191,16 +214,16 @@ else
 		}
 	}
 
-	async Task DeleteConfirm()
+	async Task DeleteConfirm(ExpenseHistory expenseHistory)
 	{
 		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
 		if (confirmed)
 		{
-			await DeleteRecord();
+			await DeleteRecord(expenseHistory);
 		}
 	}
 
-	async Task DeleteRecord()
+	async Task DeleteRecord(ExpenseHistory expenseHistory)
 	{
 		ShowPopup = false;
 		Error = "";
@@ -208,11 +231,38 @@ else
 		try
 		{
 			await expenseHistoryService.DeleteRecord(expenseHistory);
-			expenseHistoryList.Remove(expenseHistory);
+			expenseHistoryList = await expenseHistoryService.GetList();
+			ExpenseHistoryItems = expenseHistoryList;
 		}
 		catch (Exception e)
 		{
 			Error = e.Message;
 		}
+	}
+
+	// Helper Methods
+
+	string GetExpenseCategoryName(int id, List<ExpenseCategories> expenseCategoriesList)
+	{
+		return ItemFromList.GetExpenseCategoryName(id, expenseCategoriesList);
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(ExpenseHistory exh) => FilterFunc(exh, searchString1);
+
+	private bool FilterFunc(ExpenseHistory exh, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (exh.ExpenseName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		if ($"{exh.ExpenseAmount} {exh.AmountPaid}".Contains(searchString))
+			return true;
+		if ($"{exh.DueDate} {exh.ExpenseDate}".Contains(searchString))
+			return true;
+		if ($"{exh.ExpenseCategoryId}".Contains(searchString))
+			return true;
+		return false;
 	}
 }

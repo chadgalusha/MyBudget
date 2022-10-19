@@ -2,6 +2,7 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
+@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Payment Frequency Types</h3>
 <p style="color:red">@Error</p>
@@ -12,34 +13,35 @@
 }
 else
 {
-	<table class="table table-striped table-bordered shadow-sm">
-		<thead>
-			<tr>
-				<th>Payment Frequency Type Id</th>
-				<th>Payment Frequency Type</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var type in paymentFrequencyTypesList)
-			{
-				<tr>
-					<td>@type.PaymentFrequencyTypeId</td>
-					<td>@type.PaymentFrequencyType</td>
-					<td>
-						<button class="btn btn-primary"
-						@onclick="(() => EditType(type))">
-						Edit
-						</button>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-	<p>
-		<button class="btn btn-success" @onclick="AddNewType">
-			Add New Type
-		</button>
-	</p>
+	<MudTable Items="@PaymentFrequencyTypeItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<PaymentFrequencyTypes, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Payment Frequency Type</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh>Payment Frequency Type Id</MudTh>
+			<MudTh>Payment Frequency Type</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Payment Frequency Type Id">@context.PaymentFrequencyTypeId</MudTd>
+			<MudTd DataLabel="Payment Frequency Type">@context.PaymentFrequencyType</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewType">
+			Add new Payment Frequency Type
+		</MudButton>
+	</div>
 
 	@if (ShowPopup)
 	{
@@ -64,7 +66,7 @@ else
                         <br />
 						<!-- Button to save the payment frequency type -->
                         <button class="btn btn-success"
-                        @onclick="SaveType">
+                        @onclick="SaveRecord">
                             Save
                         </button>&nbsp;
                         <!-- Only show delete button if not a new record -->
@@ -72,7 +74,7 @@ else
                         {
 							<!-- Button to delete the payment frequency type -->
                             <button class="btn btn-danger"
-                        @onclick="DeleteType">
+                        @onclick="() => DeleteRecord(paymentFrequencyType)">
                                 Delete
                             </button>
                         }
@@ -90,9 +92,15 @@ else
 	PaymentFrequencyTypes paymentFrequencyType = new PaymentFrequencyTypes();
 	bool ShowPopup = false;
 
+	private string searchString1 = "";
+	private PaymentFrequencyTypes selectedItem1 = null;
+	private HashSet<PaymentFrequencyTypes> selectedItems = new();
+	private IEnumerable<PaymentFrequencyTypes> PaymentFrequencyTypeItems = new List<PaymentFrequencyTypes>();
+
 	protected override async Task OnInitializedAsync()
 	{
 		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
+		PaymentFrequencyTypeItems = paymentFrequencyTypesList;
 	}
 
 	void ClosePopup()
@@ -107,21 +115,43 @@ else
 		ShowPopup = true;
 	}
 
-	void EditType(PaymentFrequencyTypes type)
+	void EditRecord(PaymentFrequencyTypes type)
 	{
 		paymentFrequencyType = type;
 		ShowPopup = true;
 	}
 
-	async Task SaveType()
+	async Task SaveRecord()
 	{
 		ShowPopup = false;
 		Error = "";
 	}
 
-	async Task DeleteType()
+	async Task DeleteConfirm(PaymentFrequencyTypes type)
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord(type);
+		}
+	}
+
+	async Task DeleteRecord(PaymentFrequencyTypes type)
 	{
 		ShowPopup = false;
 		Error = "";
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(PaymentFrequencyTypes type) => FilterFunc(type, searchString1);
+
+	private bool FilterFunc(PaymentFrequencyTypes type, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (type.PaymentFrequencyType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		return false;
 	}
 }

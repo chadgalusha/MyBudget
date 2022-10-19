@@ -1,6 +1,6 @@
 ﻿<div class="top-row ps-3 navbar navbar-dark">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="">MyBudget</a>
+		<a class="navbar-brand" href="">CG Budgeting</a>
 		<button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
 			<span class="navbar-toggler-icon"></span>
 		</button>
@@ -22,10 +22,10 @@
 			@if (expandIncomesNav)
 			{
 				<NavLink class="nav-link" href="incomehistorypage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Income History
+					<MudIcon Icon="@Icons.TwoTone.Circle" />  Income History
 				</NavLink>
 				<NavLink class="nav-link" href="incomespage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Current Incomes
+					<MudIcon Icon="@Icons.TwoTone.Circle"/>  Current Incomes
 				</NavLink>
 			}
 		</div>
@@ -37,10 +37,10 @@
 			@if (expandExpensesNav)
 			{
 				<NavLink class="nav-link" href="expensehistorypage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Expense History
+					<MudIcon Icon="@Icons.TwoTone.Circle" />  Expense History
 				</NavLink>
 				<NavLink class="nav-link" href="expensespage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Current Expenses
+					<MudIcon Icon="@Icons.TwoTone.Circle"/>  Current Expenses
 				</NavLink>
 			}
 		</div>
@@ -58,16 +58,19 @@
 			@if (expandSubNav)
 			{
 				<NavLink class="nav-link" href="bankaccounttypespage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Bank Account Types
+					<MudIcon Icon="@Icons.TwoTone.Circle"/>  Bank Account Types
 				</NavLink>
 				<NavLink class="nav-link" href="incometypespage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Income Tyes
+					<MudIcon Icon="@Icons.TwoTone.Circle"/>  Income Types
 				</NavLink>
 				<NavLink class="nav-link" href="expensetypespage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Expense Types
+					<MudIcon Icon="@Icons.TwoTone.Circle"/>  Expense Types
+				</NavLink>
+				<NavLink class="nav-link" href="expensecategoriespage">
+					<MudIcon Icon="@Icons.TwoTone.Circle" />  Expense Categories
 				</NavLink>
 				<NavLink class="nav-link" href="paymentfrequencytypespage">
-					<span class="oi spinner-border-sm" aria-hidden="true"></span> Payment Frequencies
+					<MudIcon Icon="@Icons.TwoTone.Circle" />  Payment Frequencies
 				</NavLink>
 			}
 		</div>

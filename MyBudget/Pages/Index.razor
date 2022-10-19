@@ -26,6 +26,7 @@
 </div>
 
 @code {
+
 	private BarChartConfig _lastMonthConfig;
 	private BarChartConfig _thisMonthConfig;
 	private BarChartConfig _lastYearConfig;
@@ -49,6 +50,8 @@
 		_thisYearConfig = GetBarCharConfiguration(_thisYearConfig);
 		var thisYearIncomeExpenseVM = ThisYearIncomeExpenseVM();
 		SetBarChartLabelsAndData(_thisYearConfig, thisYearIncomeExpenseVM);
+		var newlastMonthIncomeExpense = LastMonthIncomeExpenseVM();
+		var newthisMonthIncomeExpense = ThisMonthIncomeExpenseVM();
 	}
 
 	IncomeAndExpensesViewModel LastMonthIncomeExpenseVM()
@@ -162,9 +165,10 @@
 			{
 				Label = "Value",
 				Data = ViewModelData(viewModel),
-				BackgroundColor = new List<string>() { "green", "red" },
-				BorderColor = new List<string>() { "black", "black" },
-				BorderWidth = 1
+				BackgroundColor = new List<string>() { "#7aed6d", "#f06772" },
+				BorderColor = new List<string>() { "green", "red" },
+				BorderWidth = 1, 
+				HoverBackgroundColor = new List<string>() { "#15a805", "#b80412" }
 			});
 	}
 }

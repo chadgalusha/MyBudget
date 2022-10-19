@@ -1,6 +1,5 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 using SQLite;
 
 namespace MyBudget.DataAccess
@@ -36,13 +35,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.InsertAsync(bankAccount).ContinueWith((b) =>
                 {
-                    Log.Information($"Bank account created: {bankAccount.BankAccountName}");
+                    MyBudgetLogger.CreatedLogMessage(bankAccount);
                 });
                 return bankAccount;
             }
             catch (Exception e)
             {
-                Log.Error($"Error creating new bank account: {e.Message}");
+                MyBudgetLogger.ErrorCreating(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
@@ -53,13 +52,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.UpdateAsync(bankAccount).ContinueWith((b) =>
                 {
-                    Log.Information($"Bank account updated: {bankAccount.BankAccountId}, {bankAccount.BankAccountName}");
+                    MyBudgetLogger.UpdatedLogMessage(bankAccount);
                 });
                 return bankAccount;
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating bank account: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
@@ -70,13 +69,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.DeleteAsync(bankAccount).ContinueWith((b) =>
                 {
-                    Log.Information($"Bank account deleted: {bankAccount.BankAccountId}, {bankAccount.BankAccountName}");
+                    MyBudgetLogger.DeletedLogMessage(bankAccount);
                 });
                 return bankAccount;
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting bank account: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
