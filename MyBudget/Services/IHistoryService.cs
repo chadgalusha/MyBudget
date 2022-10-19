@@ -7,7 +7,7 @@ namespace MyBudget.Services
         Task<T> GetById(int id);
         Task<List<T>> GetList();
         Task<T> CreateRecord(T newHistory);
-        Task<T> UpdatRecord(T history);
+        Task<T> UpdateRecord(T history);
         Task<T> DeleteRecord(T history);
         decimal GetAmountForLastMonth();
         decimal GetAmountForLastYear();

@@ -11,7 +11,9 @@
 
 @if (expenseHistoryList == null)
 {
-	<p><em>Loading...</em></p>
+	<div class="spinner-border text-danger" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
 }
 else
 {
@@ -182,7 +184,8 @@ else
 					ExpenseAmount = expenseHistory.ExpenseAmount,
 					AmountPaid = expenseHistory.AmountPaid,
 					ExpenseDate = expenseHistory.ExpenseDate,
-					DueDate = expenseHistory.DueDate
+					DueDate = expenseHistory.DueDate,
+					ExpenseCategoryId = expenseHistory.ExpenseCategoryId
 				};
 
 				var createdExpenseHistory = await expenseHistoryService.CreateRecord(newExpenseHistory);
@@ -200,7 +203,7 @@ else
 			}
 			else
 			{
-				var updatedRecord = await expenseHistoryService.UpdatRecord(expenseHistory);
+				var updatedRecord = await expenseHistoryService.UpdateRecord(expenseHistory);
 				if (updatedRecord.ExpenseHistoryId == 0)
 				{
 					Error = "Error updating expense history, please try again";

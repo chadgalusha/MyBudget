@@ -32,7 +32,7 @@ else
 			<MudTh></MudTh>
 		</HeaderContent>
 		<RowTemplate>
-			<MudTd DataLabel="Expense Id">@context.ExpensesId</MudTd>
+			<MudTd DataLabel="Expense Id" Style="display:none;">@context.ExpensesId</MudTd>
 			<MudTd DataLabel="Expense Name">@context.ExpensesName</MudTd>
 			<MudTd DataLabel="Expense Type Id">@GetExpenseTypeName(context.ExpenseTypeId, expenseTypesList)</MudTd>
 			<MudTd DataLabel="Payment Frequency Type Id">@GetPaymentFrequencyTypeName(context.PaymentFrequencyTypeId, paymentFrequencyTypesList)</MudTd>

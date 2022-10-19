@@ -27,7 +27,7 @@ namespace MyBudget.Services
             return await _expenseHistoryDataAccess.CreateRecordAsync(newExpenseHistory);
         }
 
-        public async Task<ExpenseHistory> UpdatRecord(ExpenseHistory expenseHistory)
+        public async Task<ExpenseHistory> UpdateRecord(ExpenseHistory expenseHistory)
         {
             return await _expenseHistoryDataAccess.UpdateRecordAsync(expenseHistory);
         }

@@ -27,7 +27,7 @@ namespace MyBudget.Services
             return _incomeHistoryDataAccess.CreateRecordAsync(newIncomeHistory);
         }
 
-        public Task<IncomeHistory> UpdatRecord(IncomeHistory incomeHistory)
+        public Task<IncomeHistory> UpdateRecord(IncomeHistory incomeHistory)
         {
             return _incomeHistoryDataAccess.UpdateRecordAsync(incomeHistory);
         }

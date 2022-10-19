@@ -170,7 +170,7 @@ else
 			}
 			else
 			{
-				var updatedRecord = await incomeHistoryService.UpdatRecord(incomeHistory);
+				var updatedRecord = await incomeHistoryService.UpdateRecord(incomeHistory);
 				if (updatedRecord.IncomeHistoryId == 0)
 				{
 					Error = "Error updating income history, please try again";
