@@ -1,5 +1,4 @@
 ﻿using MyBudget.Models;
-using System.Reflection;
 
 namespace MyBudget.Helpers
 {
@@ -20,6 +19,13 @@ namespace MyBudget.Helpers
 			}
 
 			return name;
+		}
+
+		public static string GetExpenseCategoryName(int id, List<ExpenseCategories> expenseCategoriesList)
+		{
+			return expenseCategoriesList.Where(e => e.ExpenseCategoryId == id)
+				.Select(e => e.ExpenseCategoryName)
+				.FirstOrDefault("");
 		}
 
 		// private methods

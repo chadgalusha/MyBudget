@@ -1,0 +1,229 @@
+﻿@page "/incomehistorypage"
+@using MyBudget.Models
+@using MyBudget.Services
+@inject IHistoryService<IncomeHistory> incomeHistoryService
+@inject IJSRuntime jsRuntime
+
+<h3 style="text-align:center">Income History</h3>
+<p style="color:red">@Error</p>
+
+@if (incomeHistoryList == null)
+{
+	<p><em>Loading...</em></p>
+}
+else
+{
+	<MudTable Items="@IncomeHistoryItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<IncomeHistory, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Income History</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh Style="display:none;">Income History Id</MudTh>
+			<MudTh>Income Name</MudTh>
+			<MudTh>Income Amount</MudTh>
+			<MudTh>Income Date</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Income History Id" Style="display:none;">@context.IncomeHistoryId</MudTd>
+			<MudTd DataLabel="Income Name">@context.IncomeName</MudTd>
+			<MudTd DataLabel="Income Amount">$@context.IncomeAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Income Date">$@context.IncomeDate.ToShortDateString()</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
+			Add New Income History
+		</MudButton>
+	</div>
+
+	@if (ShowPopup)
+	{
+		<div class="modal" tabindex="1" style="display:block" role="dialog">
+			<div class="modal-dialog">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Edit Income History</h3>
+						<!-- Button to close the popup -->
+						<button type="button" class="close"
+						@onclick="ClosePopup">
+							<span aria-hidden="true">X</span>
+						</button>
+					</div>
+					<!-- Edit form for current income history -->
+					<div class="modal-body">
+						<label for="incomehistoryid">Income History Id: </label>
+						<input class="form-control" type="number" disabled="disabled"
+					   @bind="incomeHistory.IncomeHistoryId" id="incomehistoryid" />
+						<label for="incomehistoryname">Income History Name: </label>
+						<input class="form-control" type="text"
+					   placeholder="Income History Name"
+					   @bind="incomeHistory.IncomeName" id="incomehistoryname" />
+						<label for="incomeamount">Income Amount: </label>
+						<input class="form-control" type="number"
+					   placeholder="Income Amount"
+					   @bind="incomeHistory.IncomeAmount" id="incomeamount" min="0" />
+						<label for="incomedate">Income Date:</label>
+						<input class="form-control" type="date"
+					   placeholder="Income Date"
+					   @bind="incomeHistory.IncomeDate" id="incomedate" />
+
+						<br />
+						<!-- Button to save the income history -->
+						<button class="btn btn-success"
+						@onclick="SaveRecord">
+							Save
+						</button>&nbsp;
+						<!-- Only show delete button if not a new record -->
+						@if (incomeHistory.IncomeHistoryId > 0)
+						{
+							<!-- Button to delete the income history -->
+							<button class="btn btn-danger"
+						@onclick="() => DeleteConfirm(incomeHistory)">
+								Delete
+							</button>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+
+	string Error = "";
+	bool ShowPopup = false;
+	List<IncomeHistory> incomeHistoryList = new();
+	IncomeHistory incomeHistory = new();
+
+	private string searchString1 = "";
+	private IncomeHistory selectedItem1 = null;
+	private HashSet<IncomeHistory> selectedItems = new();
+	private IEnumerable<IncomeHistory> IncomeHistoryItems = new List<IncomeHistory>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		incomeHistoryList = await incomeHistoryService.GetList();
+		IncomeHistoryItems = incomeHistoryList;
+	}
+
+	void ClosePopup()
+	{
+		ShowPopup = false;
+	}
+
+	void AddNewRecord()
+	{
+		incomeHistory = new()
+		{
+			IncomeHistoryId = 0,
+			IncomeDate = DateTime.Today.Date
+		};
+		ShowPopup = true;
+	}
+
+	void EditRecord(IncomeHistory incomeHistoryToEdit)
+	{
+		incomeHistory = incomeHistoryToEdit;
+		ShowPopup = true;
+	}
+
+	async Task SaveRecord()
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			if (incomeHistory.IncomeHistoryId == 0)
+			{
+				IncomeHistory newIncomeHistory = new()
+				{
+					IncomeName = incomeHistory.IncomeName,
+					IncomeAmount = incomeHistory.IncomeAmount,
+					IncomeDate = incomeHistory.IncomeDate
+				};
+
+				var createdIncomeHistory = await incomeHistoryService.CreateRecord(newIncomeHistory);
+
+				switch (createdIncomeHistory.IncomeHistoryId)
+				{
+					case 0:
+						Error = "Error processing request, please try again";
+						break;
+					default:
+						incomeHistoryList = await incomeHistoryService.GetList();
+						IncomeHistoryItems = incomeHistoryList;
+						break;
+				}
+			}
+			else
+			{
+				var updatedRecord = await incomeHistoryService.UpdatRecord(incomeHistory);
+				if (updatedRecord.IncomeHistoryId == 0)
+				{
+					Error = "Error updating income history, please try again";
+					incomeHistoryList = await incomeHistoryService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	async Task DeleteConfirm(IncomeHistory incomeHistory)
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord(incomeHistory);
+		}
+	}
+
+	async Task DeleteRecord(IncomeHistory incomeHistory)
+	{
+		ShowPopup = false;
+		Error = "";
+
+		try
+		{
+			await incomeHistoryService.DeleteRecord(incomeHistory);
+			incomeHistoryList = await incomeHistoryService.GetList();
+			IncomeHistoryItems = incomeHistoryList;
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(IncomeHistory incomeHistory) => FilterFunc(incomeHistory, searchString1);
+
+	private bool FilterFunc(IncomeHistory incomeHistory, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (incomeHistory.IncomeName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		if ($"{incomeHistory.IncomeAmount.ToString("0.00")}".Contains(searchString))
+			return true;
+		if ($"{incomeHistory.IncomeDate.ToShortDateString()}".Contains(searchString))
+			return true;
+		return false;
+	}
+}

@@ -2,6 +2,7 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject ITypeService<BankAccountTypes> bankAccountTypesService
+@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Bank Account Types</h3>
 <p style="color:red">@Error</p>
@@ -12,34 +13,35 @@
 }
 else
 {
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Bank Account Type Id</th>
-				<th>Bank Account Type</th>
-			</tr>
-		</thead>
-		<tbody>
-			@foreach (var type in bankAccountTypesList)
-			{
-				<tr>
-					<td>@type.BankAccountTypeId</td>
-					<td>@type.BankAccountType</td>
-					<td>
-						<button class="btn btn-primary"
-						@onclick="(() => EditRecord(type))">
-							Edit
-						</button>
-					</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-	<p>
-		<button class="btn btn-success" @onclick="AddNewRecord">
-			Add New Type
-		</button>
-	</p>
+	<MudTable Items="@BankAccountTypeItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<BankAccountTypes, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
+		<ToolBarContent>
+			<MudText Typo="Typo.h6">Expense Type</MudText>
+			<MudSpacer />
+			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+		</ToolBarContent>
+		<HeaderContent>
+			<MudTh>Bank Account Type Id</MudTh>
+			<MudTh>Bank Account Type</MudTh>
+			<MudTh></MudTh>
+		</HeaderContent>
+		<RowTemplate>
+			<MudTd DataLabel="Bank Account Type Id">@context.BankAccountTypeId</MudTd>
+			<MudTd DataLabel="Bank Account Type">@context.BankAccountType</MudTd>
+			<MudTd>
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+			</MudTd>
+		</RowTemplate>
+		<PagerContent>
+			<MudTablePager />
+		</PagerContent>
+	</MudTable>
+
+	<div id="add-button">
+		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
+			Add New Bank Account Type
+		</MudButton>
+	</div>
 
 	@if (ShowPopup)
 	{
@@ -72,7 +74,7 @@ else
 						{
 							<!-- Button to delete the bank account type -->
 							<button class="btn btn-danger"
-						@onclick="DeleteRecord">
+						@onclick="() => DeleteRecord(bankAccountType)">
 								Delete
 							</button>
 						}
@@ -90,9 +92,15 @@ else
 	BankAccountTypes bankAccountType = new();
 	bool ShowPopup = false;
 
+	private string searchString1 = "";
+	private BankAccountTypes selectedItem1 = null;
+	private HashSet<BankAccountTypes> selectedItems = new();
+	private IEnumerable<BankAccountTypes> BankAccountTypeItems = new List<BankAccountTypes>();
+
 	protected override async Task OnInitializedAsync()
 	{
 		bankAccountTypesList = await bankAccountTypesService.GetList();
+		BankAccountTypeItems = bankAccountTypesList;
 	}
 
 	void ClosePopup()
@@ -119,9 +127,31 @@ else
 		Error = "";
 	}
 
-	async Task DeleteRecord()
+	async Task DeleteConfirm(BankAccountTypes type)
+	{
+		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
+		if (confirmed)
+		{
+			await DeleteRecord(type);
+		}
+	}
+
+	async Task DeleteRecord(BankAccountTypes type)
 	{
 		ShowPopup = false;
 		Error = "";
+	}
+
+	// Search Functions
+
+	private bool FilterFunc1(BankAccountTypes bat) => FilterFunc(bat, searchString1);
+
+	private bool FilterFunc(BankAccountTypes bat, string searchString)
+	{
+		if (string.IsNullOrWhiteSpace(searchString))
+			return true;
+		if (bat.BankAccountType.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+			return true;
+		return false;
 	}
 }

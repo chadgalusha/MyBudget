@@ -1,7 +1,174 @@
 ﻿@page "/"
+@using MyBudget.ViewModels
+@using MyBudget.Services
+@inject IIncomeAndExpensesViewModelService service
 
-<h1>Hello, world!</h1>
+<h1 style="text-align:center;">CG Budgeting</h1>
+<h4 style="text-align:center;">Income and Expenses</h4>
 
-Welcome to your new app.
+<div class="graph-flex-container">
+	<div>
+		<h6 style="text-align:center;">Last Month Income/Expenses</h6>
+		<Chart Config="_lastMonthConfig" @ref="_chart"></Chart>
+	</div>
+	<div>
+		<h6 style="text-align:center;">This Month Income/Expenses</h6>
+		<Chart Config="_thisMonthConfig" @ref="_chart"></Chart>
+	</div>
+	<div>
+		<h6 style="text-align:center;">Last Year Income/Expenses</h6>
+		<Chart Config="_lastYearConfig" @ref="_chart"></Chart>
+	</div>
+	<div>
+		<h6 style="text-align:center;">This Year Income/Expenses</h6>
+		<Chart Config="_thisYearConfig" @ref="_chart"></Chart>
+	</div>
+</div>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+@code {
+
+	private BarChartConfig _lastMonthConfig;
+	private BarChartConfig _thisMonthConfig;
+	private BarChartConfig _lastYearConfig;
+	private BarChartConfig _thisYearConfig;
+	private Chart _chart;
+
+	protected override void OnInitialized()
+	{
+		_lastMonthConfig = GetBarCharConfiguration(_lastMonthConfig);
+		var lastMonthIncomeExpensesVM = LastMonthIncomeExpenseVM();
+		SetBarChartLabelsAndData(_lastMonthConfig, lastMonthIncomeExpensesVM);
+
+		_thisMonthConfig = GetBarCharConfiguration(_thisMonthConfig);
+		var thisMonthIncomeExpenseVM = ThisMonthIncomeExpenseVM();
+		SetBarChartLabelsAndData(_thisMonthConfig, thisMonthIncomeExpenseVM);
+
+		_lastYearConfig = GetBarCharConfiguration(_lastYearConfig);
+		var lastYearIncomeExpenseVM = LastYearIncomeExpenseVM();
+		SetBarChartLabelsAndData(_lastYearConfig, lastYearIncomeExpenseVM);
+
+		_thisYearConfig = GetBarCharConfiguration(_thisYearConfig);
+		var thisYearIncomeExpenseVM = ThisYearIncomeExpenseVM();
+		SetBarChartLabelsAndData(_thisYearConfig, thisYearIncomeExpenseVM);
+		var newlastMonthIncomeExpense = LastMonthIncomeExpenseVM();
+		var newthisMonthIncomeExpense = ThisMonthIncomeExpenseVM();
+	}
+
+	IncomeAndExpensesViewModel LastMonthIncomeExpenseVM()
+	{
+		IncomeAndExpensesViewModel lastMonthViewModel = new()
+		{
+			Income = "Last Month Income",
+			IncomeAmount = service.LastMonthIncome(),
+			Expenses = "Last Month Expenses",
+			ExpensesAmount = service.LastMonthExpenses()
+		};
+
+		return lastMonthViewModel;
+	}
+
+	IncomeAndExpensesViewModel ThisMonthIncomeExpenseVM()
+	{
+		IncomeAndExpensesViewModel thisMonthViewModel = new()
+		{
+			Income = "This Month Income",
+			IncomeAmount = service.ThisMonthIncome(),
+			Expenses = "This Month Expenses",
+			ExpensesAmount = service.ThisMonthExpenses()
+		};
+
+		return thisMonthViewModel;
+	}
+
+	IncomeAndExpensesViewModel LastYearIncomeExpenseVM()
+	{
+		IncomeAndExpensesViewModel lastYearViewModel = new()
+		{
+			Income = "Last Year Income",
+			IncomeAmount = service.LastYearIncome(),
+			Expenses = "Last Year Expenses",
+			ExpensesAmount = service.LastYearExpenses()
+		};
+
+		return lastYearViewModel;
+	}
+
+	IncomeAndExpensesViewModel ThisYearIncomeExpenseVM()
+	{
+		IncomeAndExpensesViewModel thisYearViewModel = new()
+		{
+			Income = "This Year Income",
+			IncomeAmount = service.ThisYearIncome(),
+			Expenses = "This Year Expenses",
+			ExpensesAmount = service.ThisYearExpenses()
+		};
+
+		return thisYearViewModel;
+	}
+
+	List<string> ViewModelDataLabels(IncomeAndExpensesViewModel viewModel)
+	{
+		return new List<string>() { viewModel.Income, viewModel.Expenses };
+	}
+
+	List<decimal> ViewModelData(IncomeAndExpensesViewModel viewModel)
+	{
+		return new List<decimal>() { viewModel.IncomeAmount, viewModel.ExpensesAmount };
+	}
+
+	BarChartConfig GetBarCharConfiguration(BarChartConfig newBarChart)
+	{
+		newBarChart = new BarChartConfig()
+		{
+			Options = new Options()
+			{
+				Plugins = new Plugins()
+				{
+					Legend = new Legend()
+					{
+						Align = LegendAlign.Center,
+						Display = false,
+						Position = LegendPosition.Top
+					}
+				},
+				Scales = new Scales()
+				{
+					X = new XAxes()
+					{
+						Stacked = true,
+						Ticks = new Ticks()
+						{
+							MaxRotation = 0,
+							MinRotation = 0
+						}
+					},
+					Y = new YAxes()
+					{
+						Stacked = true
+					}
+				}
+			}
+		};
+
+		return newBarChart;
+	}
+
+	void SetBarChartLabelsAndData(BarChartConfig barChartConfig, IncomeAndExpensesViewModel viewModel)
+	{
+		barChartConfig.Data.Labels = ViewModelDataLabels(viewModel);
+		SetBarChartDatasets(barChartConfig, viewModel);
+	}
+
+	void SetBarChartDatasets(BarChartConfig barChartConfig, IncomeAndExpensesViewModel viewModel)
+	{
+		barChartConfig.Data.Datasets.Add(new BarDataset()
+			{
+				Label = "Value",
+				Data = ViewModelData(viewModel),
+				BackgroundColor = new List<string>() { "#7aed6d", "#f06772" },
+				BorderColor = new List<string>() { "green", "red" },
+				BorderWidth = 1, 
+				HoverBackgroundColor = new List<string>() { "#15a805", "#b80412" }
+			});
+	}
+}

@@ -1,8 +1,6 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 using SQLite;
-using System.Linq;
 
 namespace MyBudget.DataAccess
 {
@@ -14,7 +12,7 @@ namespace MyBudget.DataAccess
 
         public IncomeDataAccess()
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _dbPath = DatabaseHelper.GetDbPath();
         }
 
         public async Task<Incomes> GetRecordByIdAsync(int id)
@@ -37,13 +35,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.InsertAsync(newIncome).ContinueWith((i) =>
                 {
-                    Log.Information($"Income created: {newIncome.IncomeName}");
+                    MyBudgetLogger.CreatedLogMessage(newIncome);
                 });
                 return newIncome;
             }
             catch (Exception e)
             {
-                Log.Error($"Error inserting new income: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newIncome, e);
                 return null;
             }
         }
@@ -54,13 +52,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.UpdateAsync(income).ContinueWith((i) =>
                 {
-                    Log.Information($"Income updated: {income.IncomeId}, {income.IncomeName}");
+                    MyBudgetLogger.UpdatedLogMessage(income);
                 });
                 return income;
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating income: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(income, e);
                 return null;
             }
         }
@@ -71,13 +69,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.DeleteAsync(income).ContinueWith((i) =>
                 {
-                    Log.Information($"Income deleted: {income.IncomeId}, {income.IncomeName}");
+                    MyBudgetLogger.DeletedLogMessage(income);
                 });
                 return income;
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting income: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(income, e);
                 return null;
             }
         }
@@ -119,10 +117,10 @@ namespace MyBudget.DataAccess
             }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            await _asyncConnection.CreateTableAsync<Incomes>().ContinueWith((results) =>
-            {
-                Log.Information($"Incomes table created: {results.Result}");
-            });
+            //await _asyncConnection.CreateTableAsync<Incomes>().ContinueWith((results) =>
+            //{
+            //    Log.Information($"Incomes table created: {results.Result}");
+            //});
         }
     }
 }

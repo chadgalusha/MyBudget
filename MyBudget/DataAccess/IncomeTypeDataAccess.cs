@@ -1,6 +1,5 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 using SQLite;
 
 namespace MyBudget.DataAccess
@@ -13,7 +12,7 @@ namespace MyBudget.DataAccess
 
         public IncomeTypeDataAccess()
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _dbPath = DatabaseHelper.GetDbPath();
         }
 
         public async Task<IncomeTypes> GetRecordByIdAsync(int id)
@@ -34,12 +33,15 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _asyncConnection.InsertAsync(newType);
+                await _asyncConnection.InsertAsync(newType).ContinueWith((i) =>
+                {
+                    MyBudgetLogger.CreatedLogMessage(newType);
+                });
                 return newType;
             }
             catch (Exception e)
             {
-                Log.Error($"Error inserting new record: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newType, e);
                 return null;
             }
         }
@@ -48,12 +50,15 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _asyncConnection.UpdateAsync(type);
+                await _asyncConnection.UpdateAsync(type).ContinueWith((i) =>
+                {
+                    MyBudgetLogger.UpdatedLogMessage(type);
+                });
                 return type;
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating record: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(type, e);
                 return null;
             }
         }
@@ -62,12 +67,15 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _asyncConnection.DeleteAsync(type);
+                await _asyncConnection.DeleteAsync(type).ContinueWith((i) =>
+                {
+                    MyBudgetLogger.DeletedLogMessage(type);
+                });
                 return type;
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting type: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(type, e);
                 return null;
             }
         }
@@ -119,7 +127,7 @@ namespace MyBudget.DataAccess
             }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            await _asyncConnection.CreateTableAsync<IncomeTypes>();
+            //await _asyncConnection.CreateTableAsync<IncomeTypes>();
 
             if (await DoesTableHaveValuesAsync() == false)
             {

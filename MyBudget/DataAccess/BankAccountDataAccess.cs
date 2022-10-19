@@ -1,16 +1,10 @@
 ﻿using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 using SQLite;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MyBudget.DataAccess
 {
-	public class BankAccountDataAccess : IDataAccess<BankAccounts>
+    public class BankAccountDataAccess : IDataAccess<BankAccounts>
 	{
         private readonly string _dbPath;
         private SQLiteAsyncConnection _asyncConnection;
@@ -18,7 +12,7 @@ namespace MyBudget.DataAccess
 
         public BankAccountDataAccess()
         {
-            _dbPath = DatbasePath.GetDbPath();
+            _dbPath = DatabaseHelper.GetDbPath();
         }
 
         public async Task<BankAccounts> GetRecordByIdAsync(int id)
@@ -41,13 +35,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.InsertAsync(bankAccount).ContinueWith((b) =>
                 {
-                    Log.Information($"Bank account created: {bankAccount.BankAccountName}");
+                    MyBudgetLogger.CreatedLogMessage(bankAccount);
                 });
                 return bankAccount;
             }
             catch (Exception e)
             {
-                Log.Error($"Error creating new bank account: {e.Message}");
+                MyBudgetLogger.ErrorCreating(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
@@ -58,13 +52,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.UpdateAsync(bankAccount).ContinueWith((b) =>
                 {
-                    Log.Information($"Bank account updated: {bankAccount.BankAccountId}, {bankAccount.BankAccountName}");
+                    MyBudgetLogger.UpdatedLogMessage(bankAccount);
                 });
                 return bankAccount;
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating bank account: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
@@ -75,13 +69,13 @@ namespace MyBudget.DataAccess
             {
                 await _asyncConnection.DeleteAsync(bankAccount).ContinueWith((b) =>
                 {
-                    Log.Information($"Bank account deleted: {bankAccount.BankAccountId}, {bankAccount.BankAccountName}");
+                    MyBudgetLogger.DeletedLogMessage(bankAccount);
                 });
                 return bankAccount;
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting bank account: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
@@ -123,10 +117,10 @@ namespace MyBudget.DataAccess
             }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            await _asyncConnection.CreateTableAsync<BankAccounts>().ContinueWith((results) =>
-            {
-                Log.Information($"Bank Account table created: {results.Result}");
-            });
+            //await _asyncConnection.CreateTableAsync<BankAccounts>().ContinueWith((results) =>
+            //{
+            //    Log.Information($"Bank Account table created: {results.Result}");
+            //});
         }
     }
 }
