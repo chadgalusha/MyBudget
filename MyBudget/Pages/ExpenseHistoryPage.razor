@@ -19,18 +19,23 @@ else
 {
 	<MudTable Items="@ExpenseHistoryItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<ExpenseHistory, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
 		<ToolBarContent>
-			<MudText Typo="Typo.h6">Expense History</MudText>
+			<MudDatePicker Label="Month-Year Selector" @bind-Date="_yearMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="MM/yyyy" />
+			@if (_yearMonth != null)
+			{
+				<MudIcon Icon="@Icons.TwoTone.Search" Title="Search" Color="Color.Primary" class="date-search-button" @onclick="SearchByDateFilter"/>
+				<MudIcon Icon="@Icons.TwoTone.Cancel" Title="Clear" Color="Color.Warning" class="date-search-button" @onclick="ClearDateFilter"/>
+			}
 			<MudSpacer />
 			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh Style="display:none;">Expense History Id</MudTh>
-			<MudTh>Expense Name</MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseName)">Expense Name</MudTableSortLabel></MudTh>
 			<MudTh>Amount Due</MudTh>
 			<MudTh>Amount Paid</MudTh>
-			<MudTh>Date Paid</MudTh>
+			<MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseDate)">Date Paid</MudTableSortLabel></MudTh>
 			<MudTh>Due Date</MudTh>
-			<MudTh>Expense Category</MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseCategoryId)">Expense Category</MudTableSortLabel></MudTh>
 			<MudTh></MudTh>
 		</HeaderContent>
 		<RowTemplate>
@@ -139,6 +144,8 @@ else
 	private ExpenseHistory selectedItem1 = null;
 	private HashSet<ExpenseHistory> selectedItems = new();
 	private IEnumerable<ExpenseHistory> ExpenseHistoryItems = new List<ExpenseHistory>();
+
+	DateTime? _yearMonth;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -262,10 +269,33 @@ else
 			return true;
 		if ($"{exh.ExpenseAmount} {exh.AmountPaid}".Contains(searchString))
 			return true;
-		if ($"{exh.DueDate} {exh.ExpenseDate}".Contains(searchString))
+		if ($"{exh.DueDate.ToShortDateString()} {exh.ExpenseDate.ToShortDateString()}".Contains(searchString))
 			return true;
 		if ($"{exh.ExpenseCategoryId}".Contains(searchString))
 			return true;
 		return false;
+	}
+
+	// Date Filter Functions
+
+	void SearchByDateFilter()
+	{
+		if (_yearMonth == null)
+			return;
+
+		ExpenseHistoryItems = expenseHistoryList;
+
+		int month = _yearMonth.Value.Month;
+		int year = _yearMonth.Value.Year;
+
+		ExpenseHistoryItems = ExpenseHistoryItems.ToList()
+								.Where(i => i.ExpenseDate.Month == month)
+								.Where(i => i.ExpenseDate.Year == year);
+	}
+
+	void ClearDateFilter()
+	{
+		_yearMonth = null;
+		ExpenseHistoryItems = expenseHistoryList;
 	}
 }

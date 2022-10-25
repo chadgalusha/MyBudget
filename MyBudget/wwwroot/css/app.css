@@ -115,3 +115,12 @@ a, .btn-link {
     border: dashed;
     transform:scale(1.4);
 }
+
+.date-search-button {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+    .date-search-button:hover {
+        border:dashed;
+    }
