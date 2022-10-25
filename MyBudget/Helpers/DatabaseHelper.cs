@@ -9,6 +9,7 @@ namespace MyBudget.Helpers
         public static string GetDbPath()
         {
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "database.sqlite");
+            //return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "test_database.sqlite");
         }
 
         public static void CheckForDbTables()
