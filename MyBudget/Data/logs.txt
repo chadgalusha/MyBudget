@@ -352,3 +352,38 @@
 2022-10-19 12:16:12.758 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":125,"ExpenseName":"Mortgage","ExpenseAmount":1323.22,"AmountPaid":1323.22,"ExpenseDate":"2022-09-06T00:00:00","DueDate":"2022-09-06T00:00:00","ExpenseCategoryId":1}
 2022-10-19 12:16:33.322 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":126,"ExpenseName":"Van Payment","ExpenseAmount":192,"AmountPaid":192,"ExpenseDate":"2022-09-07T00:00:00","DueDate":"2022-09-07T00:00:00","ExpenseCategoryId":4}
 2022-10-19 12:16:53.686 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":127,"ExpenseName":"Chad CC Payment","ExpenseAmount":50,"AmountPaid":50,"ExpenseDate":"2022-09-21T00:00:00","DueDate":"2022-09-21T00:00:00","ExpenseCategoryId":6}
+2022-10-25 14:42:52.656 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":1,"BankAccountType":"Checking"}
+2022-10-25 14:42:52.682 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":2,"BankAccountType":"Savings"}
+2022-10-25 14:42:52.689 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":3,"BankAccountType":"Money-Market"}
+2022-10-25 14:42:55.904 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":1,"IncomeType":"Primary"}
+2022-10-25 14:42:55.912 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":2,"IncomeType":"Secondary"}
+2022-10-25 14:42:55.919 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":3,"IncomeType":"Occasional"}
+2022-10-25 14:42:55.926 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":4,"IncomeType":"One-Time"}
+2022-10-25 14:42:57.046 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":1,"ExpenseType":"Primary"}
+2022-10-25 14:42:57.054 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":2,"ExpenseType":"Secondary"}
+2022-10-25 14:42:57.062 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":3,"ExpenseType":"Occasional"}
+2022-10-25 14:42:57.070 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":4,"ExpenseType":"One-Time"}
+2022-10-25 14:43:01.523 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":1,"ExpenseCategoryName":"Home \u0026 Utility","ExpenseCategoryDescription":"Mortgage, rent, electricity, water, gas"}
+2022-10-25 14:43:01.531 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":2,"ExpenseCategoryName":"Giving","ExpenseCategoryDescription":"Charitable giving"}
+2022-10-25 14:43:01.539 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":3,"ExpenseCategoryName":"Grocery","ExpenseCategoryDescription":"Food shopping"}
+2022-10-25 14:43:01.548 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":4,"ExpenseCategoryName":"Transportation","ExpenseCategoryDescription":"Gas and maintenance for vehicles"}
+2022-10-25 14:43:01.556 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":5,"ExpenseCategoryName":"Health","ExpenseCategoryDescription":"Medical, Dental, etc."}
+2022-10-25 14:43:01.564 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":6,"ExpenseCategoryName":"Finance","ExpenseCategoryDescription":"Payments for credit cards, service charges, loan payments"}
+2022-10-25 14:43:01.573 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":7,"ExpenseCategoryName":"Insurance","ExpenseCategoryDescription":"Life insuruance, vehicle insurance, etc."}
+2022-10-25 14:43:01.579 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":8,"ExpenseCategoryName":"Dine Out","ExpenseCategoryDescription":"Restaurants, fast food, coffee"}
+2022-10-25 14:43:01.587 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":9,"ExpenseCategoryName":"Shopping \u0026 Entertainment","ExpenseCategoryDescription":"Entertainment spending, gifts, hobbies, frivolous spending"}
+2022-10-25 14:43:01.595 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":10,"ExpenseCategoryName":"Education","ExpenseCategoryDescription":"School material and services"}
+2022-10-25 14:43:01.602 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":11,"ExpenseCategoryName":"Travel","ExpenseCategoryDescription":"Airline luggage fees, hotels, car rentals"}
+2022-10-25 14:43:01.609 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":12,"ExpenseCategoryName":"Business Expense","ExpenseCategoryDescription":"Office supplies, print, business expenses"}
+2022-10-25 14:43:01.617 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":13,"ExpenseCategoryName":"Misc Cach \u0026 Checks","ExpenseCategoryDescription":"ATM, money checks, etc."}
+2022-10-25 14:43:01.624 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":14,"ExpenseCategoryName":"Pet Care","ExpenseCategoryDescription":"Health and other spending for pets besides food"}
+2022-10-25 14:43:01.632 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":15,"ExpenseCategoryName":"No Category","ExpenseCategoryDescription":"Spending that defies categorization"}
+2022-10-25 14:43:02.255 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":1,"PaymentFrequencyType":"Yearly"}
+2022-10-25 14:43:02.263 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":2,"PaymentFrequencyType":"Bi-Yearly"}
+2022-10-25 14:43:02.271 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":3,"PaymentFrequencyType":"Quarterly"}
+2022-10-25 14:43:02.279 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":4,"PaymentFrequencyType":"Monthly"}
+2022-10-25 14:43:02.286 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":5,"PaymentFrequencyType":"Bi-Monthly"}
+2022-10-25 14:43:02.293 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":6,"PaymentFrequencyType":"Bi-Weekly"}
+2022-10-25 14:43:02.301 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":7,"PaymentFrequencyType":"Weekly"}
+2022-10-25 14:43:02.309 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":8,"PaymentFrequencyType":"Occasional"}
+2022-10-25 14:43:02.315 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":9,"PaymentFrequencyType":"Single"}

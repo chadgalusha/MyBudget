@@ -125,6 +125,27 @@ else
 	{
 		ShowPopup = false;
 		Error = "";
+
+		try
+		{
+			if (paymentFrequencyType.PaymentFrequencyTypeId == 0)
+			{
+
+			}
+			else
+			{
+				var updatedRecord = await paymentFrequencyTypeService.UpdateRecord(paymentFrequencyType);
+				if (updatedRecord.PaymentFrequencyTypeId == -1)
+				{
+					Error = "Duplicate Payment Frequency Type, please try again";
+					paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			Error = e.Message;
+		}
 	}
 
 	async Task DeleteConfirm(PaymentFrequencyTypes type)
