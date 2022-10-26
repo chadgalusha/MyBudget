@@ -42,7 +42,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorCreating(newType, e);
-                return null;
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
             }
         }
 
@@ -59,7 +59,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorUpdating(type, e);
-                return null;
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
             }
         }
 
@@ -76,7 +76,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorDeleting(type, e);
-                return null;
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
             }
         }
 

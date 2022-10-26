@@ -2,10 +2,8 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject ITypeService<ExpenseTypes> expenseTypeService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expense Types</h3>
-<p style="color:red">@Error</p>
 
 @if (expenseTypeList == null)
 {
@@ -74,7 +72,7 @@ else
 						{
 							<!-- Button to delete the expense type -->
 							<button class="btn btn-danger"
-						@onclick="() => DeleteRecord(expenseType)">
+						@onclick="() => DeleteConfirm(expenseType)">
 								Delete
 							</button>
 						}
@@ -86,7 +84,6 @@ else
 }
 
 @code {
-	string Error = "";
 	List<ExpenseTypes> expenseTypeList = new();
 	ExpenseTypes expenseType = new();
 	bool ShowPopup = false;
@@ -96,7 +93,15 @@ else
 	private HashSet<ExpenseTypes> selectedItems = new();
 	private IEnumerable<ExpenseTypes> ExpenseTypeItems = new List<ExpenseTypes>();
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		expenseTypeList = await expenseTypeService.GetList();
 		ExpenseTypeItems = expenseTypeList;
@@ -123,7 +128,6 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
@@ -135,71 +139,100 @@ else
 				};
 
 				var createdExpenseType = await expenseTypeService.CreateRecord(newExpenseType);
-
-				switch (createdExpenseType.ExpenseTypeId)
-				{
-					case 0:
-						Error = "Error processing request, please try again";
-						break;
-					case -1:
-						Error = "Duplicate expense type name, please try again";
-						break;
-					default:
-						expenseTypeList = await expenseTypeService.GetList();
-						ExpenseTypeItems = expenseTypeList;
-						break;
-				}
+				CreateResultProcessor(createdExpenseType);
 			}
 			else
 			{
 				var updatedRecord = await expenseTypeService.UpdateRecord(expenseType);
-				if (updatedRecord.ExpenseTypeId == -1)
-				{
-					Error = "Duplicate expense type name, please try again";
-					expenseTypeList = await expenseTypeService.GetList();
-				}
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(ExpenseTypes type)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(type);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {type.ExpenseType}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(type); }
 	}
 
 	async Task DeleteRecord(ExpenseTypes type)
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
 			var deleteExpenseTypeResult = await expenseTypeService.DeleteRecord(type);
-
-			if (deleteExpenseTypeResult.ExpenseTypeId == -1)
-			{
-				Error = "Expense type in use by 1 or more expenses";
-			}
-
-			if (deleteExpenseTypeResult.ExpenseTypeId != -1)
-			{
-				expenseTypeList.Remove(type);
-				expenseTypeList = await expenseTypeService.GetList();
-				ExpenseTypeItems = expenseTypeList;
-			}
+			DeleteResultProcessor(deleteExpenseTypeResult);
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}	
+	}
+
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void DuplicateNameMessage() { Snackbar.Add("Duplicate Expense Type name, please try again", Severity.Error); }
+	void TypeInUseMessage() { Snackbar.Add("Expense Type in use by 1 or more expenses", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(ExpenseTypes type)
+	{
+		switch (type.ExpenseTypeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				DuplicateNameMessage();
+				break;
+			default:
+				expenseTypeList.Add(type);
+				ExpenseTypeItems = expenseTypeList;
+				Snackbar.Add("Expense Type Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(ExpenseTypes type)
+	{
+		if (type.ExpenseTypeId == -1)
+		{
+			DuplicateNameMessage();
+			await LoadData();
+			return;
+		}
+		if (type.ExpenseTypeId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(ExpenseTypes type)
+	{
+		switch (type.ExpenseTypeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				TypeInUseMessage();
+				break;
+			default:
+				expenseTypeList.Remove(type);
+				ExpenseTypeItems = expenseTypeList;
+				Snackbar.Add("Expense Type Deleted", Severity.Success);
+				break;
+		}
 	}
 
 	// Search Functions

@@ -42,7 +42,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorCreating(newType, e);
-                return null;
+                return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }
 
@@ -59,7 +59,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorUpdating(type, e);
-                return null;
+                return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }
 
@@ -76,45 +76,45 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorDeleting(type, e);
-                return null;
+                return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }
 
         public bool DoesTypeNameExist(string incomeTypeName)
         {
-            _connection = new SQLiteConnection(_dbPath);
-
-            int result = _connection.Table<IncomeTypes>()
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                int result = _connection.Table<IncomeTypes>()
                 .Where(i => i.IncomeType.ToLower() == incomeTypeName.ToLower())
                 .Count();
 
-            _connection.Close();
-            return result > 0;
+                return result > 0;
+            } 
         }
 
         public string GetNameOfTypeByID(int id)
         {
-            _connection = new SQLiteConnection(_dbPath);
-
-            string incomeTypeName = _connection.Table<IncomeTypes>()
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                string incomeTypeName = _connection.Table<IncomeTypes>()
                 .Where(i => i.IncomeTypeId == id)
                 .Select(i => i.IncomeType)
                 .SingleOrDefault();
 
-            _connection.Close();
-            return incomeTypeName;
+                return incomeTypeName;
+            }
         }
 
         public bool IsTypeUsedAndCannotBeDeleted(int incomeTypeId)
         {
-            _connection = new SQLiteConnection(_dbPath);
-
-            int result = _connection.Table<Incomes>()
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                int result = _connection.Table<Incomes>()
                 .Where(i => i.IncomeTypeId == incomeTypeId)
                 .Count();
 
-            _connection.Close();
-            return result > 0;
+                return result > 0;
+            }
         }
 
         // private methods

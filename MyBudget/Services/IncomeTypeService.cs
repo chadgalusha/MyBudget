@@ -68,20 +68,20 @@ namespace MyBudget.Services
             }
         }
 
-        public async Task<IncomeTypes> DeleteRecord(IncomeTypes type)
+        public async Task<IncomeTypes> DeleteRecord(IncomeTypes incomeType)
         {
-            if (IsIncomeTypeUsedByIncome(type.IncomeTypeId) == true)
+            if (IsIncomeTypeUsedByIncome(incomeType.IncomeTypeId) == true)
             {
                 return new IncomeTypes() { IncomeTypeId = -1 };
             }
 
             try
             {
-                return await _incomeTypeDataAccess.DeleteRecordAsync(type);
+                return await _incomeTypeDataAccess.DeleteRecordAsync(incomeType);
             }
             catch (Exception e)
             {
-                MyBudgetLogger.ErrorDeleting(type, e);
+                MyBudgetLogger.ErrorDeleting(incomeType, e);
                 return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }

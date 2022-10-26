@@ -2,10 +2,8 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Payment Frequency Types</h3>
-<p style="color:red">@Error</p>
 
 @if (paymentFrequencyTypesList == null)
 {
@@ -74,7 +72,7 @@ else
                         {
 							<!-- Button to delete the payment frequency type -->
                             <button class="btn btn-danger"
-                        @onclick="() => DeleteRecord(paymentFrequencyType)">
+                        @onclick="() => DeleteConfirm(paymentFrequencyType)">
                                 Delete
                             </button>
                         }
@@ -87,7 +85,6 @@ else
 
 @code 
 {
-	string Error = "";
 	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
 	PaymentFrequencyTypes paymentFrequencyType = new PaymentFrequencyTypes();
 	bool ShowPopup = false;
@@ -97,7 +94,15 @@ else
 	private HashSet<PaymentFrequencyTypes> selectedItems = new();
 	private IEnumerable<PaymentFrequencyTypes> PaymentFrequencyTypeItems = new List<PaymentFrequencyTypes>();
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
 		PaymentFrequencyTypeItems = paymentFrequencyTypesList;
@@ -124,43 +129,111 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
 			if (paymentFrequencyType.PaymentFrequencyTypeId == 0)
 			{
+				PaymentFrequencyTypes newPaymentFrequency = new()
+				{
+					PaymentFrequencyType = paymentFrequencyType.PaymentFrequencyType
+				};
 
+				var createdPaymentFrequencyType = await paymentFrequencyTypeService.CreateRecord(newPaymentFrequency);
+				CreateResultProcessor(createdPaymentFrequencyType);
 			}
 			else
 			{
 				var updatedRecord = await paymentFrequencyTypeService.UpdateRecord(paymentFrequencyType);
-				if (updatedRecord.PaymentFrequencyTypeId == -1)
-				{
-					Error = "Duplicate Payment Frequency Type, please try again";
-					paymentFrequencyTypesList = await paymentFrequencyTypeService.GetList();
-				}
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(PaymentFrequencyTypes type)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(type);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {type.PaymentFrequencyType}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(type); }
 	}
 
 	async Task DeleteRecord(PaymentFrequencyTypes type)
 	{
 		ShowPopup = false;
-		Error = "";
+
+		try
+		{
+			var deletePaymentFrequencyType = await paymentFrequencyTypeService.DeleteRecord(type);
+			DeleteResultProcessor(deletePaymentFrequencyType);
+		}
+		catch (Exception e)
+		{
+			CatchErrorMessage(e);
+		}
+	}
+
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void DuplicateNameMessage() { Snackbar.Add("Duplicate Payment Frequency Type name, please try again", Severity.Error); }
+	void TypeInUseMessage() { Snackbar.Add("Payment Frequency Type in use by 1 or more incomes or expenses", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(PaymentFrequencyTypes type)
+	{
+		switch (type.PaymentFrequencyTypeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				DuplicateNameMessage();
+				break;
+			default:
+				paymentFrequencyTypesList.Add(type);
+				PaymentFrequencyTypeItems = paymentFrequencyTypesList;
+				Snackbar.Add("Payment Frequency Type Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(PaymentFrequencyTypes type)
+	{
+		if (type.PaymentFrequencyTypeId == -1)
+		{
+			DuplicateNameMessage();
+			await LoadData();
+			return;
+		}
+		if (type.PaymentFrequencyTypeId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(PaymentFrequencyTypes type)
+	{
+		switch (type.PaymentFrequencyTypeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				TypeInUseMessage();
+				break;
+			default:
+				paymentFrequencyTypesList.Remove(type);
+				PaymentFrequencyTypeItems = paymentFrequencyTypesList;
+				Snackbar.Add("Payment Frequency Type Deleted", Severity.Success);
+				break;
+		}
 	}
 
 	// Search Functions

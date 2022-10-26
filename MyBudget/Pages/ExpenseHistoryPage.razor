@@ -2,6 +2,7 @@
 @using MyBudget.Models
 @using MyBudget.Services
 @using MyBudget.Helpers
+@using System.Globalization
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
 @inject IJSRuntime jsRuntime
@@ -41,8 +42,8 @@ else
 		<RowTemplate>
 			<MudTd DataLabel="Expense History Id" Style="display:none;">@context.ExpenseHistoryId</MudTd>
 			<MudTd DataLabel="Expense Name">@context.ExpenseName</MudTd>
-			<MudTd DataLabel="Amount due">$@context.ExpenseAmount.ToString("0.00")</MudTd>
-			<MudTd DataLabel="Amount Paid">$@context.AmountPaid.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Amount due">@context.ExpenseAmount.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
+			<MudTd DataLabel="Amount Paid">@context.AmountPaid.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
 			<MudTd DataLabel="Date Paid">@context.ExpenseDate.ToShortDateString()</MudTd>
 			<MudTd DataLabel="Due Date">@context.DueDate.ToShortDateString()</MudTd>
 			<MudTd DataLabel="Expense Category">@GetExpenseCategoryName(context.ExpenseCategoryId, expenseCategoryList)</MudTd>

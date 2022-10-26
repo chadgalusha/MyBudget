@@ -2,6 +2,7 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @using MyBudget.Helpers
+@using System.Globalization
 @inject IService<BankAccounts> bankAccountService
 @inject ITypeService<BankAccountTypes> bankAccountTypeService
 @inject IJSRuntime jsRuntime
@@ -24,17 +25,17 @@ else
 			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 		</ToolBarContent>
 		<HeaderContent>
-			<MudTh>Bank Account Id</MudTh>
+			<MudTh style="display:none;">Bank Account Id</MudTh>
 			<MudTh>Bank Account Name</MudTh>
 			<MudTh>Bank Account Type</MudTh>
 			<MudTh>Balance</MudTh>
 			<MudTh></MudTh>
 		</HeaderContent>
 		<RowTemplate>
-			<MudTd DataLabel="Bank Account Id">@context.BankAccountId</MudTd>
+			<MudTd DataLabel="Bank Account Id" style="display:none;">@context.BankAccountId</MudTd>
 			<MudTd DataLabel="Bank Account Name">@context.BankAccountName</MudTd>
 			<MudTd DataLabel="Bank Account Type">@GetBankAccountTypeName(context.BankAccountTypeId, bankAccountTypeList)</MudTd>
-			<MudTd DataLabel="Balance">@context.Balance.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Balance">@context.Balance.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
 			<MudTd>
 				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
 				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
