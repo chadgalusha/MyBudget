@@ -121,13 +121,9 @@ namespace MyBudget.DataAccess
 
         private async Task InitializeAsync()
         {
-            if (_asyncConnection != null)
-            {
-                return;
-            }
+            if (_asyncConnection != null) { return; }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            //await _asyncConnection.CreateTableAsync<IncomeTypes>();
 
             if (await DoesTableHaveValuesAsync() == false)
             {

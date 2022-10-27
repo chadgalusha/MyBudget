@@ -460,3 +460,5 @@
 2022-10-27 15:22:48.749 -05:00 [INF] Incomes created: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":0,"InitialIncomeDate":"2022-10-27T00:00:00-05:00"}
 2022-10-27 15:22:56.076 -05:00 [INF] Incomes updated: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00-05:00"}
 2022-10-27 15:23:02.862 -05:00 [INF] Incomes deleted: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00"}
+2022-10-27 16:11:53.858 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":19,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
+2022-10-27 16:12:53.272 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":3,"ExpenseName":"Test 2","AmountPaid":23,"ExpenseDate":"2022-10-27T00:00:00-05:00","ExpenseCategoryId":19}

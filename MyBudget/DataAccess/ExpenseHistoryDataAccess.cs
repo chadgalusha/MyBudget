@@ -114,10 +114,7 @@ namespace MyBudget.DataAccess
 
         private void Initialize()
         {
-            if (_asyncConnection != null)
-            {
-                return;
-            }
+            if (_asyncConnection != null) { return; }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
         }

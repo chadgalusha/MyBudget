@@ -7,10 +7,13 @@ namespace MyBudget.Services
     public class ExpenseCategoriesService : IService<ExpenseCategories>
     {
         private readonly IDataAccess<ExpenseCategories> _expenseCategoriesDataAccess;
+        private readonly IHistoryService<ExpenseHistory> _expenseHistoryService;
 
-        public ExpenseCategoriesService(IDataAccess<ExpenseCategories> expenseCategoriesDataAccess)
+        public ExpenseCategoriesService(IDataAccess<ExpenseCategories> expenseCategoriesDataAccess, 
+            IHistoryService<ExpenseHistory> expenseHistoryService)
         {
             _expenseCategoriesDataAccess = expenseCategoriesDataAccess;
+            _expenseHistoryService = expenseHistoryService;
         }
 
         public async Task<ExpenseCategories> GetById(int id)
@@ -70,7 +73,12 @@ namespace MyBudget.Services
 
         public async Task<ExpenseCategories> DeleteRecord(ExpenseCategories expenseCategory)
         {
-            //TODO implment check if in use
+            bool isCategoryBeingUsed = await IsExpenseCategoryUsedInExpenseHistory(expenseCategory.ExpenseCategoryId);
+            if (isCategoryBeingUsed == true)
+            {
+                return new ExpenseCategories() { ExpenseCategoryId = -1 };
+            }
+
             try
             {
                 return await _expenseCategoriesDataAccess.DeleteRecordAsync(expenseCategory);
@@ -93,6 +101,20 @@ namespace MyBudget.Services
         {
             string currentExpenseCategoryname = _expenseCategoriesDataAccess.GetNameById(expenseCategory.ExpenseCategoryId);
             return !currentExpenseCategoryname.Equals(expenseCategory.ExpenseCategoryName);
+        }
+
+        private async Task<List<ExpenseHistory>> GetListExpenseHistories()
+        {
+            return await _expenseHistoryService.GetList();
+        }
+
+        private async Task<bool> IsExpenseCategoryUsedInExpenseHistory(int expenseCategoryId)
+        {
+            List<ExpenseHistory> expenseHistoryList = await GetListExpenseHistories();
+
+            int result = expenseHistoryList.Where(e => e.ExpenseCategoryId == e.ExpenseCategoryId).Count();
+
+            return result > 0;
         }
     }
 }

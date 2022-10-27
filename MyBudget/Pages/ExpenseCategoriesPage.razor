@@ -191,7 +191,7 @@ else
 
 	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
 	void DuplicateNameMessage() { Snackbar.Add("Duplicate Expense Category name, please try again", Severity.Error); }
-	void TypeInUseMessage() { Snackbar.Add("Expense Category in use by 1 or more Bank Accounts", Severity.Error); }
+	void TypeInUseMessage() { Snackbar.Add("Expense Category in use by 1 or more Expense Histories", Severity.Error); }
 	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
 
 	void CreateResultProcessor(ExpenseCategories category)
