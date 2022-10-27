@@ -1,6 +1,6 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 
 namespace MyBudget.Services
 {
@@ -43,7 +43,7 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error creating new bank account: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newBankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
 		}
@@ -64,7 +64,7 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating bank account: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
         }
@@ -77,12 +77,12 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting bank account: {e.Message}");
+               MyBudgetLogger.ErrorDeleting(bankAccount, e);
                 return new BankAccounts() { BankAccountId = 0 };
             }
 		}
 
-        #region Private Methods
+       // PRIVATE METHODS
 
         private bool IsBankAccountNameAlreadyUsed(string bankAccountName)
         {
@@ -95,7 +95,5 @@ namespace MyBudget.Services
             string currentBankAccountName = _bankAccountsDataAccess.GetNameById(bankAccount.BankAccountId);
             return !currentBankAccountName.Equals(bankAccount.BankAccountName);
         }
-
-        #endregion
     }
 }

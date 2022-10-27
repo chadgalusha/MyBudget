@@ -441,3 +441,22 @@
 2022-10-26 16:44:47.084 -05:00 [INF] BankAccountTypes deleted: {"BankAccountTypeId":7,"BankAccountType":"test2"}
 2022-10-26 16:44:50.882 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":8,"BankAccountType":"t"}
 2022-10-26 16:44:53.209 -05:00 [INF] BankAccountTypes deleted: {"BankAccountTypeId":8,"BankAccountType":"t"}
+2022-10-27 14:13:25.478 -05:00 [INF] BankAccounts created: {"BankAccountId":2,"BankAccountName":"test","BankAccountTypeId":3,"Balance":3}
+2022-10-27 14:13:31.505 -05:00 [INF] BankAccounts updated: {"BankAccountId":2,"BankAccountName":"test","BankAccountTypeId":3,"Balance":33}
+2022-10-27 14:13:34.337 -05:00 [INF] BankAccounts deleted: {"BankAccountId":2,"BankAccountName":"test","BankAccountTypeId":3,"Balance":33}
+2022-10-27 14:35:46.265 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":2,"ExpenseName":"New Test","AmountPaid":6132,"ExpenseDate":"2022-10-27T00:00:00-05:00","ExpenseCategoryId":6}
+2022-10-27 14:35:54.467 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense History","AmountPaid":12,"ExpenseDate":"2022-10-26T00:00:00","ExpenseCategoryId":7}
+2022-10-27 14:36:13.714 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense History","AmountPaid":12,"ExpenseDate":"2022-10-26T00:00:00","ExpenseCategoryId":7}
+2022-10-27 14:47:34.193 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"New Test","AmountPaid":654,"ExpenseDate":"2022-10-27T00:00:00","ExpenseCategoryId":6}
+2022-10-27 14:48:02.556 -05:00 [INF] Expenses created: {"ExpensesId":2,"ExpensesName":"test2","ExpenseTypeId":2,"PaymentFrequencyTypeId":15,"ExpenseAmount":234,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:48:17.855 -05:00 [INF] Expenses deleted: {"ExpensesId":2,"ExpensesName":"test","ExpenseTypeId":2,"PaymentFrequencyTypeId":15,"ExpenseAmount":234,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:49:19.369 -05:00 [INF] Expenses deleted: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":5,"PaymentFrequencyTypeId":15,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-27 14:49:31.528 -05:00 [INF] Expenses created: {"ExpensesId":3,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":2,"ExpenseAmount":0,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:49:44.082 -05:00 [INF] Expenses created: {"ExpensesId":4,"ExpensesName":"test2","ExpenseTypeId":2,"PaymentFrequencyTypeId":2,"ExpenseAmount":456,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:49:51.857 -05:00 [INF] Expenses deleted: {"ExpensesId":4,"ExpensesName":"test2","ExpenseTypeId":2,"PaymentFrequencyTypeId":2,"ExpenseAmount":456,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:08:27.258 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":1,"IncomeName":"Test Income History","IncomeAmount":312,"IncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:08:37.776 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":2,"IncomeName":"Test Income History","IncomeAmount":0,"IncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:08:45.728 -05:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":2,"IncomeName":"Test Income History","IncomeAmount":0,"IncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:22:48.749 -05:00 [INF] Incomes created: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":0,"InitialIncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:22:56.076 -05:00 [INF] Incomes updated: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:23:02.862 -05:00 [INF] Incomes deleted: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00"}

@@ -1,6 +1,6 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 
 namespace MyBudget.Services
 {
@@ -41,7 +41,7 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error creating new expense type: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newType, e);
                 return new ExpenseTypes() { ExpenseTypeId = 0 };
             }
         }
@@ -62,7 +62,7 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating expense type: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(expenseType, e);
                 return new ExpenseTypes() { ExpenseTypeId = 0 };
             }
         }
@@ -80,12 +80,12 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting expense type: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(type, e);
                 return new ExpenseTypes() { ExpenseTypeId = 0 };
             }
         }
 
-        #region Private Methods
+        // PRIVATE METHODS
 
         private bool IsExpenseTypeNameAlreadyUsed(string expenseTypeName)
         {
@@ -103,7 +103,5 @@ namespace MyBudget.Services
         {
             return _expenseTypeDataAccess.IsTypeUsedAndCannotBeDeleted(expenseTypeId);
         }
-
-        #endregion
     }
 }

@@ -1,11 +1,10 @@
 ﻿@page "/incomehistorypage"
 @using MyBudget.Models
 @using MyBudget.Services
+@using System.Globalization
 @inject IHistoryService<IncomeHistory> incomeHistoryService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Income History</h3>
-<p style="color:red">@Error</p>
 
 @if (incomeHistoryList == null)
 {
@@ -34,7 +33,7 @@ else
 		<RowTemplate>
 			<MudTd DataLabel="Income History Id" Style="display:none;">@context.IncomeHistoryId</MudTd>
 			<MudTd DataLabel="Income Name">@context.IncomeName</MudTd>
-			<MudTd DataLabel="Income Amount">$@context.IncomeAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Income Amount">@context.IncomeAmount.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
 			<MudTd DataLabel="Income Date">$@context.IncomeDate.ToShortDateString()</MudTd>
 			<MudTd>
 				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
@@ -107,7 +106,6 @@ else
 
 @code {
 
-	string Error = "";
 	bool ShowPopup = false;
 	List<IncomeHistory> incomeHistoryList = new();
 	IncomeHistory incomeHistory = new();
@@ -119,7 +117,15 @@ else
 
 	DateTime? _yearMonth;
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		incomeHistoryList = await incomeHistoryService.GetList();
 		IncomeHistoryItems = incomeHistoryList;
@@ -149,7 +155,6 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
@@ -163,61 +168,88 @@ else
 				};
 
 				var createdIncomeHistory = await incomeHistoryService.CreateRecord(newIncomeHistory);
-
-				switch (createdIncomeHistory.IncomeHistoryId)
-				{
-					case 0:
-						Error = "Error processing request, please try again";
-						break;
-					default:
-						incomeHistoryList = await incomeHistoryService.GetList();
-						IncomeHistoryItems = incomeHistoryList;
-						break;
-				}
+				CreateResultProcessor(createdIncomeHistory);
 			}
 			else
 			{
 				var updatedRecord = await incomeHistoryService.UpdateRecord(incomeHistory);
-				if (updatedRecord.IncomeHistoryId == 0)
-				{
-					Error = "Error updating income history, please try again";
-					incomeHistoryList = await incomeHistoryService.GetList();
-				}
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(IncomeHistory incomeHistory)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(incomeHistory);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {incomeHistory.IncomeName} : {incomeHistory.IncomeDate.ToShortDateString()}?",
+			yesText: "Delete", cancelText: "Cancel");
+		if (confirmed == true) { await DeleteRecord(incomeHistory); }
 	}
 
 	async Task DeleteRecord(IncomeHistory incomeHistory)
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
-			await incomeHistoryService.DeleteRecord(incomeHistory);
-			incomeHistoryList = await incomeHistoryService.GetList();
-			IncomeHistoryItems = incomeHistoryList;
+			var deletedIncomeHistory = await incomeHistoryService.DeleteRecord(incomeHistory);
+			DeleteResultProcessor(deletedIncomeHistory);
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
-	// Search Functions
+	// CRUD methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(IncomeHistory history)
+	{
+		switch (history.IncomeHistoryId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				incomeHistoryList.Add(history);
+				IncomeHistoryItems = incomeHistoryList;
+				Snackbar.Add("Income History Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(IncomeHistory history)
+	{
+		if (history.IncomeHistoryId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(IncomeHistory history)
+	{
+		switch (history.IncomeHistoryId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				incomeHistoryList.Remove(history);
+				IncomeHistoryItems = incomeHistoryList;
+				Snackbar.Add("Income History Deleted", Severity.Success);
+				break;
+		}
+	}
+
+	// Search methods
 
 	private bool FilterFunc1(IncomeHistory incomeHistory) => FilterFunc(incomeHistory, searchString1);
 

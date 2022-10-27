@@ -5,10 +5,8 @@
 @using System.Globalization
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expense History</h3>
-<p style="color:red">@Error</p>
 
 @if (expenseHistoryList == null)
 {
@@ -124,7 +122,6 @@ else
 
 @code {
 
-	string Error = "";
 	bool ShowPopup = false;
 	List<ExpenseHistory> expenseHistoryList = new();
 	List<ExpenseCategories> expenseCategoryList = new();
@@ -137,7 +134,15 @@ else
 
 	DateTime? _yearMonth;
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		expenseHistoryList = await expenseHistoryService.GetList();
 		ExpenseHistoryItems = expenseHistoryList;
@@ -168,7 +173,6 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
@@ -183,57 +187,85 @@ else
 				};
 
 				var createdExpenseHistory = await expenseHistoryService.CreateRecord(newExpenseHistory);
-
-				switch (createdExpenseHistory.ExpenseHistoryId)
-				{
-					case 0:
-						Error = "Error processing request, please try again";
-						break;
-					default:
-						expenseHistoryList = await expenseHistoryService.GetList();
-						ExpenseHistoryItems = expenseHistoryList;
-						break;
-				}
+				CreateResultProcessor(createdExpenseHistory);
 			}
 			else
 			{
 				var updatedRecord = await expenseHistoryService.UpdateRecord(expenseHistory);
-				if (updatedRecord.ExpenseHistoryId == 0)
-				{
-					Error = "Error updating expense history, please try again";
-					expenseHistoryList = await expenseHistoryService.GetList();
-				}
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(ExpenseHistory expenseHistory)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(expenseHistory);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {expenseHistory.ExpenseName} : {expenseHistory.ExpenseDate.ToShortDateString()}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(expenseHistory); }
 	}
 
 	async Task DeleteRecord(ExpenseHistory expenseHistory)
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
-			await expenseHistoryService.DeleteRecord(expenseHistory);
-			expenseHistoryList = await expenseHistoryService.GetList();
-			ExpenseHistoryItems = expenseHistoryList;
+			var deletedExpenseHistory = await expenseHistoryService.DeleteRecord(expenseHistory);
+			DeleteResultProcessor(deletedExpenseHistory);
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
+		}
+	}
+
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(ExpenseHistory history)
+	{
+		switch (history.ExpenseHistoryId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				expenseHistoryList.Add(history);
+				ExpenseHistoryItems = expenseHistoryList;
+				Snackbar.Add("Expense History Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(ExpenseHistory history)
+	{
+		if (history.ExpenseHistoryId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(ExpenseHistory history)
+	{
+		switch (history.ExpenseHistoryId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				expenseHistoryList.Remove(history);
+				ExpenseHistoryItems = expenseHistoryList;
+				Snackbar.Add("Expense History Deleted", Severity.Success);
+				break;
 		}
 	}
 
@@ -244,7 +276,7 @@ else
 		return ItemFromList.GetExpenseCategoryName(id, expenseCategoriesList);
 	}
 
-	// Search Functions
+	// Search methods
 
 	private bool FilterFunc1(ExpenseHistory exh) => FilterFunc(exh, searchString1);
 
