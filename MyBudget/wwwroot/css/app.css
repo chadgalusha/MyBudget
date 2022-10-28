@@ -140,3 +140,9 @@ a, .btn-link {
         width: 500px;
         margin: 20px 20px 20px 20px;
     }
+
+.history-inline-form {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+}

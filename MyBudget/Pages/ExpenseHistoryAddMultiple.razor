@@ -1,0 +1,57 @@
+﻿@page "/expensehistoryaddmultiple"
+@using MyBudget.Components
+@using MyBudget.Models
+@using MyBudget.Services
+@using MyBudget.Helpers
+@inject IHistoryService<ExpenseHistory> expenseHistoryService
+@inject IService<ExpenseCategories> expenseCategoryService
+
+<h3 style="text-align:center;">Add Multiple Expense Histories</h3>
+<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+
+@*<div class="mud-inline-form">
+	<MudTextField T="string" HelperText="Expense History Name" @bind-Value="expenseHistory.ExpenseName" MaxLength="20"  Class=" m-1"/>
+	<MudNumericField T="decimal" HelperText="Expense Amount" @bind-Value="expenseHistory.AmountPaid" Min="0" Max="999999999" Class="m-1"/>
+	<MudDatePicker @bind-Value="expenseHistory.ExpenseDate" HelperText="Expense Date" Class="m-1"/>
+	<MudSelect T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="expenseHistory.ExpenseCategoryId" HelperText="Expense Category" Class="p-1">
+		@foreach (var category in expenseCategoryList)
+		{
+			<MudSelectItem Value="category.ExpenseCategoryId">@category.ExpenseCategoryName</MudSelectItem>
+		}
+	</MudSelect>
+</div>*@
+
+<table>
+	<thead>
+		<tr>
+			<th>Text</th>
+			<th>Number</th>
+			<th>Date</th>
+			<th>Select</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><input type="text"/></td>
+			<td><input type="number"/></td>
+			<td><input type="date"/></td>
+			<td><select>
+				<option value="">Selection 1</option>
+				<option value="">Selection 2</option>
+				<option value="">Selection 3</option>
+			</select></td>
+		</tr>
+	</tbody>
+</table>
+
+@code {
+
+	ExpenseHistory expenseHistory = new() { ExpenseDate = DateTime.Today };
+	List<ExpenseCategories> expenseCategoryList = new();
+
+	protected override async Task OnInitializedAsync()
+	{
+		expenseCategoryList = await expenseCategoryService.GetList();
+	}
+
+}
