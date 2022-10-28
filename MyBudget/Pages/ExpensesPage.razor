@@ -2,13 +2,12 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @using MyBudget.Helpers
+@using System.Globalization
 @inject IService<Expenses> expenseService
 @inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
 @inject ITypeService<ExpenseTypes> expenseTypeService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expenses</h3>
-<p style="color:red">@Error</p>
 
 @if (expensesList == null)
 {
@@ -36,7 +35,7 @@ else
 			<MudTd DataLabel="Expense Name">@context.ExpensesName</MudTd>
 			<MudTd DataLabel="Expense Type Id">@GetExpenseTypeName(context.ExpenseTypeId, expenseTypesList)</MudTd>
 			<MudTd DataLabel="Payment Frequency Type Id">@GetPaymentFrequencyTypeName(context.PaymentFrequencyTypeId, paymentFrequencyTypesList)</MudTd>
-			<MudTd DataLabel="Expense Amount">@context.ExpenseAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Expense Amount">@context.ExpenseAmount.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
 			<MudTd DataLabel="Expense Initial Date">@context.InitialExpenseDate.ToShortDateString()</MudTd>
 			<MudTd>
 				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
@@ -126,7 +125,6 @@ else
 }
 
 @code {
-	string Error = "";
 	List<Expenses> expensesList = new();
 	List<ExpenseTypes> expenseTypesList = new();
 	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
@@ -138,7 +136,15 @@ else
 	private HashSet<Expenses> selectedItems = new();
 	private IEnumerable<Expenses> ExpenseItems = new List<Expenses>();
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		expensesList = await expenseService.GetList();
 		ExpenseItems = expensesList;
@@ -170,7 +176,6 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
@@ -186,60 +191,95 @@ else
 				};
 
 				var createdExpense = await expenseService.CreateRecord(newExpense);
-
-				switch (createdExpense.ExpensesId)
-				{
-					case -1:
-						Error = "Duplicate Expense name, please try again";
-						break;
-					case 0:
-						Error = "Error processing request, please try again";
-						break;
-					default:
-						expensesList = await expenseService.GetList();
-						ExpenseItems = expensesList;
-						break;
-				}
+				CreateResultProcessor(createdExpense);
 			}
 			else
 			{
 				var updatedRecord = await expenseService.UpdateRecord(expense);
-				if (updatedRecord.ExpensesId == -1)
-				{
-					Error = "Name already used, please try again";
-					expensesList = await expenseService.GetList();
-				}
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(Expenses expense)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(expense);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {expense.ExpensesName}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(expense); }
 	}
 
 	async Task DeleteRecord(Expenses expense)
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
-			await expenseService.DeleteRecord(expense);
-			expensesList = await expenseService.GetList();
-			ExpenseItems = expensesList;
+			var deletedExpense = await expenseService.DeleteRecord(expense);
+			DeleteResultProcessor(deletedExpense);
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
+		}
+	}
+
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void DuplicateNameMessage() { Snackbar.Add("Duplicate Expense name, please try again", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(Expenses exp)
+	{
+		switch (exp.ExpensesId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				DuplicateNameMessage();
+				break;
+			default:
+				expensesList.Add(exp);
+				ExpenseItems = expensesList;
+				Snackbar.Add("Expense Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(Expenses exp)
+	{
+		if (exp.ExpensesId == -1)
+		{
+			DuplicateNameMessage();
+			await LoadData();
+			return;
+		}
+		if (exp.ExpensesId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(Expenses exp)
+	{
+		switch (exp.ExpensesId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				expensesList.Remove(exp);
+				ExpenseItems = expensesList;
+				Snackbar.Add("Expense Deleted", Severity.Success);
+				break;
 		}
 	}
 
@@ -255,7 +295,7 @@ else
 		return ItemFromList.GetNameFromTypeList(id, paymentFrequencyTypeList);
 	}
 
-	// Search Functions
+	// Search methods
 
 	private bool FilterFunc1(Expenses expense) => FilterFunc(expense, searchString1);
 

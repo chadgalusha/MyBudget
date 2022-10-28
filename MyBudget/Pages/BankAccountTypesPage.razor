@@ -2,10 +2,8 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @inject ITypeService<BankAccountTypes> bankAccountTypesService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Bank Account Types</h3>
-<p style="color:red">@Error</p>
 
 @if (bankAccountTypesList == null)
 {
@@ -28,8 +26,8 @@ else
 			<MudTd DataLabel="Bank Account Type Id">@context.BankAccountTypeId</MudTd>
 			<MudTd DataLabel="Bank Account Type">@context.BankAccountType</MudTd>
 			<MudTd>
-				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
-				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="(() => DeleteConfirm(context))" class="mud-table-button" Color="Color.Error" />
+				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="() => EditRecord(context)" class="mud-table-button" Color="Color.Info" />
+				<MudIcon Icon="@Icons.TwoTone.Delete" Title="Delete" @onclick="() => DeleteConfirm(context)" class="mud-table-button" Color="Color.Error" />
 			</MudTd>
 		</RowTemplate>
 		<PagerContent>
@@ -74,7 +72,7 @@ else
 						{
 							<!-- Button to delete the bank account type -->
 							<button class="btn btn-danger"
-						@onclick="() => DeleteRecord(bankAccountType)">
+						@onclick="() => DeleteConfirm(bankAccountType)">
 								Delete
 							</button>
 						}
@@ -87,7 +85,6 @@ else
 
 @code 
 {
-	string Error = "";
 	List<BankAccountTypes> bankAccountTypesList = new();
 	BankAccountTypes bankAccountType = new();
 	bool ShowPopup = false;
@@ -97,7 +94,15 @@ else
 	private HashSet<BankAccountTypes> selectedItems = new();
 	private IEnumerable<BankAccountTypes> BankAccountTypeItems = new List<BankAccountTypes>();
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		bankAccountTypesList = await bankAccountTypesService.GetList();
 		BankAccountTypeItems = bankAccountTypesList;
@@ -124,25 +129,114 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
+
+		try
+		{
+			if (bankAccountType.BankAccountTypeId == 0)
+			{
+				BankAccountTypes newBankAccountType = new()
+				{
+					BankAccountType = bankAccountType.BankAccountType
+				};
+
+				var createdBankAccountType = await bankAccountTypesService.CreateRecord(newBankAccountType);
+				CreateResultProcessor(createdBankAccountType);
+			}
+			else
+			{
+				var updatedRecord = await bankAccountTypesService.UpdateRecord(bankAccountType);
+				UpdateResultProcessor(updatedRecord);
+			}
+		}
+		catch (Exception e)
+		{
+			CatchErrorMessage(e);
+		}
 	}
 
 	async Task DeleteConfirm(BankAccountTypes type)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(type);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {type.BankAccountType}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(type); }
 	}
 
 	async Task DeleteRecord(BankAccountTypes type)
 	{
 		ShowPopup = false;
-		Error = "";
+
+		try
+		{
+			var deleteBankAccountType = await bankAccountTypesService.DeleteRecord(type);
+			DeleteResultProcessor(deleteBankAccountType);
+		}
+		catch (Exception e)
+		{
+			CatchErrorMessage(e);
+		}
 	}
 
-	// Search Functions
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void DuplicateNameMessage() { Snackbar.Add("Duplicate Bank Account Type name, please try again", Severity.Error); }
+	void TypeInUseMessage() { Snackbar.Add("Bank Account Type in use by 1 or more Bank Accounts", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(BankAccountTypes type)
+	{
+		switch (type.BankAccountTypeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				DuplicateNameMessage();
+				break;
+			default:
+				bankAccountTypesList.Add(type);
+				BankAccountTypeItems = bankAccountTypesList;
+				Snackbar.Add("Bank Account Type Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(BankAccountTypes type)
+	{
+		if (type.BankAccountTypeId == -1)
+		{
+			DuplicateNameMessage();
+			await LoadData();
+			return;
+		}
+		if (type.BankAccountTypeId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(BankAccountTypes type)
+	{
+		switch (type.BankAccountTypeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				TypeInUseMessage();
+				break;
+			default:
+				bankAccountTypesList.Remove(type);
+				BankAccountTypeItems = bankAccountTypesList;
+				Snackbar.Add("Bank Account Type Deleted", Severity.Success);
+				break;
+		}
+	}
+
+	// Search methods
 
 	private bool FilterFunc1(BankAccountTypes bat) => FilterFunc(bat, searchString1);
 

@@ -25,6 +25,12 @@
 	</div>
 </div>
 
+<div class="donut-chart-flex-container">
+	<MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="donutIndex"
+			  InputData="donutChartData" InputLabels="donutChartLabels" id="donut-chart"
+			  ></MudChart>
+</div>
+
 @code {
 
 	private BarChartConfig _lastMonthConfig;
@@ -32,6 +38,10 @@
 	private BarChartConfig _lastYearConfig;
 	private BarChartConfig _thisYearConfig;
 	private Chart _chart;
+
+	private int donutIndex = -1;
+	public double[] donutChartData = { 50, 234, 94, 12};
+	public string[] donutChartLabels = { "test1", "test2", "test3", "test4" };
 
 	protected override void OnInitialized()
 	{

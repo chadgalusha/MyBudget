@@ -2,13 +2,12 @@
 @using MyBudget.Services
 @using MyBudget.Models
 @using MyBudget.Helpers
+@using System.Globalization
 @inject IService<Incomes> incomeService
 @inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
 @inject ITypeService<IncomeTypes> incomeTypeService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Incomes</h3>
-<p style="color:red">@Error</p>
 
 @if (incomeList == null)
 {
@@ -25,7 +24,7 @@ else
 		<HeaderContent>
 			<MudTh Style="display:none;">Income Id</MudTh>
 			<MudTh>Income Name</MudTh>
-			<MudTh>Income Type Id</MudTh>
+			<MudTh>Income Type</MudTh>
 			<MudTh>Payment Frequency Type Id</MudTh>
 			<MudTh>Income Amount</MudTh>
 			<MudTh>Income Initial Date</MudTh>
@@ -34,9 +33,9 @@ else
 		<RowTemplate>
 			<MudTd DataLabel="Income Id" Style="display:none">@context.IncomeId</MudTd>
 			<MudTd DataLabel="Income Name">@context.IncomeName</MudTd>
-			<MudTd DataLabel="Income Type Id">@GetIncomeTypeName(context.IncomeTypeId, incomeTypesList)</MudTd>
+			<MudTd DataLabel="Income Type">@GetIncomeTypeName(context.IncomeTypeId, incomeTypesList)</MudTd>
 			<MudTd DataLabel="Payment Frequency Type Id">@GetPaymentFrequencyTypeName(context.PaymentFrequencyTypeId, paymentFrequencyTypesList)</MudTd>
-			<MudTd DataLabel="Income Amount">@context.IncomeAmount.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Income Amount">@context.IncomeAmount.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
 			<MudTd DataLabel="Income Initial Date">@context.InitialIncomeDate.ToShortDateString()</MudTd>
 			<MudTd>
 				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
@@ -126,7 +125,6 @@ else
 }
 
 @code {
-	string Error = "";
 	List<Incomes> incomeList = new();
 	List<IncomeTypes> incomeTypesList = new();
 	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
@@ -138,7 +136,15 @@ else
 	private HashSet<Incomes> selectedItems = new();
 	private IEnumerable<Incomes> IncomeItems = new List<Incomes>();
 
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		incomeList = await incomeService.GetList();
 		IncomeItems = incomeList;
@@ -170,7 +176,6 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
@@ -186,56 +191,95 @@ else
 				};
 
 				var createdIncome = await incomeService.CreateRecord(newIncome);
-
-				if (createdIncome.IncomeName == null || createdIncome.IncomeName == "")
-				{
-					Error = "Duplicate Income name, please try again";
-				}
-				else
-				{
-					incomeList = await incomeService.GetList();
-					IncomeItems = incomeList;
-				}
+				CreateResultProcessor(createdIncome);
 			}
 			else
 			{
 				var updatedRecord = await incomeService.UpdateRecord(income);
-				if (updatedRecord.IncomeId == -1)
-				{
-					Error = "Name already used, please try again";
-					incomeList = await incomeService.GetList();
-				}
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(Incomes income)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(income);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {income.IncomeName}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(income); }
 	}
 
 	async Task DeleteRecord(Incomes income)
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
-			await incomeService.DeleteRecord(income);
-			incomeList = await incomeService.GetList();
-			IncomeItems = incomeList;
+			var deletedIncome = await incomeService.DeleteRecord(income);
+			DeleteResultProcessor(deletedIncome);
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
+		}
+	}
+
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void DuplicateNameMessage() { Snackbar.Add("Duplicate Income name, please try again", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(Incomes inc)
+	{
+		switch (inc.IncomeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			case -1:
+				DuplicateNameMessage();
+				break;
+			default:
+				incomeList.Add(inc);
+				IncomeItems = incomeList;
+				Snackbar.Add("Income Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(Incomes inc)
+	{
+		if (inc.IncomeId == -1)
+		{
+			DuplicateNameMessage();
+			await LoadData();
+			return;
+		}
+		if (inc.IncomeId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(Incomes inc)
+	{
+		switch (inc.IncomeId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				incomeList.Remove(inc);
+				IncomeItems = incomeList;
+				Snackbar.Add("Income Deleted", Severity.Success);
+				break;
 		}
 	}
 

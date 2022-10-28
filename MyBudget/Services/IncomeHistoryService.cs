@@ -1,4 +1,5 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 
 namespace MyBudget.Services
@@ -22,19 +23,43 @@ namespace MyBudget.Services
             return _incomeHistoryDataAccess.GetListAsync();
         }
 
-        public Task<IncomeHistory> CreateRecord(IncomeHistory newIncomeHistory)
+        public async Task<IncomeHistory> CreateRecord(IncomeHistory newIncomeHistory)
         {
-            return _incomeHistoryDataAccess.CreateRecordAsync(newIncomeHistory);
+            try
+            {
+                return await _incomeHistoryDataAccess.CreateRecordAsync(newIncomeHistory);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorCreating(newIncomeHistory, e);
+                return new IncomeHistory() { IncomeHistoryId = 0 };
+            }
         }
 
-        public Task<IncomeHistory> UpdateRecord(IncomeHistory incomeHistory)
+        public async Task<IncomeHistory> UpdateRecord(IncomeHistory incomeHistory)
         {
-            return _incomeHistoryDataAccess.UpdateRecordAsync(incomeHistory);
+            try
+            {
+                return await _incomeHistoryDataAccess.UpdateRecordAsync(incomeHistory);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorUpdating(incomeHistory, e);
+                return new IncomeHistory() { IncomeHistoryId = 0 };
+            }
         }
 
-        public Task<IncomeHistory> DeleteRecord(IncomeHistory incomeHistory)
+        public async Task<IncomeHistory> DeleteRecord(IncomeHistory incomeHistory)
         {
-            return _incomeHistoryDataAccess.DeleteRecordAsync(incomeHistory);
+            try
+            {
+                return await _incomeHistoryDataAccess.DeleteRecordAsync(incomeHistory);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorDeleting(incomeHistory, e);
+                return new IncomeHistory() { IncomeHistoryId = 0 };
+            }
         }
 
         public decimal GetAmountForLastMonth()

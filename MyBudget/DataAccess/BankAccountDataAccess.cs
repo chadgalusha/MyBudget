@@ -17,7 +17,7 @@ namespace MyBudget.DataAccess
 
         public async Task<BankAccounts> GetRecordByIdAsync(int id)
         {
-            await InitializeAsync();
+            Initialize();
             return await _asyncConnection.Table<BankAccounts>()
                 .Where(b => b.BankAccountId == id)
                 .FirstAsync();
@@ -25,7 +25,7 @@ namespace MyBudget.DataAccess
 
         public async Task<List<BankAccounts>> GetListAsync()
         {
-            await InitializeAsync();
+            Initialize();
             return await _asyncConnection.Table<BankAccounts>().ToListAsync();
         }
 
@@ -109,18 +109,11 @@ namespace MyBudget.DataAccess
 
         // private methods
 
-        private async Task InitializeAsync()
+        private void Initialize()
         {
-            if (_asyncConnection != null)
-            {
-                return;
-            }
+            if (_asyncConnection != null) { return; }
 
             _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-            //await _asyncConnection.CreateTableAsync<BankAccounts>().ContinueWith((results) =>
-            //{
-            //    Log.Information($"Bank Account table created: {results.Result}");
-            //});
         }
     }
 }

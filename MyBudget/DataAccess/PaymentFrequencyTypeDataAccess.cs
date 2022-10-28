@@ -7,7 +7,8 @@ namespace MyBudget.DataAccess
     public class PaymentFrequencyTypeDataAccess : ITypeDataAccess<PaymentFrequencyTypes>
 	{
         private readonly string _dbPath;
-        private SQLiteAsyncConnection _connection;
+        private SQLiteAsyncConnection _asyncConnection;
+        private SQLiteConnection _connection;
 
         public PaymentFrequencyTypeDataAccess()
         {
@@ -17,7 +18,7 @@ namespace MyBudget.DataAccess
         public async Task<PaymentFrequencyTypes> GetRecordByIdAsync(int id)
         {
             await InitializeAsync();
-            return await _connection.Table<PaymentFrequencyTypes>()
+            return await _asyncConnection.Table<PaymentFrequencyTypes>()
                 .Where(p => p.PaymentFrequencyTypeId == id)
                 .FirstAsync();
         }
@@ -25,14 +26,14 @@ namespace MyBudget.DataAccess
         public async Task<List<PaymentFrequencyTypes>> GetListAsync()
         {
             await InitializeAsync();
-            return await _connection.Table<PaymentFrequencyTypes>().ToListAsync();
+            return await _asyncConnection.Table<PaymentFrequencyTypes>().ToListAsync();
         }
 
         public async Task<PaymentFrequencyTypes> CreateRecord(PaymentFrequencyTypes newType)
 		{
             try
             {
-                await _connection.InsertAsync(newType).ContinueWith((p) =>
+                await _asyncConnection.InsertAsync(newType).ContinueWith((p) =>
                 {
                     MyBudgetLogger.CreatedLogMessage(newType);
                 });
@@ -41,7 +42,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorCreating(newType, e);
-                return null;
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
             }
         }
 
@@ -49,7 +50,7 @@ namespace MyBudget.DataAccess
         {
             try
             {
-                await _connection.UpdateAsync(type).ContinueWith((p) =>
+                await _asyncConnection.UpdateAsync(type).ContinueWith((p) =>
                 {
                     MyBudgetLogger.UpdatedLogMessage(type);
                 });
@@ -58,7 +59,7 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorUpdating(type, e);
-                return null;
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
             }
         }
 
@@ -66,7 +67,7 @@ namespace MyBudget.DataAccess
 		{
             try
             {
-                await _connection.DeleteAsync(type).ContinueWith((p) =>
+                await _asyncConnection.DeleteAsync(type).ContinueWith((p) =>
                 {
                     MyBudgetLogger.DeletedLogMessage(type);
                 });
@@ -75,7 +76,48 @@ namespace MyBudget.DataAccess
             catch (Exception e)
             {
                 MyBudgetLogger.ErrorDeleting(type, e);
-                return null;
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+            }
+        }
+
+        public bool DoesTypeNameExist(string typeName)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                int result = _connection.Table<PaymentFrequencyTypes>()
+                    .Where(p => p.PaymentFrequencyType.ToLower() == typeName.ToLower())
+                    .Count();
+
+                return result > 0;
+            }
+        }
+
+        public string GetNameOfTypeByID(int typeId)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                string paymentFrequencyTypeName = _connection.Table<PaymentFrequencyTypes>()
+                    .Where(p => p.PaymentFrequencyTypeId == typeId)
+                    .Select(p => p.PaymentFrequencyType)
+                    .SingleOrDefault();
+
+                return paymentFrequencyTypeName;
+            }
+        }
+
+        public bool IsTypeUsedAndCannotBeDeleted(int typeId)
+        {
+            using (_connection = new SQLiteConnection(_dbPath))
+            {
+                int resultIncomes = _connection.Table<Incomes>()
+                    .Where(p => p.PaymentFrequencyTypeId == typeId)
+                    .Count();
+
+                int resultExpenses = _connection.Table<Expenses>()
+                    .Where(p => p.PaymentFrequencyTypeId == typeId)
+                    .Count();
+
+                return resultIncomes > 0 || resultExpenses > 0;
             }
         }
 
@@ -83,13 +125,9 @@ namespace MyBudget.DataAccess
 
         private async Task InitializeAsync()
         {
-            if (_connection != null)
-            {
-                return;
-            }
+            if (_asyncConnection != null) {  return; }
 
-            _connection = new SQLiteAsyncConnection(_dbPath);
-            //await _connection.CreateTableAsync<PaymentFrequencyTypes>();
+            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
 
             if (await DoesTableHaveValuesAsync() == false)
             {
@@ -116,21 +154,6 @@ namespace MyBudget.DataAccess
 
                 await CreateRecord(newType);
             }
-        }
-
-        public bool DoesTypeNameExist(string typeName)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetNameOfTypeByID(int typeId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsTypeUsedAndCannotBeDeleted(int typeId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

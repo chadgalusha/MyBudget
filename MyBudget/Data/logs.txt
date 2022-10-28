@@ -352,3 +352,113 @@
 2022-10-19 12:16:12.758 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":125,"ExpenseName":"Mortgage","ExpenseAmount":1323.22,"AmountPaid":1323.22,"ExpenseDate":"2022-09-06T00:00:00","DueDate":"2022-09-06T00:00:00","ExpenseCategoryId":1}
 2022-10-19 12:16:33.322 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":126,"ExpenseName":"Van Payment","ExpenseAmount":192,"AmountPaid":192,"ExpenseDate":"2022-09-07T00:00:00","DueDate":"2022-09-07T00:00:00","ExpenseCategoryId":4}
 2022-10-19 12:16:53.686 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":127,"ExpenseName":"Chad CC Payment","ExpenseAmount":50,"AmountPaid":50,"ExpenseDate":"2022-09-21T00:00:00","DueDate":"2022-09-21T00:00:00","ExpenseCategoryId":6}
+2022-10-25 14:42:52.656 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":1,"BankAccountType":"Checking"}
+2022-10-25 14:42:52.682 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":2,"BankAccountType":"Savings"}
+2022-10-25 14:42:52.689 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":3,"BankAccountType":"Money-Market"}
+2022-10-25 14:42:55.904 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":1,"IncomeType":"Primary"}
+2022-10-25 14:42:55.912 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":2,"IncomeType":"Secondary"}
+2022-10-25 14:42:55.919 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":3,"IncomeType":"Occasional"}
+2022-10-25 14:42:55.926 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":4,"IncomeType":"One-Time"}
+2022-10-25 14:42:57.046 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":1,"ExpenseType":"Primary"}
+2022-10-25 14:42:57.054 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":2,"ExpenseType":"Secondary"}
+2022-10-25 14:42:57.062 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":3,"ExpenseType":"Occasional"}
+2022-10-25 14:42:57.070 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":4,"ExpenseType":"One-Time"}
+2022-10-25 14:43:01.523 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":1,"ExpenseCategoryName":"Home \u0026 Utility","ExpenseCategoryDescription":"Mortgage, rent, electricity, water, gas"}
+2022-10-25 14:43:01.531 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":2,"ExpenseCategoryName":"Giving","ExpenseCategoryDescription":"Charitable giving"}
+2022-10-25 14:43:01.539 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":3,"ExpenseCategoryName":"Grocery","ExpenseCategoryDescription":"Food shopping"}
+2022-10-25 14:43:01.548 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":4,"ExpenseCategoryName":"Transportation","ExpenseCategoryDescription":"Gas and maintenance for vehicles"}
+2022-10-25 14:43:01.556 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":5,"ExpenseCategoryName":"Health","ExpenseCategoryDescription":"Medical, Dental, etc."}
+2022-10-25 14:43:01.564 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":6,"ExpenseCategoryName":"Finance","ExpenseCategoryDescription":"Payments for credit cards, service charges, loan payments"}
+2022-10-25 14:43:01.573 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":7,"ExpenseCategoryName":"Insurance","ExpenseCategoryDescription":"Life insuruance, vehicle insurance, etc."}
+2022-10-25 14:43:01.579 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":8,"ExpenseCategoryName":"Dine Out","ExpenseCategoryDescription":"Restaurants, fast food, coffee"}
+2022-10-25 14:43:01.587 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":9,"ExpenseCategoryName":"Shopping \u0026 Entertainment","ExpenseCategoryDescription":"Entertainment spending, gifts, hobbies, frivolous spending"}
+2022-10-25 14:43:01.595 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":10,"ExpenseCategoryName":"Education","ExpenseCategoryDescription":"School material and services"}
+2022-10-25 14:43:01.602 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":11,"ExpenseCategoryName":"Travel","ExpenseCategoryDescription":"Airline luggage fees, hotels, car rentals"}
+2022-10-25 14:43:01.609 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":12,"ExpenseCategoryName":"Business Expense","ExpenseCategoryDescription":"Office supplies, print, business expenses"}
+2022-10-25 14:43:01.617 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":13,"ExpenseCategoryName":"Misc Cach \u0026 Checks","ExpenseCategoryDescription":"ATM, money checks, etc."}
+2022-10-25 14:43:01.624 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":14,"ExpenseCategoryName":"Pet Care","ExpenseCategoryDescription":"Health and other spending for pets besides food"}
+2022-10-25 14:43:01.632 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":15,"ExpenseCategoryName":"No Category","ExpenseCategoryDescription":"Spending that defies categorization"}
+2022-10-25 14:43:02.255 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":1,"PaymentFrequencyType":"Yearly"}
+2022-10-25 14:43:02.263 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":2,"PaymentFrequencyType":"Bi-Yearly"}
+2022-10-25 14:43:02.271 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":3,"PaymentFrequencyType":"Quarterly"}
+2022-10-25 14:43:02.279 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":4,"PaymentFrequencyType":"Monthly"}
+2022-10-25 14:43:02.286 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":5,"PaymentFrequencyType":"Bi-Monthly"}
+2022-10-25 14:43:02.293 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":6,"PaymentFrequencyType":"Bi-Weekly"}
+2022-10-25 14:43:02.301 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":7,"PaymentFrequencyType":"Weekly"}
+2022-10-25 14:43:02.309 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":8,"PaymentFrequencyType":"Occasional"}
+2022-10-25 14:43:02.315 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":9,"PaymentFrequencyType":"Single"}
+2022-10-25 19:15:31.366 -05:00 [INF] Expenses created: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":9,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00-05:00"}
+2022-10-26 08:23:10.804 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":10,"PaymentFrequencyType":"Test"}
+2022-10-26 08:23:21.225 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":10,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 08:24:29.352 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":9,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 08:24:35.473 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":10,"PaymentFrequencyType":"Test"}
+2022-10-26 08:26:23.357 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":11,"PaymentFrequencyType":"test"}
+2022-10-26 08:26:49.320 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":12,"PaymentFrequencyType":"test2"}
+2022-10-26 08:59:02.493 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":11,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 08:59:18.482 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":12,"PaymentFrequencyType":"test2"}
+2022-10-26 09:00:07.216 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":13,"PaymentFrequencyType":"test2"}
+2022-10-26 09:00:35.012 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":13,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 09:00:53.816 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":11,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 09:01:05.308 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":13,"PaymentFrequencyType":"test2"}
+2022-10-26 09:04:25.645 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":3,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 09:04:31.471 -05:00 [INF] PaymentFrequencyTypes updated: {"PaymentFrequencyTypeId":11,"PaymentFrequencyType":"test2"}
+2022-10-26 09:04:34.467 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":11,"PaymentFrequencyType":"test2"}
+2022-10-26 09:12:47.340 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":14,"PaymentFrequencyType":"test"}
+2022-10-26 09:13:03.707 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":14,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 09:13:22.038 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":4,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 09:13:25.756 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":14,"PaymentFrequencyType":"test"}
+2022-10-26 09:13:44.704 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":15,"PaymentFrequencyType":"test"}
+2022-10-26 09:13:49.641 -05:00 [INF] PaymentFrequencyTypes updated: {"PaymentFrequencyTypeId":15,"PaymentFrequencyType":"test3"}
+2022-10-26 09:15:44.602 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":15,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 09:15:52.613 -05:00 [INF] PaymentFrequencyTypes updated: {"PaymentFrequencyTypeId":15,"PaymentFrequencyType":"test2"}
+2022-10-26 09:25:46.132 -05:00 [INF] PaymentFrequencyTypes updated: {"PaymentFrequencyTypeId":15,"PaymentFrequencyType":"test"}
+2022-10-26 09:25:57.578 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":16,"PaymentFrequencyType":"test2"}
+2022-10-26 09:26:02.905 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":16,"PaymentFrequencyType":"test2"}
+2022-10-26 09:34:08.431 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":17,"PaymentFrequencyType":"test2"}
+2022-10-26 09:34:37.887 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":17,"PaymentFrequencyType":"test2"}
+2022-10-26 13:00:07.576 -05:00 [INF] PaymentFrequencyTypes created: {"PaymentFrequencyTypeId":18,"PaymentFrequencyType":"test2"}
+2022-10-26 13:00:15.319 -05:00 [INF] PaymentFrequencyTypes updated: {"PaymentFrequencyTypeId":18,"PaymentFrequencyType":"test23"}
+2022-10-26 13:00:23.545 -05:00 [INF] PaymentFrequencyTypes deleted: {"PaymentFrequencyTypeId":18,"PaymentFrequencyType":"test23"}
+2022-10-26 13:51:03.372 -05:00 [INF] IncomeTypes created: {"IncomeTypeId":5,"IncomeType":"test"}
+2022-10-26 13:51:30.334 -05:00 [INF] Incomes created: {"IncomeId":1,"IncomeName":"MyIncome","IncomeTypeId":5,"PaymentFrequencyTypeId":8,"IncomeAmount":321,"InitialIncomeDate":"2022-10-26T00:00:00-05:00"}
+2022-10-26 14:34:13.317 -05:00 [INF] ExpenseTypes created: {"ExpenseTypeId":5,"ExpenseType":"test"}
+2022-10-26 14:34:37.140 -05:00 [INF] Expenses updated: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":5,"PaymentFrequencyTypeId":15,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-26 15:24:09.088 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":4,"BankAccountType":"test"}
+2022-10-26 15:24:17.566 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":5,"BankAccountType":"test2"}
+2022-10-26 15:25:24.764 -05:00 [INF] BankAccountTypes deleted: {"BankAccountTypeId":5,"BankAccountType":"test2"}
+2022-10-26 15:25:31.918 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":6,"BankAccountType":"test2"}
+2022-10-26 15:25:36.508 -05:00 [INF] BankAccountTypes deleted: {"BankAccountTypeId":6,"BankAccountType":"test2"}
+2022-10-26 15:25:49.437 -05:00 [INF] BankAccounts created: {"BankAccountId":1,"BankAccountName":"My Bank Account","BankAccountTypeId":4,"Balance":123123}
+2022-10-26 16:31:40.367 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":16,"ExpenseCategoryName":"Test Category","ExpenseCategoryDescription":"description"}
+2022-10-26 16:32:45.798 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense History","ExpenseAmount":12,"AmountPaid":12,"ExpenseDate":"2022-10-26T00:00:00-05:00","DueDate":"2022-10-26T00:00:00-05:00","ExpenseCategoryId":16}
+2022-10-26 16:33:12.644 -05:00 [INF] ExpenseCategories deleted: {"ExpenseCategoryId":16,"ExpenseCategoryName":"Test Category","ExpenseCategoryDescription":"description"}
+2022-10-26 16:33:37.764 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense History","ExpenseAmount":12,"AmountPaid":12,"ExpenseDate":"2022-10-26T00:00:00","DueDate":"2022-10-26T00:00:00","ExpenseCategoryId":1}
+2022-10-26 16:35:22.883 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":17,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
+2022-10-26 16:40:08.794 -05:00 [INF] ExpenseCategories deleted: {"ExpenseCategoryId":17,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
+2022-10-26 16:40:43.401 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":18,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
+2022-10-26 16:42:38.555 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":7,"BankAccountType":"test2"}
+2022-10-26 16:44:38.487 -05:00 [INF] ExpenseCategories deleted: {"ExpenseCategoryId":18,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
+2022-10-26 16:44:47.084 -05:00 [INF] BankAccountTypes deleted: {"BankAccountTypeId":7,"BankAccountType":"test2"}
+2022-10-26 16:44:50.882 -05:00 [INF] BankAccountTypes created: {"BankAccountTypeId":8,"BankAccountType":"t"}
+2022-10-26 16:44:53.209 -05:00 [INF] BankAccountTypes deleted: {"BankAccountTypeId":8,"BankAccountType":"t"}
+2022-10-27 14:13:25.478 -05:00 [INF] BankAccounts created: {"BankAccountId":2,"BankAccountName":"test","BankAccountTypeId":3,"Balance":3}
+2022-10-27 14:13:31.505 -05:00 [INF] BankAccounts updated: {"BankAccountId":2,"BankAccountName":"test","BankAccountTypeId":3,"Balance":33}
+2022-10-27 14:13:34.337 -05:00 [INF] BankAccounts deleted: {"BankAccountId":2,"BankAccountName":"test","BankAccountTypeId":3,"Balance":33}
+2022-10-27 14:35:46.265 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":2,"ExpenseName":"New Test","AmountPaid":6132,"ExpenseDate":"2022-10-27T00:00:00-05:00","ExpenseCategoryId":6}
+2022-10-27 14:35:54.467 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense History","AmountPaid":12,"ExpenseDate":"2022-10-26T00:00:00","ExpenseCategoryId":7}
+2022-10-27 14:36:13.714 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":1,"ExpenseName":"Test Expense History","AmountPaid":12,"ExpenseDate":"2022-10-26T00:00:00","ExpenseCategoryId":7}
+2022-10-27 14:47:34.193 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"New Test","AmountPaid":654,"ExpenseDate":"2022-10-27T00:00:00","ExpenseCategoryId":6}
+2022-10-27 14:48:02.556 -05:00 [INF] Expenses created: {"ExpensesId":2,"ExpensesName":"test2","ExpenseTypeId":2,"PaymentFrequencyTypeId":15,"ExpenseAmount":234,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:48:17.855 -05:00 [INF] Expenses deleted: {"ExpensesId":2,"ExpensesName":"test","ExpenseTypeId":2,"PaymentFrequencyTypeId":15,"ExpenseAmount":234,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:49:19.369 -05:00 [INF] Expenses deleted: {"ExpensesId":1,"ExpensesName":"test","ExpenseTypeId":5,"PaymentFrequencyTypeId":15,"ExpenseAmount":123,"InitialExpenseDate":"2022-10-25T00:00:00"}
+2022-10-27 14:49:31.528 -05:00 [INF] Expenses created: {"ExpensesId":3,"ExpensesName":"test","ExpenseTypeId":1,"PaymentFrequencyTypeId":2,"ExpenseAmount":0,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:49:44.082 -05:00 [INF] Expenses created: {"ExpensesId":4,"ExpensesName":"test2","ExpenseTypeId":2,"PaymentFrequencyTypeId":2,"ExpenseAmount":456,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 14:49:51.857 -05:00 [INF] Expenses deleted: {"ExpensesId":4,"ExpensesName":"test2","ExpenseTypeId":2,"PaymentFrequencyTypeId":2,"ExpenseAmount":456,"InitialExpenseDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:08:27.258 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":1,"IncomeName":"Test Income History","IncomeAmount":312,"IncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:08:37.776 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":2,"IncomeName":"Test Income History","IncomeAmount":0,"IncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:08:45.728 -05:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":2,"IncomeName":"Test Income History","IncomeAmount":0,"IncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:22:48.749 -05:00 [INF] Incomes created: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":0,"InitialIncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:22:56.076 -05:00 [INF] Incomes updated: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00-05:00"}
+2022-10-27 15:23:02.862 -05:00 [INF] Incomes deleted: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00"}
+2022-10-27 16:11:53.858 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":19,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
+2022-10-27 16:12:53.272 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":3,"ExpenseName":"Test 2","AmountPaid":23,"ExpenseDate":"2022-10-27T00:00:00-05:00","ExpenseCategoryId":19}

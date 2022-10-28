@@ -1,4 +1,5 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 
 namespace MyBudget.Services
@@ -24,17 +25,82 @@ namespace MyBudget.Services
 
         public async Task<PaymentFrequencyTypes> CreateRecord(PaymentFrequencyTypes newType)
         {
-            return await _paymentFrequencyTypeDataAccess.CreateRecord(newType);
+            if (IsPaymentFrequencyNameAlreadyUsed(newType.PaymentFrequencyType) == true)
+            {
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = -1 };
+            }
+
+            try
+            {
+                PaymentFrequencyTypes newPaymentFrequencyType = new()
+                {
+                    PaymentFrequencyType = newType.PaymentFrequencyType
+                };
+
+                return await _paymentFrequencyTypeDataAccess.CreateRecord(newPaymentFrequencyType);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorCreating(newType, e);
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+            }
         }
 
-        public async Task<PaymentFrequencyTypes> UpdateRecord(PaymentFrequencyTypes type)
+        public async Task<PaymentFrequencyTypes> UpdateRecord(PaymentFrequencyTypes paymentFrequencyType)
         {
-            return await _paymentFrequencyTypeDataAccess.UpdateRecordAsync(type);
+            if (IsUpdatedPaymentFrequencyNameModified(paymentFrequencyType) == true)
+            {
+                if (IsPaymentFrequencyNameAlreadyUsed(paymentFrequencyType.PaymentFrequencyType) == true)
+                {
+                    return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = -1 };
+                }
+            }
+
+            try
+            {
+                return await _paymentFrequencyTypeDataAccess.UpdateRecordAsync(paymentFrequencyType);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorUpdating(paymentFrequencyType, e);
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+            }
         }
 
-        public async Task<PaymentFrequencyTypes> DeleteRecord(PaymentFrequencyTypes type)
+        public async Task<PaymentFrequencyTypes> DeleteRecord(PaymentFrequencyTypes paymentFrequencyType)
         {
-            return await _paymentFrequencyTypeDataAccess.DeleteRecordAsync(type);
+            if (IsPaymentFrequencyUsedByIncomeOrExpenses(paymentFrequencyType.PaymentFrequencyTypeId) == true)
+            {
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = -1 };
+            }
+
+            try
+            {
+                return await _paymentFrequencyTypeDataAccess.DeleteRecordAsync(paymentFrequencyType);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorDeleting(paymentFrequencyType, e);
+                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+            }
+        }
+
+        // PRIVATE METHODS
+
+        private bool IsPaymentFrequencyNameAlreadyUsed(string paymentFrequencyName)
+        {
+            return _paymentFrequencyTypeDataAccess.DoesTypeNameExist(paymentFrequencyName);
+        }
+
+        private bool IsUpdatedPaymentFrequencyNameModified(PaymentFrequencyTypes paymentFrequencyType)
+        {
+            string currentPaymentFrequencyName = _paymentFrequencyTypeDataAccess.GetNameOfTypeByID(paymentFrequencyType.PaymentFrequencyTypeId);
+            return !currentPaymentFrequencyName.Equals(paymentFrequencyType.PaymentFrequencyType);
+        }
+
+        private bool IsPaymentFrequencyUsedByIncomeOrExpenses(int paymentFrequencyTypeId)
+        {
+            return _paymentFrequencyTypeDataAccess.IsTypeUsedAndCannotBeDeleted(paymentFrequencyTypeId);
         }
     }
 }
