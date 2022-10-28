@@ -1,6 +1,6 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 
 namespace MyBudget.Services
 {
@@ -27,7 +27,7 @@ namespace MyBudget.Services
 		{
 			if (IsIncomeNameAlreadyUsed(newIncome.IncomeName) == true)
 			{
-				return new Incomes();
+				return new Incomes() { IncomeId = -1 };
 			}
 
 			try
@@ -45,8 +45,8 @@ namespace MyBudget.Services
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Error creating new Income: {e.Message}");
-				return new Incomes();
+				MyBudgetLogger.ErrorCreating(newIncome, e);
+				return new Incomes() { IncomeId = 0 };
 			}
 		}
 
@@ -66,9 +66,9 @@ namespace MyBudget.Services
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Error updating Income: {e.Message}");
-				return new Incomes();
-			}
+				MyBudgetLogger.ErrorUpdating(income, e);
+                return new Incomes() { IncomeId = 0 };
+            }
 		}
 
 		public async Task<Incomes> DeleteRecord(Incomes income)
@@ -79,12 +79,12 @@ namespace MyBudget.Services
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Error deleting Income: {e.Message}");
-				return new Incomes();
-			}
+				MyBudgetLogger.ErrorDeleting(income, e);
+                return new Incomes() { IncomeId = 0 };
+            }
 		}
 
-        #region Private Methods
+        // PRIVATE METHODS
 
         private bool IsIncomeNameAlreadyUsed(string incomeName)
 		{
@@ -97,7 +97,5 @@ namespace MyBudget.Services
 			string currentIncomeName = _incomeDataAccess.GetNameById(income.IncomeId);
 			return !currentIncomeName.Equals(income.IncomeName);
 		}
-
-        #endregion
     }
 }

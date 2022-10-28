@@ -115,3 +115,28 @@ a, .btn-link {
     border: dashed;
     transform:scale(1.4);
 }
+
+.date-search-button {
+    margin-top: 20px;
+    margin-left: 10px;
+}
+
+    .date-search-button:hover {
+        border:dashed;
+    }
+
+.donut-chart-flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+    .donut-chart-flex-container > #donut-chart {
+        padding: 20px;
+        border: 1px solid black;
+        border-radius: 6px;
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+        width: 500px;
+        margin: 20px 20px 20px 20px;
+    }

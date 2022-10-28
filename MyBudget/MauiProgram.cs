@@ -1,4 +1,5 @@
-﻿using MudBlazor.Services;
+﻿using MudBlazor;
+using MudBlazor.Services;
 using MyBudget.DataAccess;
 using MyBudget.Helpers;
 using MyBudget.Models;
@@ -61,7 +62,17 @@ public static class MauiProgram
 		builder.Services.AddTransient<IIncomeAndExpensesViewModelService, IncomeAndExpensesViewModelService>();
 		builder.Services.AddTransient<IService<ExpenseCategories>, ExpenseCategoriesService>();
 
-		builder.Services.AddMudServices();
+		builder.Services.AddMudServices(config =>
+		{
+			config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopCenter;
+            config.SnackbarConfiguration.PreventDuplicates = false;
+            config.SnackbarConfiguration.NewestOnTop = false;
+            config.SnackbarConfiguration.ShowCloseIcon = true;
+            config.SnackbarConfiguration.VisibleStateDuration = 10000;
+            config.SnackbarConfiguration.HideTransitionDuration = 500;
+            config.SnackbarConfiguration.ShowTransitionDuration = 500;
+            config.SnackbarConfiguration.SnackbarVariant = Variant.Filled;
+        });
 
         return builder.Build();
 	}

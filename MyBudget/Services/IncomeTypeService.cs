@@ -1,4 +1,5 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 using Serilog;
 
@@ -41,7 +42,7 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error creating new income type: {e.Message}");
+                MyBudgetLogger.ErrorCreating(newType, e);
                 return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }
@@ -62,25 +63,25 @@ namespace MyBudget.Services
             }
             catch (Exception e)
             {
-                Log.Error($"Error updating income type: {e.Message}");
+                MyBudgetLogger.ErrorUpdating(incomeType, e);
                 return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }
 
-        public async Task<IncomeTypes> DeleteRecord(IncomeTypes type)
+        public async Task<IncomeTypes> DeleteRecord(IncomeTypes incomeType)
         {
-            if (IsIncomeTypeUsedByIncome(type.IncomeTypeId) == true)
+            if (IsIncomeTypeUsedByIncome(incomeType.IncomeTypeId) == true)
             {
                 return new IncomeTypes() { IncomeTypeId = -1 };
             }
 
             try
             {
-                return await _incomeTypeDataAccess.DeleteRecordAsync(type);
+                return await _incomeTypeDataAccess.DeleteRecordAsync(incomeType);
             }
             catch (Exception e)
             {
-                Log.Error($"Error deleting income type: {e.Message}");
+                MyBudgetLogger.ErrorDeleting(incomeType, e);
                 return new IncomeTypes() { IncomeTypeId = 0 };
             }
         }

@@ -2,42 +2,44 @@
 @using MyBudget.Models
 @using MyBudget.Services
 @using MyBudget.Helpers
+@using System.Globalization
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
-@inject IJSRuntime jsRuntime
 
 <h3 style="text-align:center">Expense History</h3>
-<p style="color:red">@Error</p>
 
 @if (expenseHistoryList == null)
 {
-	<p><em>Loading...</em></p>
+	<div class="spinner-border text-danger" role="status">
+		<span class="sr-only">Loading...</span>
+	</div>
 }
 else
 {
 	<MudTable Items="@ExpenseHistoryItems" Striped="true" class="table-styles" Dense="true" Filter="new Func<ExpenseHistory, bool>(FilterFunc1)" @bind-SelectedItem="selectedItem1">
 		<ToolBarContent>
-			<MudText Typo="Typo.h6">Expense History</MudText>
+			<MudDatePicker Label="Month-Year Selector" @bind-Date="_yearMonth" OpenTo="OpenTo.Year" FixDay="1" DateFormat="MM/yyyy" />
+			@if (_yearMonth != null)
+			{
+				<MudIcon Icon="@Icons.TwoTone.Search" Title="Search" Color="Color.Primary" class="date-search-button" @onclick="SearchByDateFilter"/>
+				<MudIcon Icon="@Icons.TwoTone.Cancel" Title="Clear" Color="Color.Warning" class="date-search-button" @onclick="ClearDateFilter"/>
+			}
 			<MudSpacer />
 			<MudTextField @bind-Value="searchString1" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
 		</ToolBarContent>
 		<HeaderContent>
 			<MudTh Style="display:none;">Expense History Id</MudTh>
-			<MudTh>Expense Name</MudTh>
-			<MudTh>Amount Due</MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseName)">Expense Name</MudTableSortLabel></MudTh>
 			<MudTh>Amount Paid</MudTh>
-			<MudTh>Date Paid</MudTh>
-			<MudTh>Due Date</MudTh>
-			<MudTh>Expense Category</MudTh>
+			<MudTh><MudTableSortLabel InitialDirection="SortDirection.Descending" SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseDate)">Date Paid</MudTableSortLabel></MudTh>
+			<MudTh><MudTableSortLabel SortBy="new Func<ExpenseHistory, object>(x=>x.ExpenseCategoryId)">Expense Category</MudTableSortLabel></MudTh>
 			<MudTh></MudTh>
 		</HeaderContent>
 		<RowTemplate>
 			<MudTd DataLabel="Expense History Id" Style="display:none;">@context.ExpenseHistoryId</MudTd>
 			<MudTd DataLabel="Expense Name">@context.ExpenseName</MudTd>
-			<MudTd DataLabel="Amount due">$@context.ExpenseAmount.ToString("0.00")</MudTd>
-			<MudTd DataLabel="Amount Paid">$@context.AmountPaid.ToString("0.00")</MudTd>
+			<MudTd DataLabel="Amount Paid">@context.AmountPaid.ToString("C2", CultureInfo.CurrentCulture)</MudTd>
 			<MudTd DataLabel="Date Paid">@context.ExpenseDate.ToShortDateString()</MudTd>
-			<MudTd DataLabel="Due Date">@context.DueDate.ToShortDateString()</MudTd>
 			<MudTd DataLabel="Expense Category">@GetExpenseCategoryName(context.ExpenseCategoryId, expenseCategoryList)</MudTd>
 			<MudTd>
 				<MudIcon Icon="@Icons.TwoTone.Edit" Title="Edit" @onclick="(() => EditRecord(context))" class="mud-table-button" Color="Color.Info" />
@@ -77,10 +79,6 @@ else
 						<input class="form-control" type="text"
 						placeholder="Expense History Name"
 						@bind="expenseHistory.ExpenseName" id="expensehistoryname" />
-						<label for="expenseamount">Expense Amount: </label>
-						<input class="form-control" type="number"
-						placeholder="Expense Amount"
-						@bind="expenseHistory.ExpenseAmount" id="expenseamount" min="0" />
 						<label for="amountpaid">Amount Paid: </label>
 						<input class="form-control" type="number"
 						placeholder="Amount Paid"
@@ -90,9 +88,6 @@ else
 						placeholder="Expense Date"
 						@bind="expenseHistory.ExpenseDate" id="expensedate" />
 						<label for="duedate">Due Date:</label>
-						<input class="form-control" type="date"
-						placeholder="Due Date"
-						@bind="expenseHistory.DueDate" id="duedate" />
 
 						<label for="expensecategory">Expense Category: </label>
 						<select class="form-select" title="Expense Category" @bind="expenseHistory.ExpenseCategoryId" id="expensecategory">
@@ -127,7 +122,6 @@ else
 
 @code {
 
-	string Error = "";
 	bool ShowPopup = false;
 	List<ExpenseHistory> expenseHistoryList = new();
 	List<ExpenseCategories> expenseCategoryList = new();
@@ -138,7 +132,17 @@ else
 	private HashSet<ExpenseHistory> selectedItems = new();
 	private IEnumerable<ExpenseHistory> ExpenseHistoryItems = new List<ExpenseHistory>();
 
+	DateTime? _yearMonth;
+
+	[Inject] IDialogService DialogService { get; set; }
+	[Inject] ISnackbar Snackbar { get; set; }
+
 	protected override async Task OnInitializedAsync()
+	{
+		await LoadData();
+	}
+
+	async Task LoadData()
 	{
 		expenseHistoryList = await expenseHistoryService.GetList();
 		ExpenseHistoryItems = expenseHistoryList;
@@ -156,7 +160,6 @@ else
 		{
 			ExpenseHistoryId = 0,
 			ExpenseDate = DateTime.Today.Date,
-			DueDate = DateTime.Today.Date
 		};
 		ShowPopup = true;
 	}
@@ -170,7 +173,6 @@ else
 	async Task SaveRecord()
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
@@ -179,64 +181,91 @@ else
 				ExpenseHistory newExpenseHistory = new()
 				{
 					ExpenseName = expenseHistory.ExpenseName,
-					ExpenseAmount = expenseHistory.ExpenseAmount,
 					AmountPaid = expenseHistory.AmountPaid,
 					ExpenseDate = expenseHistory.ExpenseDate,
-					DueDate = expenseHistory.DueDate
+					ExpenseCategoryId = expenseHistory.ExpenseCategoryId
 				};
 
 				var createdExpenseHistory = await expenseHistoryService.CreateRecord(newExpenseHistory);
-
-				switch (createdExpenseHistory.ExpenseHistoryId)
-				{
-					case 0:
-						Error = "Error processing request, please try again";
-						break;
-					default:
-						expenseHistoryList = await expenseHistoryService.GetList();
-						ExpenseHistoryItems = expenseHistoryList;
-						break;
-				}
+				CreateResultProcessor(createdExpenseHistory);
 			}
 			else
 			{
-				var updatedRecord = await expenseHistoryService.UpdatRecord(expenseHistory);
-				if (updatedRecord.ExpenseHistoryId == 0)
-				{
-					Error = "Error updating expense history, please try again";
-					expenseHistoryList = await expenseHistoryService.GetList();
-				}
+				var updatedRecord = await expenseHistoryService.UpdateRecord(expenseHistory);
+				UpdateResultProcessor(updatedRecord);
 			}
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
 		}
 	}
 
 	async Task DeleteConfirm(ExpenseHistory expenseHistory)
 	{
-		bool confirmed = await jsRuntime.InvokeAsync<bool>("confirm", "Delete Record?");
-		if (confirmed)
-		{
-			await DeleteRecord(expenseHistory);
-		}
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {expenseHistory.ExpenseName} : {expenseHistory.ExpenseDate.ToShortDateString()}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteRecord(expenseHistory); }
 	}
 
 	async Task DeleteRecord(ExpenseHistory expenseHistory)
 	{
 		ShowPopup = false;
-		Error = "";
 
 		try
 		{
-			await expenseHistoryService.DeleteRecord(expenseHistory);
-			expenseHistoryList = await expenseHistoryService.GetList();
-			ExpenseHistoryItems = expenseHistoryList;
+			var deletedExpenseHistory = await expenseHistoryService.DeleteRecord(expenseHistory);
+			DeleteResultProcessor(deletedExpenseHistory);
 		}
 		catch (Exception e)
 		{
-			Error = e.Message;
+			CatchErrorMessage(e);
+		}
+	}
+
+	// CRUD help methods
+
+	void ProcessingErrorMessage() { Snackbar.Add("Error processing record, please try again", Severity.Error); }
+	void CatchErrorMessage(Exception e) { Snackbar.Add($"{e.Message}", Severity.Error); }
+
+	void CreateResultProcessor(ExpenseHistory history)
+	{
+		switch (history.ExpenseHistoryId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				expenseHistoryList.Add(history);
+				ExpenseHistoryItems = expenseHistoryList;
+				Snackbar.Add("Expense History Added", Severity.Success);
+				break;
+		}
+	}
+
+	async void UpdateResultProcessor(ExpenseHistory history)
+	{
+		if (history.ExpenseHistoryId == 0)
+		{
+			ProcessingErrorMessage();
+			await LoadData();
+		}
+	}
+
+	void DeleteResultProcessor(ExpenseHistory history)
+	{
+		switch (history.ExpenseHistoryId)
+		{
+			case 0:
+				ProcessingErrorMessage();
+				break;
+			default:
+				expenseHistoryList.Remove(history);
+				ExpenseHistoryItems = expenseHistoryList;
+				Snackbar.Add("Expense History Deleted", Severity.Success);
+				break;
 		}
 	}
 
@@ -247,7 +276,7 @@ else
 		return ItemFromList.GetExpenseCategoryName(id, expenseCategoriesList);
 	}
 
-	// Search Functions
+	// Search methods
 
 	private bool FilterFunc1(ExpenseHistory exh) => FilterFunc(exh, searchString1);
 
@@ -257,12 +286,35 @@ else
 			return true;
 		if (exh.ExpenseName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
 			return true;
-		if ($"{exh.ExpenseAmount} {exh.AmountPaid}".Contains(searchString))
+		if ($"{exh.AmountPaid}".Contains(searchString))
 			return true;
-		if ($"{exh.DueDate} {exh.ExpenseDate}".Contains(searchString))
+		if ($"{exh.ExpenseDate.ToShortDateString()}".Contains(searchString))
 			return true;
 		if ($"{exh.ExpenseCategoryId}".Contains(searchString))
 			return true;
 		return false;
+	}
+
+	// Date Filter Functions
+
+	void SearchByDateFilter()
+	{
+		if (_yearMonth == null)
+			return;
+
+		ExpenseHistoryItems = expenseHistoryList;
+
+		int month = _yearMonth.Value.Month;
+		int year = _yearMonth.Value.Year;
+
+		ExpenseHistoryItems = ExpenseHistoryItems.ToList()
+								.Where(i => i.ExpenseDate.Month == month)
+								.Where(i => i.ExpenseDate.Year == year);
+	}
+
+	void ClearDateFilter()
+	{
+		_yearMonth = null;
+		ExpenseHistoryItems = expenseHistoryList;
 	}
 }

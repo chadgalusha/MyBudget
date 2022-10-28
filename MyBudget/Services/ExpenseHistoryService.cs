@@ -1,4 +1,5 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 
 namespace MyBudget.Services
@@ -24,17 +25,41 @@ namespace MyBudget.Services
 
         public async Task<ExpenseHistory> CreateRecord(ExpenseHistory newExpenseHistory)
         {
-            return await _expenseHistoryDataAccess.CreateRecordAsync(newExpenseHistory);
+            try
+            {
+                return await _expenseHistoryDataAccess.CreateRecordAsync(newExpenseHistory);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorCreating(newExpenseHistory, e);
+                return new ExpenseHistory() { ExpenseHistoryId = 0 };
+            }
         }
 
-        public async Task<ExpenseHistory> UpdatRecord(ExpenseHistory expenseHistory)
+        public async Task<ExpenseHistory> UpdateRecord(ExpenseHistory expenseHistory)
         {
-            return await _expenseHistoryDataAccess.UpdateRecordAsync(expenseHistory);
+            try
+            {
+                return await _expenseHistoryDataAccess.UpdateRecordAsync(expenseHistory);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorUpdating(expenseHistory, e);
+                return new ExpenseHistory() { ExpenseHistoryId = 0 };
+            }
         }
 
         public async Task<ExpenseHistory> DeleteRecord(ExpenseHistory expenseHistory)
         {
-            return await _expenseHistoryDataAccess.DeleteRecordAsync(expenseHistory);
+            try
+            {
+                return await _expenseHistoryDataAccess.DeleteRecordAsync(expenseHistory);
+            }
+            catch (Exception e)
+            {
+                MyBudgetLogger.ErrorDeleting(expenseHistory, e);
+                return new ExpenseHistory() { ExpenseHistoryId = 0 };
+            }
         }
 
         public decimal GetAmountForLastMonth()

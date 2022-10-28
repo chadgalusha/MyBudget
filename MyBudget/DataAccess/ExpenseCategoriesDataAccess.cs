@@ -82,31 +82,27 @@ namespace MyBudget.DataAccess
 
         public bool DoesNameExist(string name)
         {
-            int result;
-
             using (_connection = new SQLiteConnection(_dbPath))
             {
-                result = _connection.Table<ExpenseCategories>()
+                int result = _connection.Table<ExpenseCategories>()
                     .Where(e => e.ExpenseCategoryName.ToLower() == name.ToLower())
                     .Count();
-            }
 
-            return result > 0;
+                return result > 0;
+            }
         }
 
         public string GetNameById(int id)
         {
-            string expenseCategoryName;
-
             using (_connection = new SQLiteConnection(_dbPath))
             {
-                expenseCategoryName = _connection.Table<ExpenseCategories>()
+                string expenseCategoryName = _connection.Table<ExpenseCategories>()
                         .Where(e => e.ExpenseCategoryId == id)
                         .Select(e => e.ExpenseCategoryName)
                         .SingleOrDefault();
-            }
 
-            return expenseCategoryName;
+                return expenseCategoryName;
+            }
         }
 
         // PRIVATE METHODS

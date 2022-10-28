@@ -1,4 +1,5 @@
 ﻿using MyBudget.DataAccess;
+using MyBudget.Helpers;
 using MyBudget.Models;
 using Serilog;
 
@@ -45,7 +46,7 @@ namespace MyBudget.Services
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Error creating new expense: {e.Message}");
+				MyBudgetLogger.ErrorCreating(newExpense, e);
 				return new Expenses() { ExpensesId = 0 };
 			}
 		}
@@ -66,7 +67,7 @@ namespace MyBudget.Services
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Error updating expense: {e.Message}");
+				MyBudgetLogger.ErrorUpdating(expense, e);
 				return new Expenses() { ExpensesId = 0 };
 			}
 		}
@@ -79,7 +80,7 @@ namespace MyBudget.Services
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Error deleting expense: {e.Message}");
+				MyBudgetLogger.ErrorDeleting(expense, e);
 				return new Expenses() { ExpensesId = 0 };
 			}
 		}
