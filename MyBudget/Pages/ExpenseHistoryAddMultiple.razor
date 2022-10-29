@@ -7,7 +7,12 @@
 @inject IService<ExpenseCategories> expenseCategoryService
 
 <h3 style="text-align:center;">Add Multiple Expense Histories</h3>
-<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+<div>
+	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+</div>
+
 
 @*<div class="mud-inline-form">
 	<MudTextField T="string" HelperText="Expense History Name" @bind-Value="expenseHistory.ExpenseName" MaxLength="20"  Class=" m-1"/>
@@ -21,37 +26,117 @@
 	</MudSelect>
 </div>*@
 
-<table>
+<table class="table">
 	<thead>
 		<tr>
+			<th>Id</th>
 			<th>Text</th>
 			<th>Number</th>
 			<th>Date</th>
 			<th>Select</th>
+			<th></th>
 		</tr>
 	</thead>
 	<tbody>
+		@foreach (var data in testDataList)
+		{
 		<tr>
-			<td><input type="text"/></td>
-			<td><input type="number"/></td>
-			<td><input type="date"/></td>
-			<td><select>
-				<option value="">Selection 1</option>
-				<option value="">Selection 2</option>
-				<option value="">Selection 3</option>
-			</select></td>
+			<td><input @bind="data.Id" type="number" disabled="disabled" /></td>
+			<td><input type="text" @bind="data.Text"/></td>
+			<td><input type="number" @bind="data.Amount" /></td>
+			<td><input type="date" @bind="data.Date" /></td>
+			<td><select @bind="data.selection">
+					<option value="Selection 1">Selection 1</option>
+					<option value="Selection 2">Selection 2</option>
+					<option value="Selection 3">Selection 3</option>
+				</select>
+			</td>
+			<td>
+				<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete" @onclick="() => RemoveElement(data.Id)" />
+			</td>
 		</tr>
+		}
 	</tbody>
 </table>
 
 @code {
 
-	ExpenseHistory expenseHistory = new() { ExpenseDate = DateTime.Today };
-	List<ExpenseCategories> expenseCategoryList = new();
+	//ExpenseHistory expenseHistory = new() { ExpenseDate = DateTime.Today };
+	//List<ExpenseCategories> expenseCategoryList = new();
+	TestData myTestData = new();
+	List<TestData> testDataList = new();
 
 	protected override async Task OnInitializedAsync()
 	{
-		expenseCategoryList = await expenseCategoryService.GetList();
+		//expenseCategoryList = await expenseCategoryService.GetList();
+
+		testDataList.Add(GetInitialTestData());
 	}
 
+	void AddRow()
+	{
+		TestData newTestData = GetNewTestData();
+		testDataList.Add(newTestData);
+	}
+
+	void DeleteRow()
+	{
+		var lastIndex = testDataList.LastOrDefault();
+		testDataList.Remove(lastIndex);
+	}
+
+	void RemoveElement(int id)
+	{
+		var a = testDataList.Where(t => t.Id == id).First();
+		testDataList.Remove(a);
+		ReIndexList();
+	}
+
+	class TestData
+	{
+		public int Id { get; set; }
+		public string Text { get; set; }
+		public decimal Amount { get; set; }
+		public DateTime Date { get; set; }
+		public string selection { get; set; }
+	}
+
+	TestData GetInitialTestData()
+	{
+		TestData testdata = new()
+		{
+			Id = 1,
+			Date = DateTime.Now
+		};
+
+		return testdata;
+	}
+
+	TestData GetNewTestData()
+	{
+		TestData testdata = new()
+		{
+			Id = NextId(),
+			Date = DateTime.Now
+		};
+
+		return testdata;
+	}
+
+	int NextId()
+	{
+		int currentHighestId = testDataList.Count;
+		return currentHighestId + 1;
+	}
+
+	void ReIndexList()
+	{
+		int currentIndex = 1;
+
+		foreach (var data in testDataList)
+		{
+			data.Id = currentIndex;
+			currentIndex++;
+		}
+	}
 }
