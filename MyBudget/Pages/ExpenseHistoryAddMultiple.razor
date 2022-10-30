@@ -3,16 +3,17 @@
 @using MyBudget.Models
 @using MyBudget.Services
 @using MyBudget.Helpers
+@using System.Globalization
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
 
 <h3 style="text-align:center;">Add Multiple Expense Histories</h3>
-<div>
+<div style="margin-top:5px;margin-bottom:5px;">
 	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
 	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
 	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
 </div>
-
 
 @*<div class="mud-inline-form">
 	<MudTextField T="string" HelperText="Expense History Name" @bind-Value="expenseHistory.ExpenseName" MaxLength="20"  Class=" m-1"/>
@@ -26,7 +27,7 @@
 	</MudSelect>
 </div>*@
 
-<table class="table">
+<table class="table table-striped table-bordered table-styles">
 	<thead>
 		<tr>
 			<th>Id</th>
@@ -41,23 +42,32 @@
 		@foreach (var data in testDataList)
 		{
 		<tr>
-			<td><input @bind="data.Id" type="number" disabled="disabled" /></td>
-			<td><input type="text" @bind="data.Text"/></td>
-			<td><input type="number" @bind="data.Amount" /></td>
-			<td><input type="date" @bind="data.Date" /></td>
-			<td><select @bind="data.selection">
+			<td><input @bind="data.Id" type="number" disabled="disabled" class="border-1" /></td>
+			<td><input type="text" @bind="data.Text" maxlength="20" class="border-1" /></td>
+			<td><input type="number" @bind="data.Amount" min="0" max="999999999" class="border-1" /></td>
+			<td><input type="date" @bind="data.Date" class="border-1"  /></td>
+			<td>
+				<select @bind="data.selection" class="border-1">
 					<option value="Selection 1">Selection 1</option>
 					<option value="Selection 2">Selection 2</option>
 					<option value="Selection 3">Selection 3</option>
 				</select>
 			</td>
 			<td>
-				<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete" @onclick="() => RemoveElement(data.Id)" />
+				<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete" 
+				@onclick="() => RemoveElement(data.Id)" class="mud-table-button" style="text-align:center;" />
 			</td>
 		</tr>
 		}
 	</tbody>
 </table>
+
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
 
 @code {
 
@@ -65,6 +75,8 @@
 	//List<ExpenseCategories> expenseCategoryList = new();
 	TestData myTestData = new();
 	List<TestData> testDataList = new();
+
+	[Inject] ISnackbar Snackbar { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -75,6 +87,11 @@
 
 	void AddRow()
 	{
+		if (testDataList.Count >= 25)
+		{
+			Snackbar.Add("Max of 25 new additions", Severity.Info);
+			return;
+		}
 		TestData newTestData = GetNewTestData();
 		testDataList.Add(newTestData);
 	}
@@ -138,5 +155,15 @@
 			data.Id = currentIndex;
 			currentIndex++;
 		}
+	}
+
+	void ProcessList()
+	{
+		testDataList.ForEach(delegate(TestData data)
+		{
+			Snackbar.Add($"{data.Id}, {data.Text}, {data.Amount.ToString("C2", CultureInfo.CurrentCulture)}, {data.Date.ToShortTimeString()}, {data.selection}", Severity.Success);
+		});
+		testDataList.Clear();
+		testDataList.Add(GetInitialTestData());
 	}
 }
