@@ -15,47 +15,36 @@
 	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
 </div>
 
-@*<div class="mud-inline-form">
-	<MudTextField T="string" HelperText="Expense History Name" @bind-Value="expenseHistory.ExpenseName" MaxLength="20"  Class=" m-1"/>
-	<MudNumericField T="decimal" HelperText="Expense Amount" @bind-Value="expenseHistory.AmountPaid" Min="0" Max="999999999" Class="m-1"/>
-	<MudDatePicker @bind-Value="expenseHistory.ExpenseDate" HelperText="Expense Date" Class="m-1"/>
-	<MudSelect T="int" AnchorOrigin="Origin.BottomCenter" @bind-Value="expenseHistory.ExpenseCategoryId" HelperText="Expense Category" Class="p-1">
-		@foreach (var category in expenseCategoryList)
-		{
-			<MudSelectItem Value="category.ExpenseCategoryId">@category.ExpenseCategoryName</MudSelectItem>
-		}
-	</MudSelect>
-</div>*@
-
 <table class="table table-striped table-bordered table-styles">
 	<thead>
 		<tr>
-			<th>Id</th>
-			<th>Text</th>
-			<th>Number</th>
-			<th>Date</th>
-			<th>Select</th>
+			<th>Row</th>
+			<th>Expense Name</th>
+			<th>Amount Paid</th>
+			<th>Expense Date</th>
+			<th>Expense Category</th>
 			<th></th>
 		</tr>
 	</thead>
 	<tbody>
-		@foreach (var data in testDataList)
+		@foreach (var expense in expenseHistoryList)
 		{
 		<tr>
-			<td><input @bind="data.Id" type="number" disabled="disabled" class="border-1" /></td>
-			<td><input type="text" @bind="data.Text" maxlength="20" class="border-1" /></td>
-			<td><input type="number" @bind="data.Amount" min="0" max="999999999" class="border-1" /></td>
-			<td><input type="date" @bind="data.Date" class="border-1"  /></td>
+			<td><input @bind="expense.ExpenseHistoryId" type="number" disabled="disabled" class="border-1" /></td>
+			<td><input type="text" @bind="expense.ExpenseName" maxlength="20" class="border-1" on/></td>
+			<td><input type="number" @bind="expense.AmountPaid" min="0" max="999999999" class="border-1" /></td>
+			<td><input type="date" @bind="expense.ExpenseDate" class="border-1" /></td>
 			<td>
-				<select @bind="data.selection" class="border-1">
-					<option value="Selection 1">Selection 1</option>
-					<option value="Selection 2">Selection 2</option>
-					<option value="Selection 3">Selection 3</option>
+				<select @bind="expense.ExpenseCategoryId" class="border-1">
+					@foreach (var category in expenseCategoryList)
+					{
+						<option value="@category.ExpenseCategoryId">@category.ExpenseCategoryName</option>
+					}
 				</select>
 			</td>
 			<td>
-				<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete" 
-				@onclick="() => RemoveElement(data.Id)" class="mud-table-button" style="text-align:center;" />
+				<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
+				@onclick="() => RemoveElement(expense.ExpenseHistoryId)" class="mud-table-button" style="text-align:center;" />
 			</td>
 		</tr>
 		}
@@ -71,99 +60,157 @@
 
 @code {
 
-	//ExpenseHistory expenseHistory = new() { ExpenseDate = DateTime.Today };
-	//List<ExpenseCategories> expenseCategoryList = new();
-	TestData myTestData = new();
-	List<TestData> testDataList = new();
+	ExpenseHistory expenseHistory = new();
+	List<ExpenseHistory> expenseHistoryList = new();
+	List<ExpenseCategories> expenseCategoryList = new();
+
+	List<ExpenseHistory> badRequestList = new();
 
 	[Inject] ISnackbar Snackbar { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
-		//expenseCategoryList = await expenseCategoryService.GetList();
-
-		testDataList.Add(GetInitialTestData());
+		expenseCategoryList = await expenseCategoryService.GetList();
+		expenseHistoryList.Add(GetInitialExpenseHistory());
 	}
 
 	void AddRow()
 	{
-		if (testDataList.Count >= 25)
+		if (expenseHistoryList.Count >= 25)
 		{
 			Snackbar.Add("Max of 25 new additions", Severity.Info);
 			return;
 		}
-		TestData newTestData = GetNewTestData();
-		testDataList.Add(newTestData);
+
+		expenseHistoryList.Add(GetNextRow());
 	}
 
 	void DeleteRow()
 	{
-		var lastIndex = testDataList.LastOrDefault();
-		testDataList.Remove(lastIndex);
+		var lastIndex = expenseHistoryList.LastOrDefault();
+		expenseHistoryList.Remove(lastIndex);
 	}
 
 	void RemoveElement(int id)
 	{
-		var a = testDataList.Where(t => t.Id == id).First();
-		testDataList.Remove(a);
+		var a = expenseHistoryList.Where(e => e.ExpenseHistoryId == id).First();
+		expenseHistoryList.Remove(a);
 		ReIndexList();
 	}
 
-	class TestData
+	ExpenseHistory GetInitialExpenseHistory()
 	{
-		public int Id { get; set; }
-		public string Text { get; set; }
-		public decimal Amount { get; set; }
-		public DateTime Date { get; set; }
-		public string selection { get; set; }
+		return new() { ExpenseHistoryId = 1, ExpenseDate = DateTime.Now };
 	}
 
-	TestData GetInitialTestData()
+	ExpenseHistory GetNextRow()
 	{
-		TestData testdata = new()
-		{
-			Id = 1,
-			Date = DateTime.Now
-		};
-
-		return testdata;
-	}
-
-	TestData GetNewTestData()
-	{
-		TestData testdata = new()
-		{
-			Id = NextId(),
-			Date = DateTime.Now
-		};
-
-		return testdata;
+		return new() { ExpenseHistoryId = NextId(), ExpenseDate = DateTime.Now };
 	}
 
 	int NextId()
 	{
-		int currentHighestId = testDataList.Count;
-		return currentHighestId + 1;
+		return expenseHistoryList.Count + 1;
 	}
 
 	void ReIndexList()
 	{
 		int currentIndex = 1;
 
-		foreach (var data in testDataList)
+		foreach (var expense in expenseHistoryList)
 		{
-			data.Id = currentIndex;
+			expense.ExpenseHistoryId = currentIndex;
 			currentIndex++;
 		}
 	}
 
-	void ProcessList()
+	async Task ProcessList()
 	{
-		testDataList.ForEach(delegate(TestData data)
+		List<ExpenseHistory> badRequestList = new();
+		int listCount = expenseHistoryList.Count;
+
+		foreach (var expense in expenseHistoryList)
 		{
-			Snackbar.Add($"{data.Id}, {data.Text}, {data.Amount.ToString("C2", CultureInfo.CurrentCulture)}, {data.Date.ToShortTimeString()}, {data.selection}", Severity.Success);
-		});
-		testDataList.Clear();
-		testDataList.Add(GetInitialTestData());
+			//TODO Check for null values
+			var result = await SaveRecord(expense);
+
+			if (result == false)
+			{
+				badRequestList.Add(expense);
+			}
+		}
+
+		if (badRequestList.Count > 0)
+		{
+			ErrorsOnSomeRecords(listCount - badRequestList.Count);
+		}
+		else
+		{
+			AllRecordsSaved(listCount);
+		}
+	}
+
+	// Save methods
+
+	async Task<bool> SaveRecord(ExpenseHistory expense)
+	{
+		try
+		{
+			ExpenseHistory newExpenseHistory = GetNewModel(expense);
+
+			var successResult = await expenseHistoryService.CreateRecord(newExpenseHistory);
+
+			return successResult.ExpenseHistoryId > 0 ? true : false;
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+			return false;
+		}
+	}
+
+	ExpenseHistory GetNewModel(ExpenseHistory expense)
+	{
+		return new()
+		{
+			ExpenseName = expense.ExpenseName,
+			AmountPaid = expense.AmountPaid,
+			ExpenseDate = expense.ExpenseDate,
+			ExpenseCategoryId = expense.ExpenseCategoryId
+		};
+	}
+
+	void ErrorsOnSomeRecords(int successCount)
+	{
+		expenseHistoryList = badRequestList;
+		badRequestList.Clear();
+		ReIndexList();
+		Snackbar.Add($"Successfully created {successCount} new records", Severity.Success);
+		Snackbar.Add("Remaining records need attention before saving", Severity.Error);
+	}
+
+	void AllRecordsSaved(int listCount)
+	{
+		Snackbar.Add($"Successfully created {listCount} records", Severity.Success);
+		expenseHistoryList.Clear();
+		expenseHistoryList.Add(GetInitialExpenseHistory());
+	}
+
+	bool CheckForNullValues(ExpenseHistory expense)
+	{
+		if (string.IsNullOrEmpty(expense.ExpenseName))
+		{
+			return false;
+		}
+		if (expense.ExpenseDate.Year < 2000)
+		{
+			return false;
+		}
+		if (string.IsNullOrEmpty(expense.ExpenseCategoryId.ToString()))
+		{
+			return false;
+		}
+
+		return true;
 	}
 }

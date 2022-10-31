@@ -31,6 +31,8 @@ namespace MyBudget.DataAccess
 
         public async Task<ExpenseHistory> CreateRecordAsync(ExpenseHistory newExpenseHistory)
         {
+            Initialize();
+
             try
             {
                 await _asyncConnection.InsertAsync(newExpenseHistory).ContinueWith((e) =>

@@ -462,3 +462,12 @@
 2022-10-27 15:23:02.862 -05:00 [INF] Incomes deleted: {"IncomeId":2,"IncomeName":"My Income 2","IncomeTypeId":4,"PaymentFrequencyTypeId":9,"IncomeAmount":34,"InitialIncomeDate":"2022-10-27T00:00:00"}
 2022-10-27 16:11:53.858 -05:00 [INF] ExpenseCategories created: {"ExpenseCategoryId":19,"ExpenseCategoryName":"Test","ExpenseCategoryDescription":"test"}
 2022-10-27 16:12:53.272 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":3,"ExpenseName":"Test 2","AmountPaid":23,"ExpenseDate":"2022-10-27T00:00:00-05:00","ExpenseCategoryId":19}
+2022-10-31 16:00:44.850 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":4,"ExpenseName":"Test1","AmountPaid":32,"ExpenseDate":"2022-10-31T16:00:25.8430885-05:00","ExpenseCategoryId":1}
+2022-10-31 16:00:44.875 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":5,"ExpenseName":"Test2","AmountPaid":23,"ExpenseDate":"2022-10-31T16:00:28.2043092-05:00","ExpenseCategoryId":5}
+2022-10-31 16:10:25.703 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":6,"ExpenseName":"Test3","AmountPaid":0,"ExpenseDate":"2022-10-31T16:10:13.8499157-05:00","ExpenseCategoryId":0}
+2022-10-31 16:11:44.724 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":6,"ExpenseName":"Test3","AmountPaid":0,"ExpenseDate":"2022-10-31T16:10:13.8499157","ExpenseCategoryId":0}
+2022-10-31 16:11:48.960 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":5,"ExpenseName":"Test2","AmountPaid":23,"ExpenseDate":"2022-10-31T16:00:28.2043092","ExpenseCategoryId":5}
+2022-10-31 16:11:52.622 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":4,"ExpenseName":"Test1","AmountPaid":32,"ExpenseDate":"2022-10-31T16:00:25.8430885","ExpenseCategoryId":1}
+2022-10-31 16:36:01.607 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":7,"ExpenseName":"test","AmountPaid":1,"ExpenseDate":"2022-10-31T16:35:45.8456552-05:00","ExpenseCategoryId":0}
+2022-10-31 16:37:13.277 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":7,"ExpenseName":"test","AmountPaid":1,"ExpenseDate":"2022-10-31T16:35:45.8456552","ExpenseCategoryId":3}
+2022-10-31 16:37:20.055 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":7,"ExpenseName":"test","AmountPaid":1,"ExpenseDate":"2022-10-31T16:35:45.8456552","ExpenseCategoryId":3}
