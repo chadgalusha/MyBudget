@@ -51,6 +51,20 @@
 	</tbody>
 </table>
 
+<MudTable Items="@expenseHistoryList">
+	<HeaderContent>
+		<MudTh></MudTh>
+		<MudTh></MudTh>
+		<MudTh></MudTh>
+		<MudTh></MudTh>
+		<MudTh></MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+
+	</RowTemplate>
+</MudTable>
+
 <div style="margin-top:5px;margin-bottom:5px;">
 	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
 	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
@@ -91,8 +105,8 @@
 
 	void RemoveElement(int id)
 	{
-		var a = expenseHistoryList.Where(e => e.ExpenseHistoryId == id).First();
-		expenseHistoryList.Remove(a);
+		var element = expenseHistoryList.Where(e => e.ExpenseHistoryId == id).First();
+		expenseHistoryList.Remove(element);
 		ReIndexList();
 	}
 

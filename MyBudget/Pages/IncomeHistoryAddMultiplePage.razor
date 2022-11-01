@@ -1,0 +1,116 @@
+﻿@page "/incomehistoryaddmultiple"
+@using MyBudget.Components
+@using MyBudget.Models
+@using MyBudget.Services
+@using MyBudget.Helpers
+@using System.Globalization
+@inject IHistoryService<IncomeHistory> incomeHistoryService;
+
+<h3 style="text-align:center;">Add Multiple Income Histories</h3>
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/incomehistorypage" _text="Back to Income History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+<MudTable Items="@incomeHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+	<HeaderContent>
+		<MudTh>Id</MudTh>
+		<MudTh>Income Name</MudTh>
+		<MudTh>Income Amount</MudTh>
+		<MudTh>Income Date</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Id">@context.IncomeHistoryId</MudTd>
+		<MudTd DataLabel="Income Name"><MudTextField @bind-Value="context.IncomeName" Label="Income Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" @onchange="Test"/></MudTd>
+		<MudTd DataLabel="Income Amount"><MudNumericField @bind-Value="context.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/></MudTd>
+		<MudTd DataLabel="Income Date"><MudDatePicker @bind-value="context.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" Date="context.IncomeDate"/></MudTd>
+		<MudTd>
+			<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
+			@onclick="(() => RemoveElement(context.IncomeHistoryId))" class="mud-table-button" style="text-align:center;"/>
+		</MudTd>
+	</RowTemplate>
+</MudTable>
+
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/incomehistorypage" _text="Back to Income History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+@code {
+
+	private List<IncomeHistory> incomeHistoryList = new();
+
+	[Inject] ISnackbar Snackbar { get; set; }
+
+	protected override void OnInitialized()
+	{
+		incomeHistoryList.Add(GetInitialIncomeHistory());
+	}
+
+	void AddRow()
+	{
+		if (incomeHistoryList.Count >= 25)
+		{
+			Snackbar.Add("Max of 25 new records", Severity.Info);
+			return;
+		}
+
+		incomeHistoryList.Add(GetNextRow());
+	}
+
+	void DeleteRow()
+	{
+		var lastIndex = incomeHistoryList.LastOrDefault();
+		incomeHistoryList.Remove(lastIndex);
+	}
+
+	void RemoveElement(int id)
+	{
+		var element = incomeHistoryList.Where(i => i.IncomeHistoryId == id).First();
+		incomeHistoryList.Remove(element);
+		ReIndexList();
+	}
+
+	IncomeHistory GetInitialIncomeHistory()
+	{
+		return new() { IncomeHistoryId = 1, IncomeDate = DateTime.Now };
+	}
+
+	int NextId()
+	{
+		return incomeHistoryList.Count + 1;
+	}
+
+	IncomeHistory GetNextRow()
+	{
+		return new() { IncomeHistoryId = NextId(), IncomeDate = DateTime.Now };
+	}
+
+	void ReIndexList()
+	{
+		int currendIndex = 1;
+
+		foreach (var income in incomeHistoryList)
+		{
+			income.IncomeHistoryId = currendIndex;
+			currendIndex++;
+		}
+	}
+
+	void Test()
+	{
+		Snackbar.Add("Hello", Severity.Info);
+	}
+
+	// Save methods
+
+	async Task ProcessList()
+	{
+
+	}
+}

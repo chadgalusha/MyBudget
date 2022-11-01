@@ -107,6 +107,11 @@ a, .btn-link {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
+.mud-table-styles {
+    border: 1px solid black;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
 #add-button {
     margin-top: 6px;
 }
