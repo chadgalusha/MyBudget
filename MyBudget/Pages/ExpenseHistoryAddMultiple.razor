@@ -31,7 +31,7 @@
 		{
 		<tr>
 			<td><input @bind="expense.ExpenseHistoryId" type="number" disabled="disabled" class="border-1" /></td>
-			<td><input type="text" @bind="expense.ExpenseName" maxlength="20" class="border-1" on/></td>
+			<td><input type="text" @bind="expense.ExpenseName" maxlength="20" class="border-1" /></td>
 			<td><input type="number" @bind="expense.AmountPaid" min="0" max="999999999" class="border-1" /></td>
 			<td><input type="date" @bind="expense.ExpenseDate" class="border-1" /></td>
 			<td>
@@ -64,8 +64,6 @@
 	List<ExpenseHistory> expenseHistoryList = new();
 	List<ExpenseCategories> expenseCategoryList = new();
 
-	List<ExpenseHistory> badRequestList = new();
-
 	[Inject] ISnackbar Snackbar { get; set; }
 
 	protected override async Task OnInitializedAsync()
@@ -78,7 +76,7 @@
 	{
 		if (expenseHistoryList.Count >= 25)
 		{
-			Snackbar.Add("Max of 25 new additions", Severity.Info);
+			Snackbar.Add("Max of 25 new records", Severity.Info);
 			return;
 		}
 
@@ -124,48 +122,58 @@
 		}
 	}
 
+	// Save methods
+
 	async Task ProcessList()
 	{
-		List<ExpenseHistory> badRequestList = new();
-		int listCount = expenseHistoryList.Count;
+		int result = CheckListForIssues();
+		if (result != 0)
+		{
+			Snackbar.Add($"Issue with row {result}. Name must not be empty/blank. Date year must be greater than 1999", Severity.Error);
+			return;
+		}
 
 		foreach (var expense in expenseHistoryList)
 		{
-			//TODO Check for null values
-			var result = await SaveRecord(expense);
-
-			if (result == false)
-			{
-				badRequestList.Add(expense);
-			}
+			await SaveRecord(expense);
 		}
 
-		if (badRequestList.Count > 0)
-		{
-			ErrorsOnSomeRecords(listCount - badRequestList.Count);
-		}
-		else
-		{
-			AllRecordsSaved(listCount);
-		}
+		ClearListAndSuccessMessage();
 	}
 
-	// Save methods
+	void ClearListAndSuccessMessage()
+	{
+		expenseHistoryList.Clear();
+		expenseHistoryList.Add(GetInitialExpenseHistory());
+		Snackbar.Add("New Expense Histories Added", Severity.Success);
+	}
 
-	async Task<bool> SaveRecord(ExpenseHistory expense)
+	int CheckListForIssues()
+	{
+		foreach (var expense in expenseHistoryList)
+		{
+			if (string.IsNullOrWhiteSpace(expense.ExpenseName))
+			{
+				return expense.ExpenseHistoryId;
+			}
+			if (expense.ExpenseDate.Year < 2000)
+			{
+				return expense.ExpenseHistoryId;
+			}
+		}
+		return 0;
+	}
+
+	async Task SaveRecord(ExpenseHistory expense)
 	{
 		try
 		{
 			ExpenseHistory newExpenseHistory = GetNewModel(expense);
-
-			var successResult = await expenseHistoryService.CreateRecord(newExpenseHistory);
-
-			return successResult.ExpenseHistoryId > 0 ? true : false;
+			await expenseHistoryService.CreateRecord(newExpenseHistory);
 		}
 		catch (Exception e)
 		{
 			Snackbar.Add(e.Message, Severity.Error);
-			return false;
 		}
 	}
 
@@ -178,39 +186,5 @@
 			ExpenseDate = expense.ExpenseDate,
 			ExpenseCategoryId = expense.ExpenseCategoryId
 		};
-	}
-
-	void ErrorsOnSomeRecords(int successCount)
-	{
-		expenseHistoryList = badRequestList;
-		badRequestList.Clear();
-		ReIndexList();
-		Snackbar.Add($"Successfully created {successCount} new records", Severity.Success);
-		Snackbar.Add("Remaining records need attention before saving", Severity.Error);
-	}
-
-	void AllRecordsSaved(int listCount)
-	{
-		Snackbar.Add($"Successfully created {listCount} records", Severity.Success);
-		expenseHistoryList.Clear();
-		expenseHistoryList.Add(GetInitialExpenseHistory());
-	}
-
-	bool CheckForNullValues(ExpenseHistory expense)
-	{
-		if (string.IsNullOrEmpty(expense.ExpenseName))
-		{
-			return false;
-		}
-		if (expense.ExpenseDate.Year < 2000)
-		{
-			return false;
-		}
-		if (string.IsNullOrEmpty(expense.ExpenseCategoryId.ToString()))
-		{
-			return false;
-		}
-
-		return true;
 	}
 }
