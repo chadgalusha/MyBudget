@@ -503,3 +503,5 @@
 2022-11-01 11:40:57.658 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":21,"ExpenseName":"Test3","AmountPaid":654,"ExpenseDate":"2022-11-01T11:36:17.1097851","ExpenseCategoryId":19}
 2022-11-01 11:40:59.772 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":20,"ExpenseName":"Test2","AmountPaid":47.11,"ExpenseDate":"2022-11-01T11:36:14.2369541","ExpenseCategoryId":5}
 2022-11-01 11:41:06.069 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":19,"ExpenseName":"Test1","AmountPaid":63.45,"ExpenseDate":"2022-11-01T11:36:12.2671544","ExpenseCategoryId":1}
+2022-11-01 19:27:28.857 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":24,"ExpenseName":"Test Expense","AmountPaid":4.23,"ExpenseDate":"2022-11-01T19:27:15.0079685-05:00","ExpenseCategoryId":8}
+2022-11-01 19:27:57.077 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":24,"ExpenseName":"Test Expense2","AmountPaid":6.78,"ExpenseDate":"2022-11-01T19:27:15.0079685","ExpenseCategoryId":5}

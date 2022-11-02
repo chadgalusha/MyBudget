@@ -16,15 +16,15 @@
 
 <MudTable Items="@incomeHistoryList" Striped="true" Dense="true" class="mud-table-styles">
 	<HeaderContent>
-		<MudTh>Id</MudTh>
+		<MudTh>Row</MudTh>
 		<MudTh>Income Name</MudTh>
 		<MudTh>Income Amount</MudTh>
 		<MudTh>Income Date</MudTh>
 		<MudTh></MudTh>
 	</HeaderContent>
 	<RowTemplate>
-		<MudTd DataLabel="Id">@context.IncomeHistoryId</MudTd>
-		<MudTd DataLabel="Income Name"><MudTextField @bind-Value="context.IncomeName" Label="Income Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" @onchange="Test"/></MudTd>
+		<MudTd DataLabel="Row">@context.IncomeHistoryId</MudTd>
+		<MudTd DataLabel="Income Name"><MudTextField @bind-Value="context.IncomeName" Label="Income Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
 		<MudTd DataLabel="Income Amount"><MudNumericField @bind-Value="context.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/></MudTd>
 		<MudTd DataLabel="Income Date"><MudDatePicker @bind-value="context.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" Date="context.IncomeDate"/></MudTd>
 		<MudTd>
@@ -51,6 +51,8 @@
 	{
 		incomeHistoryList.Add(GetInitialIncomeHistory());
 	}
+
+	// Table functionality methods
 
 	void AddRow()
 	{
@@ -111,6 +113,64 @@
 
 	async Task ProcessList()
 	{
+		int result = CheckListForIssues();
+		if (result != 0)
+		{
+			Snackbar.Add($"Issue with row {result}. Name must not be empty/blank. Date year must be greater than 1999", Severity.Error);
+			return;
+		}
 
+		foreach (var income in incomeHistoryList)
+		{
+			await SaveRecord(income);
+		}
+
+		ClearListAndSuccessMessage();
+	}
+
+	void ClearListAndSuccessMessage()
+	{
+		incomeHistoryList.Clear();
+		incomeHistoryList.Add(GetInitialIncomeHistory());
+		Snackbar.Add("New Income Histories Added", Severity.Success);
+	}
+
+	int CheckListForIssues()
+	{
+		foreach (var income in incomeHistoryList)
+		{
+			if (string.IsNullOrWhiteSpace(income.IncomeName))
+			{
+				return income.IncomeHistoryId;
+			}
+			if (income.IncomeDate.Year < 2000)
+			{
+				return income.IncomeHistoryId;
+			}
+		}
+		return 0;
+	}
+
+	async Task SaveRecord(IncomeHistory income)
+	{
+		try
+		{
+			IncomeHistory newIncomeHistory = GetNewModel(income);
+			await incomeHistoryService.CreateRecord(newIncomeHistory);
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	IncomeHistory GetNewModel(IncomeHistory income)
+	{
+		return new()
+		{
+			IncomeName = income.IncomeName,
+			IncomeAmount = income.IncomeAmount,
+			IncomeDate = income.IncomeDate
+		};
 	}
 }

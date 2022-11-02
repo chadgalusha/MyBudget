@@ -1,7 +1,6 @@
 ﻿using MyBudget.DataAccess;
 using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 
 namespace MyBudget.Services
 {
