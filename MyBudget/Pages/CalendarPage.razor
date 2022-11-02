@@ -1,6 +1,81 @@
 ﻿@page "/calendarpage"
+@using MyBudget.Helpers
+@inject ICalendarProcessor calendarProcessor
+
+<h3 style="text-align:center;">@GetMonthString() @year</h3>
+
+<div class="calendar-container">
+	<div class="calendar-header">
+		<div>Sunday</div>
+		<div>Monday</div>
+		<div>Tuesday</div>
+		<div>Wednesday</div>
+		<div>Thursday</div>
+		<div>Friday</div>
+		<div>Saturday</div>
+	</div>
+
+	<div class="calendar-grid">
+		@for (int i = 0; i <= total; i++)
+		{
+			if (i < startingIndex)
+			{
+				<div id="notMonthDay"></div>
+			}
+			else if (i > endingIndex)
+			{
+				<div id="notMonthDay"></div>
+			}
+			else
+			{
+				<div>@count</div>
+				count++;
+			}
+		}
+	</div>
+</div>
 
 
 @code {
 
+	int total = 41; // inclues 0 for total of 42
+
+	[Inject] ISnackbar Snackbar { get; set; }
+
+	// figure out how to get 1st day of month to match grid
+	DateTime currentDateTime;
+	int year;
+	int month;
+	int startingIndex;
+	int endingIndex;
+	int count = 1;
+
+	protected override void OnInitialized()
+	{
+		currentDateTime = DateTime.Now;
+		year = currentDateTime.Year;
+		month = currentDateTime.Month;
+		startingIndex = GetFirstOfMonthStartingIndex();
+		endingIndex = startingIndex + GetNumberOfDaysInMonth() - 1;
+	}
+
+	int GetFirstOfMonthStartingIndex()
+	{
+		return calendarProcessor.IntForFirstDayOfMonth(year, month);
+	}
+
+	int GetNumberOfDaysInMonth()
+	{
+		return calendarProcessor.NumberDaysInMonth(year, month);
+	}
+
+	string GetMonthString()
+	{
+		return calendarProcessor.GetMonthString(month);
+	}
+
+	void Test()
+	{
+		
+	}
 }

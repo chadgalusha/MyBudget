@@ -505,3 +505,7 @@
 2022-11-01 11:41:06.069 -05:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":19,"ExpenseName":"Test1","AmountPaid":63.45,"ExpenseDate":"2022-11-01T11:36:12.2671544","ExpenseCategoryId":1}
 2022-11-01 19:27:28.857 -05:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":24,"ExpenseName":"Test Expense","AmountPaid":4.23,"ExpenseDate":"2022-11-01T19:27:15.0079685-05:00","ExpenseCategoryId":8}
 2022-11-01 19:27:57.077 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":24,"ExpenseName":"Test Expense2","AmountPaid":6.78,"ExpenseDate":"2022-11-01T19:27:15.0079685","ExpenseCategoryId":5}
+2022-11-02 08:00:24.887 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":3,"IncomeName":"Test1","IncomeAmount":6.45,"IncomeDate":"2022-11-02T08:00:00.682366-05:00"}
+2022-11-02 08:00:24.905 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":4,"IncomeName":"Test2","IncomeAmount":999.66,"IncomeDate":"2022-11-02T08:00:02.9518268-05:00"}
+2022-11-02 08:00:34.319 -05:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":3,"IncomeName":"Test1","IncomeAmount":6.45,"IncomeDate":"2022-11-02T08:00:00.682366"}
+2022-11-02 08:00:35.975 -05:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":4,"IncomeName":"Test2","IncomeAmount":999.66,"IncomeDate":"2022-11-02T08:00:02.9518268"}

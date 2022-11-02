@@ -28,7 +28,6 @@ public static class MauiProgram
 			.ConfigureFonts(fonts =>
 			{
 				fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-				fonts.AddFont("materialdesignicons-webfont.ttf", "IconFontTypes");
 			});
 
 		builder.Services.AddMauiBlazorWebView();
@@ -61,6 +60,8 @@ public static class MauiProgram
 		builder.Services.AddTransient<IHistoryService<ExpenseHistory>, ExpenseHistoryService>();
 		builder.Services.AddTransient<IIncomeAndExpensesViewModelService, IncomeAndExpensesViewModelService>();
 		builder.Services.AddTransient<IService<ExpenseCategories>, ExpenseCategoriesService>();
+
+		builder.Services.AddTransient<ICalendarProcessor, CalendarProcessor>();
 
 		builder.Services.AddMudServices(config =>
 		{
