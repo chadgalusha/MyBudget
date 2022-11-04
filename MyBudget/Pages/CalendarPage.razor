@@ -2,42 +2,59 @@
 @using MyBudget.Helpers
 @inject ICalendarProcessor calendarProcessor
 
-<div class="budget-calendar">
-	<MudToolBar class="calendar-date-bar">
-		<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft"></MudIconButton>
-		<h3 style="text-align:center;">@GetMonthString() @year</h3>
-		<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight"></MudIconButton>
-	</MudToolBar>
+<div>
+	<div class="budget-calendar">
+		<MudToolBar class="calendar-date-bar">
+			<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft"></MudIconButton>
+			<h3 style="text-align:center;">@GetMonthString(month) @year</h3>
+			<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight"></MudIconButton>
+		</MudToolBar>
 
-	<div class="calendar-container">
-		<div class="calendar-header">
-			<div>Sunday</div>
-			<div>Monday</div>
-			<div>Tuesday</div>
-			<div>Wednesday</div>
-			<div>Thursday</div>
-			<div>Friday</div>
-			<div>Saturday</div>
-		</div>
+		<div class="calendar-container">
+			<div class="calendar-header">
+				<div>Sunday</div>
+				<div>Monday</div>
+				<div>Tuesday</div>
+				<div>Wednesday</div>
+				<div>Thursday</div>
+				<div>Friday</div>
+				<div>Saturday</div>
+			</div>
 
-		<div class="calendar-grid">
-			@for (int i = 0; i <= total; i++)
-			{
-				if (i < startingIndex)
+			<div class="calendar-grid">
+				@for (int i = 0; i <= total; i++)
 				{
-					<div id="notMonthDay"></div>
+					if (i < startingIndex)
+					{
+						<div id="notMonthDay"></div>
+					}
+					else if (i > endingIndex)
+					{
+						<div id="notMonthDay"></div>
+					}
+					else
+					{
+						if (count == today)
+						{
+							<div id="currentDay">@count</div>
+							count++;
+						}
+						else
+						{
+							<div id="monthDay">@count</div>
+							count++;
+						}
+						
+					}
 				}
-				else if (i > endingIndex)
-				{
-					<div id="notMonthDay"></div>
-				}
-				else
-				{
-					<div id="monthDay">@count</div>
-					count++;
-				}
-			}
+			</div>
 		</div>
+	</div>
+	<div class="budget-calendar-menu">
+		<h4>@GetMonthString(selectedDateTime.Month) @selectedDateTime.Day, @selectedDateTime.Year</h4>
+		<MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20"/>
+		<MudNumericField T="int" Label="Number" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/>
+		<MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" />
 	</div>
 </div>
 
@@ -51,18 +68,22 @@
 	DateTime currentDateTime;
 	int year;
 	int month;
+	int today;
 	int startingIndex;
 	int endingIndex;
 	int count = 1;
-	
+	// selectedDateTime for calendar menu
+	DateTime selectedDateTime;
 
 	protected override void OnInitialized()
 	{
 		currentDateTime = DateTime.Now;
 		year = currentDateTime.Year;
 		month = currentDateTime.Month;
+		today = currentDateTime.Day;
 		startingIndex = GetFirstOfMonthStartingIndex();
 		endingIndex = startingIndex + GetNumberOfDaysInMonth() - 1;
+		selectedDateTime = currentDateTime;
 	}
 
 	int GetFirstOfMonthStartingIndex()
@@ -75,7 +96,7 @@
 		return calendarProcessor.NumberDaysInMonth(year, month);
 	}
 
-	string GetMonthString()
+	string GetMonthString(int month)
 	{
 		return calendarProcessor.GetMonthString(month);
 	}

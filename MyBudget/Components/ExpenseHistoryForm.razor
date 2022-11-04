@@ -1,0 +1,28 @@
+﻿@using MyBudget.Models
+
+<MudCard>
+	<MudForm>
+		<MudNumericField T="int" Label="Expense History Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
+		<MudTextField T="string" Label="Expense History Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" />
+		<MudNumericField T="decimal" Label="Amount Paid" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/>
+		<MudDatePicker Date="selectedDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
+		<MudSelect T="int" Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomCenter">
+			@foreach (var category in expenseCategoryList)
+			{
+				<MudSelectItem Value="category.ExpenseCategoryId">@category.ExpenseCategoryName</MudSelectItem>
+			}
+		</MudSelect>
+	</MudForm>
+</MudCard>
+
+@code {
+
+	[Parameter, EditorRequired]
+	public DateTime selectedDate { get; set;}
+
+	[Parameter, EditorRequired]
+	public ExpenseHistory expenseHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public List<ExpenseCategories> expenseCategoryList { get; set; }
+}

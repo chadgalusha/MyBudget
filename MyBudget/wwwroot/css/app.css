@@ -101,6 +101,7 @@ a, .btn-link {
         margin: 20px 20px 20px 20px;
     }
 
+/* Table Styles */
 .table-styles {
     border: 1px solid black;
     border-radius: 6px;
@@ -130,6 +131,8 @@ a, .btn-link {
         border:dashed;
     }
 
+/* Chart Styles */
+
 .donut-chart-flex-container {
     display: flex;
     flex-direction: row;
@@ -152,14 +155,18 @@ a, .btn-link {
     align-items: center;
 }
 
+/* Calendar Styles */
+
 .budget-calendar {
     border: 1px solid black;
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     margin: 5px 5px 5px 5px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 5px;
+    padding-right: 5px;
     padding-bottom: 10px;
+    float: left;
+    width: 70%;
 }
 
 .calendar-container {
@@ -197,6 +204,18 @@ a, .btn-link {
         border: 1px solid black;
     }
 
+    .calendar-grid:hover {
+        cursor: pointer;
+    }
+
+#currentDay {
+    background-color: rgb(179, 255, 179);
+}
+
+    #currentDay:hover {
+        background-color: rgb(102, 255, 102);
+    }
+
 #notMonthDay {
     background-color: slategrey;
 }
@@ -213,3 +232,19 @@ a, .btn-link {
     margin-left: auto;
     margin-right: auto;
 }
+
+.budget-calendar-menu {
+    border: 1px solid black;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin: 5px 5px 5px 5px;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 10px;
+    float: right;
+    width: 25%;
+}
+
+    .budget-calendar-menu > h4 {
+        text-align: center;
+    }

@@ -509,3 +509,8 @@
 2022-11-02 08:00:24.905 -05:00 [INF] IncomeHistory created: {"IncomeHistoryId":4,"IncomeName":"Test2","IncomeAmount":999.66,"IncomeDate":"2022-11-02T08:00:02.9518268-05:00"}
 2022-11-02 08:00:34.319 -05:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":3,"IncomeName":"Test1","IncomeAmount":6.45,"IncomeDate":"2022-11-02T08:00:00.682366"}
 2022-11-02 08:00:35.975 -05:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":4,"IncomeName":"Test2","IncomeAmount":999.66,"IncomeDate":"2022-11-02T08:00:02.9518268"}
+2022-11-03 21:40:39.476 -05:00 [INF] BankAccounts created: {"BankAccountId":3,"BankAccountName":"Jingles","BankAccountTypeId":3,"Balance":10000000000000000000000}
+2022-11-03 21:41:02.818 -05:00 [INF] BankAccounts updated: {"BankAccountId":3,"BankAccountName":"Jingles","BankAccountTypeId":3,"Balance":0.01}
+2022-11-03 21:41:14.285 -05:00 [INF] BankAccounts deleted: {"BankAccountId":3,"BankAccountName":"Jingles","BankAccountTypeId":3,"Balance":0.01}
+2022-11-03 21:43:37.123 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"Jingles","AmountPaid":1000000000,"ExpenseDate":"2022-10-27T00:00:00","ExpenseCategoryId":14}
+2022-11-03 21:44:02.850 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"Jingles","AmountPaid":100.83,"ExpenseDate":"2022-10-27T00:00:00","ExpenseCategoryId":14}
