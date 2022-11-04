@@ -1,0 +1,9 @@
+﻿<MudButton Href="@_href" Color="Color.Success" Variant="Variant.Outlined">@_text</MudButton>
+
+@code {
+
+	[Parameter, EditorRequired]
+	public string _href { get; set; } = "";
+	[Parameter, EditorRequired]
+	public string _text { get; set; } = "";
+}

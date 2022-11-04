@@ -33,12 +33,12 @@ namespace MyBudget.Helpers
 		private static int GetTypeIdFromObject<T>(T obj)
 		{
 			var id = obj.GetType()
-                    .GetProperties()
-                    .First(a => a.Name.Contains("TypeId"))
-                    .GetValue(obj);
+					.GetProperties()
+					.First(a => a.Name.Contains("TypeId"))
+					.GetValue(obj);
 
 			return Convert.ToInt32(id);
-        }
+		}
 
 		private static string GetNameFromObject<T>(T obj)
 		{
@@ -48,6 +48,6 @@ namespace MyBudget.Helpers
 						.GetValue(obj);
 
 			return name.ToString();
-        }
+		}
 	}
 }

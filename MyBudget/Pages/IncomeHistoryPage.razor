@@ -2,6 +2,7 @@
 @using MyBudget.Models
 @using MyBudget.Services
 @using System.Globalization
+@using MyBudget.Components
 @inject IHistoryService<IncomeHistory> incomeHistoryService
 
 <h3 style="text-align:center">Income History</h3>
@@ -49,6 +50,7 @@ else
 		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
 			Add New Income History
 		</MudButton>
+		<LinkButton _href="/incomehistoryaddmultiple" _text="Add Multiple Income Histories"></LinkButton>
 	</div>
 
 	@if (ShowPopup)
