@@ -2,39 +2,44 @@
 @using MyBudget.Helpers
 @inject ICalendarProcessor calendarProcessor
 
-<h3 style="text-align:center;">@GetMonthString() @year</h3>
+<div class="budget-calendar">
+	<MudToolBar class="calendar-date-bar">
+		<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft"></MudIconButton>
+		<h3 style="text-align:center;">@GetMonthString() @year</h3>
+		<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight"></MudIconButton>
+	</MudToolBar>
 
-<div class="calendar-container">
-	<div class="calendar-header">
-		<div>Sunday</div>
-		<div>Monday</div>
-		<div>Tuesday</div>
-		<div>Wednesday</div>
-		<div>Thursday</div>
-		<div>Friday</div>
-		<div>Saturday</div>
-	</div>
+	<div class="calendar-container">
+		<div class="calendar-header">
+			<div>Sunday</div>
+			<div>Monday</div>
+			<div>Tuesday</div>
+			<div>Wednesday</div>
+			<div>Thursday</div>
+			<div>Friday</div>
+			<div>Saturday</div>
+		</div>
 
-	<div class="calendar-grid">
-		@for (int i = 0; i <= total; i++)
-		{
-			if (i < startingIndex)
+		<div class="calendar-grid">
+			@for (int i = 0; i <= total; i++)
 			{
-				<div id="notMonthDay"></div>
+				if (i < startingIndex)
+				{
+					<div id="notMonthDay"></div>
+				}
+				else if (i > endingIndex)
+				{
+					<div id="notMonthDay"></div>
+				}
+				else
+				{
+					<div id="monthDay">@count</div>
+					count++;
+				}
 			}
-			else if (i > endingIndex)
-			{
-				<div id="notMonthDay"></div>
-			}
-			else
-			{
-				<div>@count</div>
-				count++;
-			}
-		}
+		</div>
 	</div>
 </div>
-
 
 @code {
 
@@ -49,6 +54,7 @@
 	int startingIndex;
 	int endingIndex;
 	int count = 1;
+	
 
 	protected override void OnInitialized()
 	{
