@@ -1,6 +1,7 @@
 ﻿@page "/"
 @using MyBudget.ViewModels
 @using MyBudget.Services
+@using MyBudget.Components
 @inject IIncomeAndExpensesViewModelService service
 
 <h1 style="text-align:center;">CG Budgeting</h1>
@@ -29,6 +30,10 @@
 	<MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="donutIndex"
 			  InputData="donutChartData" InputLabels="donutChartLabels" id="donut-chart"
 			  ></MudChart>
+</div>
+
+<div>
+	<LinkButton _href="/calendarpage" _text="calendar"></LinkButton>
 </div>
 
 @code {

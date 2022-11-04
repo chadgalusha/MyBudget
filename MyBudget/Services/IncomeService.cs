@@ -67,8 +67,8 @@ namespace MyBudget.Services
 			catch (Exception e)
 			{
 				MyBudgetLogger.ErrorUpdating(income, e);
-                return new Incomes() { IncomeId = 0 };
-            }
+				return new Incomes() { IncomeId = 0 };
+			}
 		}
 
 		public async Task<Incomes> DeleteRecord(Incomes income)
@@ -80,13 +80,13 @@ namespace MyBudget.Services
 			catch (Exception e)
 			{
 				MyBudgetLogger.ErrorDeleting(income, e);
-                return new Incomes() { IncomeId = 0 };
-            }
+				return new Incomes() { IncomeId = 0 };
+			}
 		}
 
-        // PRIVATE METHODS
+		// PRIVATE METHODS
 
-        private bool IsIncomeNameAlreadyUsed(string incomeName)
+		private bool IsIncomeNameAlreadyUsed(string incomeName)
 		{
 			return _incomeDataAccess.DoesNameExist(incomeName);
 		}
@@ -97,5 +97,5 @@ namespace MyBudget.Services
 			string currentIncomeName = _incomeDataAccess.GetNameById(income.IncomeId);
 			return !currentIncomeName.Equals(income.IncomeName);
 		}
-    }
+	}
 }

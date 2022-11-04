@@ -3,6 +3,7 @@
 @using MyBudget.Services
 @using MyBudget.Helpers
 @using System.Globalization
+@using MyBudget.Components
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
 
@@ -55,6 +56,7 @@ else
 		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="AddNewRecord">
 			Add New Expense History
 		</MudButton>
+		<LinkButton _href="/expensehistoryaddmultiple" _text="Add Multiple Expense Histories"></LinkButton>
 	</div>
 
 	@if (ShowPopup)
@@ -87,7 +89,6 @@ else
 						<input class="form-control" type="date"
 						placeholder="Expense Date"
 						@bind="expenseHistory.ExpenseDate" id="expensedate" />
-						<label for="duedate">Due Date:</label>
 
 						<label for="expensecategory">Expense Category: </label>
 						<select class="form-select" title="Expense Category" @bind="expenseHistory.ExpenseCategoryId" id="expensecategory">

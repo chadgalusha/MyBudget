@@ -1,0 +1,176 @@
+﻿@page "/incomehistoryaddmultiple"
+@using MyBudget.Components
+@using MyBudget.Models
+@using MyBudget.Services
+@using MyBudget.Helpers
+@using System.Globalization
+@inject IHistoryService<IncomeHistory> incomeHistoryService;
+
+<h3 style="text-align:center;">Add Multiple Income Histories</h3>
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/incomehistorypage" _text="Back to Income History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+<MudTable Items="@incomeHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+	<HeaderContent>
+		<MudTh>Row</MudTh>
+		<MudTh>Income Name</MudTh>
+		<MudTh>Income Amount</MudTh>
+		<MudTh>Income Date</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Row">@context.IncomeHistoryId</MudTd>
+		<MudTd DataLabel="Income Name"><MudTextField @bind-Value="context.IncomeName" Label="Income Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
+		<MudTd DataLabel="Income Amount"><MudNumericField @bind-Value="context.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/></MudTd>
+		<MudTd DataLabel="Income Date"><MudDatePicker @bind-value="context.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" Date="context.IncomeDate"/></MudTd>
+		<MudTd>
+			<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
+			@onclick="(() => RemoveElement(context.IncomeHistoryId))" class="mud-table-button" style="text-align:center;"/>
+		</MudTd>
+	</RowTemplate>
+</MudTable>
+
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/incomehistorypage" _text="Back to Income History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+@code {
+
+	private List<IncomeHistory> incomeHistoryList = new();
+
+	[Inject] ISnackbar Snackbar { get; set; }
+
+	protected override void OnInitialized()
+	{
+		incomeHistoryList.Add(GetInitialIncomeHistory());
+	}
+
+	// Table functionality methods
+
+	void AddRow()
+	{
+		if (incomeHistoryList.Count >= 25)
+		{
+			Snackbar.Add("Max of 25 new records", Severity.Info);
+			return;
+		}
+
+		incomeHistoryList.Add(GetNextRow());
+	}
+
+	void DeleteRow()
+	{
+		var lastIndex = incomeHistoryList.LastOrDefault();
+		incomeHistoryList.Remove(lastIndex);
+	}
+
+	void RemoveElement(int id)
+	{
+		var element = incomeHistoryList.Where(i => i.IncomeHistoryId == id).First();
+		incomeHistoryList.Remove(element);
+		ReIndexList();
+	}
+
+	IncomeHistory GetInitialIncomeHistory()
+	{
+		return new() { IncomeHistoryId = 1, IncomeDate = DateTime.Now };
+	}
+
+	int NextId()
+	{
+		return incomeHistoryList.Count + 1;
+	}
+
+	IncomeHistory GetNextRow()
+	{
+		return new() { IncomeHistoryId = NextId(), IncomeDate = DateTime.Now };
+	}
+
+	void ReIndexList()
+	{
+		int currendIndex = 1;
+
+		foreach (var income in incomeHistoryList)
+		{
+			income.IncomeHistoryId = currendIndex;
+			currendIndex++;
+		}
+	}
+
+	void Test()
+	{
+		Snackbar.Add("Hello", Severity.Info);
+	}
+
+	// Save methods
+
+	async Task ProcessList()
+	{
+		int result = CheckListForIssues();
+		if (result != 0)
+		{
+			Snackbar.Add($"Issue with row {result}. Name must not be empty/blank. Date year must be greater than 1999", Severity.Error);
+			return;
+		}
+
+		foreach (var income in incomeHistoryList)
+		{
+			await SaveRecord(income);
+		}
+
+		ClearListAndSuccessMessage();
+	}
+
+	void ClearListAndSuccessMessage()
+	{
+		incomeHistoryList.Clear();
+		incomeHistoryList.Add(GetInitialIncomeHistory());
+		Snackbar.Add("New Income Histories Added", Severity.Success);
+	}
+
+	int CheckListForIssues()
+	{
+		foreach (var income in incomeHistoryList)
+		{
+			if (string.IsNullOrWhiteSpace(income.IncomeName))
+			{
+				return income.IncomeHistoryId;
+			}
+			if (income.IncomeDate.Year < 2000)
+			{
+				return income.IncomeHistoryId;
+			}
+		}
+		return 0;
+	}
+
+	async Task SaveRecord(IncomeHistory income)
+	{
+		try
+		{
+			IncomeHistory newIncomeHistory = GetNewModel(income);
+			await incomeHistoryService.CreateRecord(newIncomeHistory);
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	IncomeHistory GetNewModel(IncomeHistory income)
+	{
+		return new()
+		{
+			IncomeName = income.IncomeName,
+			IncomeAmount = income.IncomeAmount,
+			IncomeDate = income.IncomeDate
+		};
+	}
+}

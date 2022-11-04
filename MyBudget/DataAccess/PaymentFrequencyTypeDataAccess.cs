@@ -4,156 +4,156 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class PaymentFrequencyTypeDataAccess : ITypeDataAccess<PaymentFrequencyTypes>
+	public class PaymentFrequencyTypeDataAccess : ITypeDataAccess<PaymentFrequencyTypes>
 	{
-        private readonly string _dbPath;
-        private SQLiteAsyncConnection _asyncConnection;
-        private SQLiteConnection _connection;
+		private readonly string _dbPath;
+		private SQLiteAsyncConnection _asyncConnection;
+		private SQLiteConnection _connection;
 
-        public PaymentFrequencyTypeDataAccess()
-        {
-            _dbPath = DatabaseHelper.GetDbPath();
-        }
-
-        public async Task<PaymentFrequencyTypes> GetRecordByIdAsync(int id)
-        {
-            await InitializeAsync();
-            return await _asyncConnection.Table<PaymentFrequencyTypes>()
-                .Where(p => p.PaymentFrequencyTypeId == id)
-                .FirstAsync();
-        }
-
-        public async Task<List<PaymentFrequencyTypes>> GetListAsync()
-        {
-            await InitializeAsync();
-            return await _asyncConnection.Table<PaymentFrequencyTypes>().ToListAsync();
-        }
-
-        public async Task<PaymentFrequencyTypes> CreateRecord(PaymentFrequencyTypes newType)
+		public PaymentFrequencyTypeDataAccess()
 		{
-            try
-            {
-                await _asyncConnection.InsertAsync(newType).ContinueWith((p) =>
-                {
-                    MyBudgetLogger.CreatedLogMessage(newType);
-                });
-                return newType;
-            }
-            catch (Exception e)
-            {
-                MyBudgetLogger.ErrorCreating(newType, e);
-                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
-            }
-        }
+			_dbPath = DatabaseHelper.GetDbPath();
+		}
 
-        public async Task<PaymentFrequencyTypes> UpdateRecordAsync(PaymentFrequencyTypes type)
-        {
-            try
-            {
-                await _asyncConnection.UpdateAsync(type).ContinueWith((p) =>
-                {
-                    MyBudgetLogger.UpdatedLogMessage(type);
-                });
-                return type;
-            }
-            catch (Exception e)
-            {
-                MyBudgetLogger.ErrorUpdating(type, e);
-                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
-            }
-        }
-
-        public async Task<PaymentFrequencyTypes> DeleteRecordAsync(PaymentFrequencyTypes type)
+		public async Task<PaymentFrequencyTypes> GetRecordByIdAsync(int id)
 		{
-            try
-            {
-                await _asyncConnection.DeleteAsync(type).ContinueWith((p) =>
-                {
-                    MyBudgetLogger.DeletedLogMessage(type);
-                });
-                return type;
-            }
-            catch (Exception e)
-            {
-                MyBudgetLogger.ErrorDeleting(type, e);
-                return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
-            }
-        }
+			await InitializeAsync();
+			return await _asyncConnection.Table<PaymentFrequencyTypes>()
+				.Where(p => p.PaymentFrequencyTypeId == id)
+				.FirstAsync();
+		}
 
-        public bool DoesTypeNameExist(string typeName)
-        {
-            using (_connection = new SQLiteConnection(_dbPath))
-            {
-                int result = _connection.Table<PaymentFrequencyTypes>()
-                    .Where(p => p.PaymentFrequencyType.ToLower() == typeName.ToLower())
-                    .Count();
+		public async Task<List<PaymentFrequencyTypes>> GetListAsync()
+		{
+			await InitializeAsync();
+			return await _asyncConnection.Table<PaymentFrequencyTypes>().ToListAsync();
+		}
 
-                return result > 0;
-            }
-        }
+		public async Task<PaymentFrequencyTypes> CreateRecord(PaymentFrequencyTypes newType)
+		{
+			try
+			{
+				await _asyncConnection.InsertAsync(newType).ContinueWith((p) =>
+				{
+					MyBudgetLogger.CreatedLogMessage(newType);
+				});
+				return newType;
+			}
+			catch (Exception e)
+			{
+				MyBudgetLogger.ErrorCreating(newType, e);
+				return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+			}
+		}
 
-        public string GetNameOfTypeByID(int typeId)
-        {
-            using (_connection = new SQLiteConnection(_dbPath))
-            {
-                string paymentFrequencyTypeName = _connection.Table<PaymentFrequencyTypes>()
-                    .Where(p => p.PaymentFrequencyTypeId == typeId)
-                    .Select(p => p.PaymentFrequencyType)
-                    .SingleOrDefault();
+		public async Task<PaymentFrequencyTypes> UpdateRecordAsync(PaymentFrequencyTypes type)
+		{
+			try
+			{
+				await _asyncConnection.UpdateAsync(type).ContinueWith((p) =>
+				{
+					MyBudgetLogger.UpdatedLogMessage(type);
+				});
+				return type;
+			}
+			catch (Exception e)
+			{
+				MyBudgetLogger.ErrorUpdating(type, e);
+				return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+			}
+		}
 
-                return paymentFrequencyTypeName;
-            }
-        }
+		public async Task<PaymentFrequencyTypes> DeleteRecordAsync(PaymentFrequencyTypes type)
+		{
+			try
+			{
+				await _asyncConnection.DeleteAsync(type).ContinueWith((p) =>
+				{
+					MyBudgetLogger.DeletedLogMessage(type);
+				});
+				return type;
+			}
+			catch (Exception e)
+			{
+				MyBudgetLogger.ErrorDeleting(type, e);
+				return new PaymentFrequencyTypes() { PaymentFrequencyTypeId = 0 };
+			}
+		}
 
-        public bool IsTypeUsedAndCannotBeDeleted(int typeId)
-        {
-            using (_connection = new SQLiteConnection(_dbPath))
-            {
-                int resultIncomes = _connection.Table<Incomes>()
-                    .Where(p => p.PaymentFrequencyTypeId == typeId)
-                    .Count();
+		public bool DoesTypeNameExist(string typeName)
+		{
+			using (_connection = new SQLiteConnection(_dbPath))
+			{
+				int result = _connection.Table<PaymentFrequencyTypes>()
+					.Where(p => p.PaymentFrequencyType.ToLower() == typeName.ToLower())
+					.Count();
 
-                int resultExpenses = _connection.Table<Expenses>()
-                    .Where(p => p.PaymentFrequencyTypeId == typeId)
-                    .Count();
+				return result > 0;
+			}
+		}
 
-                return resultIncomes > 0 || resultExpenses > 0;
-            }
-        }
+		public string GetNameOfTypeByID(int typeId)
+		{
+			using (_connection = new SQLiteConnection(_dbPath))
+			{
+				string paymentFrequencyTypeName = _connection.Table<PaymentFrequencyTypes>()
+					.Where(p => p.PaymentFrequencyTypeId == typeId)
+					.Select(p => p.PaymentFrequencyType)
+					.SingleOrDefault();
 
-        // private methods
+				return paymentFrequencyTypeName;
+			}
+		}
 
-        private async Task InitializeAsync()
-        {
-            if (_asyncConnection != null) {  return; }
+		public bool IsTypeUsedAndCannotBeDeleted(int typeId)
+		{
+			using (_connection = new SQLiteConnection(_dbPath))
+			{
+				int resultIncomes = _connection.Table<Incomes>()
+					.Where(p => p.PaymentFrequencyTypeId == typeId)
+					.Count();
 
-            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
+				int resultExpenses = _connection.Table<Expenses>()
+					.Where(p => p.PaymentFrequencyTypeId == typeId)
+					.Count();
 
-            if (await DoesTableHaveValuesAsync() == false)
-            {
-                await InitializeTableValuesAsync();
-            }
-        }
+				return resultIncomes > 0 || resultExpenses > 0;
+			}
+		}
 
-        private async Task<bool> DoesTableHaveValuesAsync()
-        {
-            var listOfValues = await GetListAsync();
-            return listOfValues.Any();
-        }
+		// private methods
 
-        private async Task InitializeTableValuesAsync()
-        {
-            var initialValuesArray = PaymentFrequencyTypes.InitialValues();
+		private async Task InitializeAsync()
+		{
+			if (_asyncConnection != null) { return; }
 
-            foreach (var value in initialValuesArray)
-            {
-                PaymentFrequencyTypes newType = new()
-                {
-                    PaymentFrequencyType = value
-                };
+			_asyncConnection = new SQLiteAsyncConnection(_dbPath);
 
-                await CreateRecord(newType);
-            }
-        }
-    }
+			if (await DoesTableHaveValuesAsync() == false)
+			{
+				await InitializeTableValuesAsync();
+			}
+		}
+
+		private async Task<bool> DoesTableHaveValuesAsync()
+		{
+			var listOfValues = await GetListAsync();
+			return listOfValues.Any();
+		}
+
+		private async Task InitializeTableValuesAsync()
+		{
+			var initialValuesArray = PaymentFrequencyTypes.InitialValues();
+
+			foreach (var value in initialValuesArray)
+			{
+				PaymentFrequencyTypes newType = new()
+				{
+					PaymentFrequencyType = value
+				};
+
+				await CreateRecord(newType);
+			}
+		}
+	}
 }

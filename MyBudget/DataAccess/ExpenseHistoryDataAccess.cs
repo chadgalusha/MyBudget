@@ -4,119 +4,121 @@ using SQLite;
 
 namespace MyBudget.DataAccess
 {
-    public class ExpenseHistoryDataAccess : IHistoryDataAccess<ExpenseHistory>
-    {
-        private readonly string _dbPath;
-        private SQLiteAsyncConnection _asyncConnection;
-        private SQLiteConnection _connection;
+	public class ExpenseHistoryDataAccess : IHistoryDataAccess<ExpenseHistory>
+	{
+		private readonly string _dbPath;
+		private SQLiteAsyncConnection _asyncConnection;
+		private SQLiteConnection _connection;
 
-        public ExpenseHistoryDataAccess()
-        {
-            _dbPath = DatabaseHelper.GetDbPath();
-        }
+		public ExpenseHistoryDataAccess()
+		{
+			_dbPath = DatabaseHelper.GetDbPath();
+		}
 
-        public Task<ExpenseHistory> GetRecordByIdAsync(int id)
-        {
-            Initialize();
-            return _asyncConnection.Table<ExpenseHistory>()
-                .Where(e => e.ExpenseHistoryId == id)
-                .FirstAsync();
-        }
+		public Task<ExpenseHistory> GetRecordByIdAsync(int id)
+		{
+			Initialize();
+			return _asyncConnection.Table<ExpenseHistory>()
+				.Where(e => e.ExpenseHistoryId == id)
+				.FirstAsync();
+		}
 
-        public Task<List<ExpenseHistory>> GetListAsync()
-        {
-            Initialize();
-            return _asyncConnection.Table<ExpenseHistory>().ToListAsync();
-        }
+		public Task<List<ExpenseHistory>> GetListAsync()
+		{
+			Initialize();
+			return _asyncConnection.Table<ExpenseHistory>().ToListAsync();
+		}
 
-        public async Task<ExpenseHistory> CreateRecordAsync(ExpenseHistory newExpenseHistory)
-        {
-            try
-            {
-                await _asyncConnection.InsertAsync(newExpenseHistory).ContinueWith((e) =>
-                {
-                    MyBudgetLogger.CreatedLogMessage(newExpenseHistory);
-                });
+		public async Task<ExpenseHistory> CreateRecordAsync(ExpenseHistory newExpenseHistory)
+		{
+			Initialize();
 
-                return newExpenseHistory;
-            }
-            catch (Exception e)
-            {
-                MyBudgetLogger.ErrorCreating(newExpenseHistory, e);
-                return new ExpenseHistory() { ExpenseHistoryId = 0 };
-            }
-        }
+			try
+			{
+				await _asyncConnection.InsertAsync(newExpenseHistory).ContinueWith((e) =>
+				{
+					MyBudgetLogger.CreatedLogMessage(newExpenseHistory);
+				});
 
-        public async Task<ExpenseHistory> UpdateRecordAsync(ExpenseHistory expenseHistory)
-        {
-            try
-            {
-                await _asyncConnection.UpdateAsync(expenseHistory).ContinueWith((e) =>
-                {
-                    MyBudgetLogger.UpdatedLogMessage(expenseHistory);
-                });
+				return newExpenseHistory;
+			}
+			catch (Exception e)
+			{
+				MyBudgetLogger.ErrorCreating(newExpenseHistory, e);
+				return new ExpenseHistory() { ExpenseHistoryId = 0 };
+			}
+		}
 
-                return expenseHistory;
-            }
-            catch (Exception e)
-            {
-                MyBudgetLogger.ErrorUpdating(expenseHistory, e);
-                return new ExpenseHistory() { ExpenseHistoryId = 0 };
-            }
-        }
+		public async Task<ExpenseHistory> UpdateRecordAsync(ExpenseHistory expenseHistory)
+		{
+			try
+			{
+				await _asyncConnection.UpdateAsync(expenseHistory).ContinueWith((e) =>
+				{
+					MyBudgetLogger.UpdatedLogMessage(expenseHistory);
+				});
 
-        public async Task<ExpenseHistory> DeleteRecordAsync(ExpenseHistory expenseHistory)
-        {
-            try
-            {
-                await _asyncConnection.DeleteAsync(expenseHistory).ContinueWith((e) =>
-                {
-                    MyBudgetLogger.DeletedLogMessage(expenseHistory);
-                });
+				return expenseHistory;
+			}
+			catch (Exception e)
+			{
+				MyBudgetLogger.ErrorUpdating(expenseHistory, e);
+				return new ExpenseHistory() { ExpenseHistoryId = 0 };
+			}
+		}
 
-                return expenseHistory;
-            }
-            catch (Exception e)
-            {
-                MyBudgetLogger.ErrorDeleting(expenseHistory, e);
-                return new ExpenseHistory() { ExpenseHistoryId = 0 };
-            }
-        }
+		public async Task<ExpenseHistory> DeleteRecordAsync(ExpenseHistory expenseHistory)
+		{
+			try
+			{
+				await _asyncConnection.DeleteAsync(expenseHistory).ContinueWith((e) =>
+				{
+					MyBudgetLogger.DeletedLogMessage(expenseHistory);
+				});
 
-        public decimal[] GetHistoryArrayForMonth(int year, int month)
-        {
-            using (_connection = new SQLiteConnection(_dbPath))
-            {
-                var result = _connection.Table<ExpenseHistory>()
-                    .ToArray()
-                    .Where(e => e.ExpenseDate.Year == year)
-                    .Where(e => e.ExpenseDate.Month == month)
-                    .Select(e => e.AmountPaid);
+				return expenseHistory;
+			}
+			catch (Exception e)
+			{
+				MyBudgetLogger.ErrorDeleting(expenseHistory, e);
+				return new ExpenseHistory() { ExpenseHistoryId = 0 };
+			}
+		}
 
-                return result.ToArray();
-            }
-        }
+		public decimal[] GetHistoryArrayForMonth(int year, int month)
+		{
+			using (_connection = new SQLiteConnection(_dbPath))
+			{
+				var result = _connection.Table<ExpenseHistory>()
+					.ToArray()
+					.Where(e => e.ExpenseDate.Year == year)
+					.Where(e => e.ExpenseDate.Month == month)
+					.Select(e => e.AmountPaid);
 
-        public decimal[] GetHistoryArrayForYear(int year)
-        {
-            using (_connection = new SQLiteConnection(_dbPath))
-            {
-                var result = _connection.Table<ExpenseHistory>()
-                    .ToArray()
-                    .Where(e => e.ExpenseDate.Year == year)
-                    .Select(e => e.AmountPaid);
+				return result.ToArray();
+			}
+		}
 
-                return result.ToArray();
-            }
-        }
+		public decimal[] GetHistoryArrayForYear(int year)
+		{
+			using (_connection = new SQLiteConnection(_dbPath))
+			{
+				var result = _connection.Table<ExpenseHistory>()
+					.ToArray()
+					.Where(e => e.ExpenseDate.Year == year)
+					.Select(e => e.AmountPaid);
 
-        // PRIVATE METHODS
+				return result.ToArray();
+			}
+		}
 
-        private void Initialize()
-        {
-            if (_asyncConnection != null) { return; }
+		// PRIVATE METHODS
 
-            _asyncConnection = new SQLiteAsyncConnection(_dbPath);
-        }
-    }
+		private void Initialize()
+		{
+			if (_asyncConnection != null) { return; }
+
+			_asyncConnection = new SQLiteAsyncConnection(_dbPath);
+		}
+	}
 }

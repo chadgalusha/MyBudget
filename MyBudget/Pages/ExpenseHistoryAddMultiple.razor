@@ -1,0 +1,185 @@
+﻿@page "/expensehistoryaddmultiple"
+@using MyBudget.Components
+@using MyBudget.Models
+@using MyBudget.Services
+@using MyBudget.Helpers
+@using System.Globalization
+@inject IHistoryService<ExpenseHistory> expenseHistoryService
+@inject IService<ExpenseCategories> expenseCategoryService
+
+<h3 style="text-align:center;">Add Multiple Expense Histories</h3>
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+<MudTable Items="@expenseHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+	<HeaderContent>
+		<MudTh>Row</MudTh>
+		<MudTh>Expense Name</MudTh>
+		<MudTh>Amount Paid</MudTh>
+		<MudTh>Expense Date</MudTh>
+		<MudTh>Expense Category</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Row">@context.ExpenseHistoryId</MudTd>
+		<MudTd DataLabel="Expense Name"><MudTextField @bind-Value="context.ExpenseName" Label="Expense Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
+		<MudTd DataLabel="Amount Paid"><MudNumericField @bind-Value="context.AmountPaid" Label="Expense Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999" /></MudTd>
+		<MudTd DataLabel="Expense Date"><MudDatePicker @bind-value="context.ExpenseDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense" Date="context.ExpenseDate" /></MudTd>
+		<MudTd DataLabel="Expense Category">
+			<MudSelect T="int" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="context.ExpenseCategoryId">
+				@foreach (var category in expenseCategoryList)
+				{
+					<MudSelectItem Value="category.ExpenseCategoryId">@category.ExpenseCategoryName</MudSelectItem>
+				}
+			</MudSelect>
+		</MudTd>
+		<MudTd>
+			<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
+			@onclick="(() => RemoveElement(context.ExpenseHistoryId))" class="mud-table-button" style="text-align:center;"/>
+		</MudTd>
+	</RowTemplate>
+</MudTable>
+
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+@code {
+
+	ExpenseHistory expenseHistory = new();
+	List<ExpenseHistory> expenseHistoryList = new();
+	List<ExpenseCategories> expenseCategoryList = new();
+
+	[Inject] ISnackbar Snackbar { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		expenseCategoryList = await expenseCategoryService.GetList();
+		expenseHistoryList.Add(GetInitialExpenseHistory());
+	}
+
+	// Table functionality methods
+
+	void AddRow()
+	{
+		if (expenseHistoryList.Count >= 25)
+		{
+			Snackbar.Add("Max of 25 new records", Severity.Info);
+			return;
+		}
+
+		expenseHistoryList.Add(GetNextRow());
+	}
+
+	void DeleteRow()
+	{
+		var lastIndex = expenseHistoryList.LastOrDefault();
+		expenseHistoryList.Remove(lastIndex);
+	}
+
+	void RemoveElement(int id)
+	{
+		var element = expenseHistoryList.Where(e => e.ExpenseHistoryId == id).First();
+		expenseHistoryList.Remove(element);
+		ReIndexList();
+	}
+
+	ExpenseHistory GetInitialExpenseHistory()
+	{
+		return new() { ExpenseHistoryId = 1, ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
+	}
+
+	ExpenseHistory GetNextRow()
+	{
+		return new() { ExpenseHistoryId = NextId(), ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
+	}
+
+	int NextId()
+	{
+		return expenseHistoryList.Count + 1;
+	}
+
+	void ReIndexList()
+	{
+		int currentIndex = 1;
+
+		foreach (var expense in expenseHistoryList)
+		{
+			expense.ExpenseHistoryId = currentIndex;
+			currentIndex++;
+		}
+	}
+
+	// Save methods
+
+	async Task ProcessList()
+	{
+		int result = CheckListForIssues();
+		if (result != 0)
+		{
+			Snackbar.Add($"Issue with row {result}. Name must not be empty/blank. Date year must be greater than 1999", Severity.Error);
+			return;
+		}
+
+		foreach (var expense in expenseHistoryList)
+		{
+			await SaveRecord(expense);
+		}
+
+		ClearListAndSuccessMessage();
+	}
+
+	void ClearListAndSuccessMessage()
+	{
+		expenseHistoryList.Clear();
+		expenseHistoryList.Add(GetInitialExpenseHistory());
+		Snackbar.Add("New Expense Histories Added", Severity.Success);
+	}
+
+	int CheckListForIssues()
+	{
+		foreach (var expense in expenseHistoryList)
+		{
+			if (string.IsNullOrWhiteSpace(expense.ExpenseName))
+			{
+				return expense.ExpenseHistoryId;
+			}
+			if (expense.ExpenseDate.Year < 2000)
+			{
+				return expense.ExpenseHistoryId;
+			}
+		}
+		return 0;
+	}
+
+	async Task SaveRecord(ExpenseHistory expense)
+	{
+		try
+		{
+			ExpenseHistory newExpenseHistory = GetNewModel(expense);
+			await expenseHistoryService.CreateRecord(newExpenseHistory);
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	ExpenseHistory GetNewModel(ExpenseHistory expense)
+	{
+		return new()
+		{
+			ExpenseName = expense.ExpenseName,
+			AmountPaid = expense.AmountPaid,
+			ExpenseDate = expense.ExpenseDate,
+			ExpenseCategoryId = expense.ExpenseCategoryId
+		};
+	}
+}

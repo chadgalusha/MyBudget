@@ -1,7 +1,6 @@
 ﻿using MyBudget.DataAccess;
 using MyBudget.Helpers;
 using MyBudget.Models;
-using Serilog;
 
 namespace MyBudget.Services
 {
@@ -85,9 +84,9 @@ namespace MyBudget.Services
 			}
 		}
 
-        #region Private Methods
+		#region Private Methods
 
-        private bool IsExpenseNameAlreadyUsed(string expenseName)
+		private bool IsExpenseNameAlreadyUsed(string expenseName)
 		{
 			return _expenseDataAccess.DoesNameExist(expenseName);
 		}
@@ -98,6 +97,6 @@ namespace MyBudget.Services
 			return !currentExpenseName.Equals(expense.ExpensesName);
 		}
 
-        #endregion
-    }
+		#endregion
+	}
 }
