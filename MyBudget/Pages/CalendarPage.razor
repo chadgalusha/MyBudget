@@ -33,6 +33,7 @@ else
 				</div>
 
 				<div class="calendar-grid">
+					@{count = 1;}
 					@for (int i = 0; i <= total; i++)
 					{
 						if (i < startingIndex)
@@ -63,7 +64,13 @@ else
 		</div>
 		<div class="budget-calendar-menu">
 			<h4>@GetMonthString(selectedDateTime.Month) @selectedDateTime.Day, @selectedDateTime.Year</h4>
-			<ExpenseHistoryForm selectedDate="selectedDateTime" expenseHistory="expenseHistory" expenseCategoryList="expenseCategoryList"/>
+			<MudButtonGroup Color="Color.Info" Variant="Variant.Outlined" VerticalAlign="true" style="margin: 5px 5px 5px 5px">
+				<MudButton OnClick="TurnOnExpenseHistory">New Expense History</MudButton>
+				<MudButton>New Income History</MudButton>
+			</MudButtonGroup>
+			<ExpenseHistoryForm selectedDate="selectedDateTime" expenseHistory="expenseHistory" expenseCategoryList="expenseCategoryList"
+			SaveExpenseHistory="() => SaveExpenseHistoryAsync(expenseHistory)" CancelExpenseHistory="CancelExpenseHistory" @ref="expenseHistoryForm"
+			UpdateExpenseHistory="() => UpdateExpenseHistoryAsync(expenseHistory)" DeleteExpenseHistory="() => DeleteExpenseHistoryAsync(expenseHistory)" />
 		</div>
 	</div>
 }
@@ -73,6 +80,7 @@ else
 	int total = 41; // inclues 0 for total of 42
 
 	[Inject] ISnackbar Snackbar { get; set; }
+	[Inject] IDialogService DialogService { get; set; }
 
 	DateTime currentDateTime;
 	int year;
@@ -84,9 +92,15 @@ else
 	// selectedDateTime for calendar menu
 	DateTime selectedDateTime;
 
+	// Component variable
+	ExpenseHistoryForm expenseHistoryForm;
+
 	// Model variables
 	ExpenseHistory expenseHistory = new();
 	List<ExpenseCategories> expenseCategoryList = new();
+
+	// button variables
+	string expenseHistoryFormVisible = "block";
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -99,6 +113,7 @@ else
 		selectedDateTime = currentDateTime;
 
 		expenseCategoryList = await expenseCategoryService.GetList();
+		HideExpenseHistoryForm();
 	}
 
 	int GetFirstOfMonthStartingIndex()
@@ -114,6 +129,82 @@ else
 	string GetMonthString(int month)
 	{
 		return calendarProcessor.GetMonthString(month);
+	}
+
+	// Expense History methods
+
+	ExpenseHistory GetNewExpenseHistory()
+	{
+		return new() { ExpenseHistoryId = 0, ExpenseDate = selectedDateTime, ExpenseCategoryId = 1 };
+	}
+
+	async Task SaveExpenseHistoryAsync(ExpenseHistory expense)
+	{
+		try
+		{
+			await expenseHistoryService.CreateRecord(expense);
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	async Task UpdateExpenseHistoryAsync(ExpenseHistory expense)
+	{
+		try
+		{
+			await expenseHistoryService.UpdateRecord(expense);
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	async Task DeleteConfirm(ExpenseHistory expenseHistory)
+	{
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {expenseHistory.ExpenseName} : {expenseHistory.ExpenseDate.ToShortDateString()}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteExpenseHistoryAsync(expenseHistory); }
+	}
+
+	async Task DeleteExpenseHistoryAsync(ExpenseHistory expense)
+	{
+		try
+		{
+			await expenseHistoryService.DeleteRecord(expense);
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	void CancelExpenseHistory()
+	{
+		HideExpenseHistoryForm();
+	}
+
+	// Button methods
+
+	void TurnOnExpenseHistory()
+	{
+		ShowExpenseHistoryForm();
+	}
+
+	// Component visible toggles
+
+	private void ShowExpenseHistoryForm()
+	{
+		expenseHistoryForm.SetVisible(true);
+	}
+
+	private void HideExpenseHistoryForm()
+	{
+		expenseHistoryForm.SetVisible(false);
 	}
 
 	void Test()

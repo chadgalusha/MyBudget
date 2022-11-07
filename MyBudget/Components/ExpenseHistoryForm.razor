@@ -1,12 +1,15 @@
 ﻿@using MyBudget.Models
+@using MyBudget.Services
+@inject IHistoryService<ExpenseHistory> expenseHistoryService
 
-<MudCard>
+<MudCard Class="@display">
+	<h3 style="text-align:center;">Expense History</h3>
 	<MudForm>
-		<MudNumericField T="int" Label="Expense History Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
-		<MudTextField T="string" Label="Expense History Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" />
-		<MudNumericField T="decimal" Label="Amount Paid" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/>
-		<MudDatePicker Date="selectedDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
-		<MudSelect T="int" Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomCenter">
+		<MudNumericField T="int" @bind-Value="expenseHistory.ExpenseHistoryId" Label="Expense History Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true"/>
+		<MudTextField T="string" @bind-Value="expenseHistory.ExpenseName" Label="Expense History Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20"/>
+		<MudNumericField T="decimal" @bind-Value="expenseHistory.AmountPaid" Label="Amount Paid" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/>
+		<MudDatePicker Date="selectedDate" @bind-Value="expenseHistory.ExpenseDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+		<MudSelect T="int" @bind-Value="expenseHistory.ExpenseCategoryId" Variant="Variant.Outlined" Margin="Margin.Dense" AnchorOrigin="Origin.BottomCenter">
 			@foreach (var category in expenseCategoryList)
 			{
 				<MudSelectItem Value="category.ExpenseCategoryId">@category.ExpenseCategoryName</MudSelectItem>
@@ -14,12 +17,22 @@
 		</MudSelect>
 	</MudForm>
 	<div style="margin-top:2px;margin-bottom:2px;">
-		<MudButton Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Save</MudButton>
-		<MudButton Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Cancel</MudButton>
+		@if (expenseHistory.ExpenseHistoryId == 0)
+		{
+			<MudButton @onclick="CallSaveExpenseHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Save</MudButton>
+			<MudButton @onclick="CallCancelExpenseHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Cancel</MudButton>
+		}
+		else
+		{
+			<MudButton @onclick="CallUpdateExpenseHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Save</MudButton>
+			<MudButton @onclick="CallDeleteExpenseHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Cancel</MudButton>
+		}
 	</div>
 </MudCard>
 
 @code {
+
+	string display = "";
 
 	[Parameter, EditorRequired]
 	public DateTime selectedDate { get; set;}
@@ -29,4 +42,60 @@
 
 	[Parameter, EditorRequired]
 	public List<ExpenseCategories> expenseCategoryList { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<ExpenseHistory> SaveExpenseHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<ExpenseHistory> CancelExpenseHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<ExpenseHistory> UpdateExpenseHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<ExpenseHistory> DeleteExpenseHistory { get; set; }
+
+	private async Task CallSaveExpenseHistory()
+	{
+		if (SaveExpenseHistory.HasDelegate)
+		{
+			await SaveExpenseHistory.InvokeAsync();
+		}
+	}
+
+	private async Task CallCancelExpenseHistory()
+	{
+		if (CancelExpenseHistory.HasDelegate)
+		{
+			await CancelExpenseHistory.InvokeAsync();
+		}
+	}
+
+	private async Task CallUpdateExpenseHistory()
+	{
+		if (UpdateExpenseHistory.HasDelegate)
+		{
+			await UpdateExpenseHistory.InvokeAsync();
+		}
+	}
+
+	private async Task CallDeleteExpenseHistory()
+	{
+		if (DeleteExpenseHistory.HasDelegate)
+		{
+			await DeleteExpenseHistory.InvokeAsync();
+		}
+	}
+
+	public void SetVisible(bool visible)
+	{
+		if (visible)
+		{
+			display = "";
+		}
+		else
+		{
+			display = "d-none";
+		}
+	}
 }
