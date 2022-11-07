@@ -1,0 +1,90 @@
+﻿@using MyBudget.Models
+
+<MudCard Class="@display">
+	<h3 style="text-align:center;">Income History</h3>
+	<MudForm>
+		<MudNumericField T="int" @bind-Value="incomeHistory.IncomeHistoryId" Label="Income History Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true" />
+		<MudTextField T="string" @bind-Value="incomeHistory.IncomeName" Label="Income History Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" />
+		<MudNumericField T="decimal" @bind-Value="incomeHistory.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999" />
+		<MudDatePicker Date="selectedDate" @bind-Value="incomeHistory.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
+	</MudForm>
+	<div style="margin-top:2px;margin-bottom:2px;">
+		@if (incomeHistory.IncomeHistoryId == 0)
+		{
+			<MudButton @onclick="CallSaveIncomeHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Save</MudButton>
+			<MudButton @onclick="CallCancelIncomeHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Cancel</MudButton>
+		}
+		else
+		{
+			<MudButton @onclick="CallUpdateIncomeHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Edit</MudButton>
+			<MudButton @onclick="CallDeleteIncomeHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Delete</MudButton>
+		}
+	</div>
+</MudCard>
+
+@code {
+
+	string display = "";
+
+	[Parameter, EditorRequired]
+	public DateTime selectedDate { get; set; }
+
+	[Parameter, EditorRequired]
+	public IncomeHistory incomeHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<IncomeHistory> SaveIncomeHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<IncomeHistory> CancelIncomeHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<IncomeHistory> UpdateIncomeHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<IncomeHistory> DeleteIncomeHistory { get; set; }
+
+	private async Task CallSaveIncomeHistory()
+	{
+		if (SaveIncomeHistory.HasDelegate)
+		{
+			await SaveIncomeHistory.InvokeAsync();
+		}
+	}
+
+	private async Task CallCancelIncomeHistory()
+	{
+		if (CancelIncomeHistory.HasDelegate)
+		{
+			await CancelIncomeHistory.InvokeAsync();
+		}
+	}
+
+	private async Task CallUpdateIncomeHistory()
+	{
+		if (UpdateIncomeHistory.HasDelegate)
+		{
+			await UpdateIncomeHistory.InvokeAsync();
+		}
+	}
+
+	private async Task CallDeleteIncomeHistory()
+	{
+		if (DeleteIncomeHistory.HasDelegate)
+		{
+			await DeleteIncomeHistory.InvokeAsync();
+		}
+	}
+
+	public void SetVisible(bool visible)
+	{
+		if (visible)
+		{
+			display = "";
+		}
+		else
+		{
+			display = "d-none";
+		}
+	}
+}

@@ -83,8 +83,23 @@ a, .btn-link {
 	}
 }
 
-/* index.razor graph flex container */
+/* my budget loader */
 
+.mybudgetloader {
+    border: 16px rgb(190, 190, 190);
+    border-top: 16px rgb(82, 196, 80);
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: loadspinner 2s linear infinite;
+}
+
+@keyframes loadspinner {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* index.razor graph flex container */
 .graph-flex-container {
     display: flex;
     flex-direction: row;
@@ -243,6 +258,7 @@ a, .btn-link {
     padding-bottom: 10px;
     float: right;
     width: 25%;
+    height: 450px;
 }
 
     .budget-calendar-menu > h4 {

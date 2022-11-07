@@ -5,11 +5,12 @@
 @using MyBudget.Services
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
+@inject IHistoryService<IncomeHistory> incomeHistoryService
 @inject ICalendarProcessor calendarProcessor
 
 @if (expenseCategoryList == null)
 {
-	<div class="spinner-border text-primary"></div>
+	<div class="mybudgetloader"></div>
 }
 else
 {
@@ -64,13 +65,18 @@ else
 		</div>
 		<div class="budget-calendar-menu">
 			<h4>@GetMonthString(selectedDateTime.Month) @selectedDateTime.Day, @selectedDateTime.Year</h4>
-			<MudButtonGroup Color="Color.Info" Variant="Variant.Outlined" VerticalAlign="true" style="margin: 5px 5px 5px 5px">
+			<MudButtonGroup Color="Color.Info" Variant="Variant.Outlined" VerticalAlign="true" style="margin: 5px 10px 5px;display:flex;justify-content:center;">
 				<MudButton OnClick="TurnOnExpenseHistory">New Expense History</MudButton>
-				<MudButton>New Income History</MudButton>
+				<MudButton OnClick="TurnOnIncomeHistory">New Income History</MudButton>
 			</MudButtonGroup>
+
 			<ExpenseHistoryForm selectedDate="selectedDateTime" expenseHistory="expenseHistory" expenseCategoryList="expenseCategoryList"
 			SaveExpenseHistory="() => SaveExpenseHistoryAsync(expenseHistory)" CancelExpenseHistory="CancelExpenseHistory" @ref="expenseHistoryForm"
-			UpdateExpenseHistory="() => UpdateExpenseHistoryAsync(expenseHistory)" DeleteExpenseHistory="() => DeleteExpenseHistoryAsync(expenseHistory)" />
+			UpdateExpenseHistory="() => UpdateExpenseHistoryAsync(expenseHistory)" DeleteExpenseHistory="() => DeleteConfirmExpenseHistory(expenseHistory)" />
+
+			<IncomeHistoryForm @ref="incomeHistoryForm" selectedDate="selectedDateTime" incomeHistory="incomeHistory"
+			SaveIncomeHistory="() => SaveIncomeHistoryAsync(incomeHistory)" CancelIncomeHistory="CancelIncomeHistory"
+			UpdateIncomeHistory="() => UpdateIncomeHistoryAsync(incomeHistory)" DeleteIncomeHistory="() => DeleteIncomeHistoryAsync(incomeHistory)"/>
 		</div>
 	</div>
 }
@@ -94,13 +100,12 @@ else
 
 	// Component variable
 	ExpenseHistoryForm expenseHistoryForm;
+	IncomeHistoryForm incomeHistoryForm;
 
 	// Model variables
 	ExpenseHistory expenseHistory = new();
 	List<ExpenseCategories> expenseCategoryList = new();
-
-	// button variables
-	string expenseHistoryFormVisible = "block";
+	IncomeHistory incomeHistory = new();
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -112,8 +117,13 @@ else
 		endingIndex = startingIndex + GetNumberOfDaysInMonth() - 1;
 		selectedDateTime = currentDateTime;
 
+		expenseHistory = GetNewExpenseHistory();
 		expenseCategoryList = await expenseCategoryService.GetList();
+
+		incomeHistory = GetNewIncomeHistory();
+
 		HideExpenseHistoryForm();
+		HideIncomeHistoryForm();
 	}
 
 	int GetFirstOfMonthStartingIndex()
@@ -143,6 +153,9 @@ else
 		try
 		{
 			await expenseHistoryService.CreateRecord(expense);
+			Snackbar.Add($"Created new Expense History: {expense.ExpenseName} {expense.ExpenseDate}", Severity.Success);
+			HideExpenseHistoryForm();
+			expenseHistory = GetNewExpenseHistory();
 		}
 		catch (Exception e)
 		{
@@ -162,7 +175,7 @@ else
 		}
 	}
 
-	async Task DeleteConfirm(ExpenseHistory expenseHistory)
+	async Task DeleteConfirmExpenseHistory(ExpenseHistory expenseHistory)
 	{
 		bool? confirmed = await DialogService.ShowMessageBox(
 			"Warning", $"Permanently Delete {expenseHistory.ExpenseName} : {expenseHistory.ExpenseDate.ToShortDateString()}?",
@@ -183,19 +196,88 @@ else
 		}
 	}
 
-	void CancelExpenseHistory()
+	// Income History Methods
+
+	IncomeHistory GetNewIncomeHistory()
 	{
-		HideExpenseHistoryForm();
+		return new() { IncomeHistoryId = 0, IncomeDate = selectedDateTime };
+	}
+
+	async Task SaveIncomeHistoryAsync(IncomeHistory income)
+	{
+		try
+		{
+			await incomeHistoryService.CreateRecord(income);
+			Snackbar.Add($"Created new Income history: {income.IncomeName} {income.IncomeDate}", Severity.Success);
+			HideIncomeHistoryForm();
+			incomeHistory = GetNewIncomeHistory();
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	async Task UpdateIncomeHistoryAsync(IncomeHistory income)
+	{
+		try
+		{
+
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
+	}
+
+	async Task DeleteConfirmIncomeHistory(IncomeHistory incomeHistory)
+	{
+		bool? confirmed = await DialogService.ShowMessageBox(
+			"Warning", $"Permanently Delete {incomeHistory.IncomeName} : {incomeHistory.IncomeDate.ToShortDateString()}?",
+			yesText: "Delete", cancelText: "Cancel");
+
+		if (confirmed == true) { await DeleteIncomeHistoryAsync(incomeHistory); }
+	}
+
+	async Task DeleteIncomeHistoryAsync(IncomeHistory income)
+	{
+		try
+		{
+
+		}
+		catch (Exception e)
+		{
+			Snackbar.Add(e.Message, Severity.Error);
+		}
 	}
 
 	// Button methods
 
+	void CancelExpenseHistory()
+	{
+		HideExpenseHistoryForm();
+		expenseHistory = GetNewExpenseHistory();
+	}
+
 	void TurnOnExpenseHistory()
 	{
+		HideIncomeHistoryForm();
 		ShowExpenseHistoryForm();
 	}
 
-	// Component visible toggles
+	void CancelIncomeHistory()
+	{
+		HideIncomeHistoryForm();
+		incomeHistory = GetNewIncomeHistory();
+	}
+
+	void TurnOnIncomeHistory()
+	{
+		HideExpenseHistoryForm();
+		ShowIncomeHistoryForm();
+	}
+
+	// Component visibility toggles
 
 	private void ShowExpenseHistoryForm()
 	{
@@ -205,6 +287,16 @@ else
 	private void HideExpenseHistoryForm()
 	{
 		expenseHistoryForm.SetVisible(false);
+	}
+
+	private void ShowIncomeHistoryForm()
+	{
+		incomeHistoryForm.SetVisible(true);
+	}
+
+	private void HideIncomeHistoryForm()
+	{
+		incomeHistoryForm.SetVisible(false);
 	}
 
 	void Test()

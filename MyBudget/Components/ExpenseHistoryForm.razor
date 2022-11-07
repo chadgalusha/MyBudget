@@ -1,6 +1,4 @@
 ﻿@using MyBudget.Models
-@using MyBudget.Services
-@inject IHistoryService<ExpenseHistory> expenseHistoryService
 
 <MudCard Class="@display">
 	<h3 style="text-align:center;">Expense History</h3>
@@ -24,8 +22,8 @@
 		}
 		else
 		{
-			<MudButton @onclick="CallUpdateExpenseHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Save</MudButton>
-			<MudButton @onclick="CallDeleteExpenseHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Cancel</MudButton>
+			<MudButton @onclick="CallUpdateExpenseHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Edit</MudButton>
+			<MudButton @onclick="CallDeleteExpenseHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Delete</MudButton>
 		}
 	</div>
 </MudCard>
