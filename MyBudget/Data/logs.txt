@@ -516,3 +516,4 @@
 2022-11-03 21:44:02.850 -05:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":2,"ExpenseName":"Jingles","AmountPaid":100.83,"ExpenseDate":"2022-10-27T00:00:00","ExpenseCategoryId":14}
 2022-11-07 12:56:17.056 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":5,"IncomeName":"Testing","IncomeAmount":23.22,"IncomeDate":"2022-11-07T12:56:06.2858388-06:00"}
 2022-11-07 12:56:30.356 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":5,"IncomeName":"Testing","IncomeAmount":23.22,"IncomeDate":"2022-11-07T12:56:06.2858388"}
+2022-11-07 16:24:49.876 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":6,"IncomeName":"Nov Test","IncomeAmount":534.86,"IncomeDate":"2022-11-07T00:00:00-06:00"}

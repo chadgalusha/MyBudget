@@ -8,7 +8,7 @@
 @inject IHistoryService<IncomeHistory> incomeHistoryService
 @inject ICalendarProcessor calendarProcessor
 
-@if (expenseCategoryList == null)
+@if (thisMonthIncomeHistoryList == null || thisMonthExpenseHistoryList == null)
 {
 	<div class="mybudgetloader"></div>
 }
@@ -107,6 +107,9 @@ else
 	List<ExpenseCategories> expenseCategoryList = new();
 	IncomeHistory incomeHistory = new();
 
+	List<IncomeHistory> thisMonthIncomeHistoryList = new();
+	List<ExpenseHistory> thisMonthExpenseHistoryList = new();
+
 	protected override async Task OnInitializedAsync()
 	{
 		currentDateTime = DateTime.Now;
@@ -122,8 +125,8 @@ else
 
 		incomeHistory = GetNewIncomeHistory();
 
-		HideExpenseHistoryForm();
-		HideIncomeHistoryForm();
+		thisMonthIncomeHistoryList = GetIncomeHistoryList(year, month);
+		thisMonthExpenseHistoryList = GetExpenseHistoryList(year, month);
 	}
 
 	int GetFirstOfMonthStartingIndex()
@@ -142,6 +145,11 @@ else
 	}
 
 	// Expense History methods
+
+	List<ExpenseHistory> GetExpenseHistoryList(int year, int month)
+	{
+		return expenseHistoryService.GetListByYearMonth(year, month);
+	}
 
 	ExpenseHistory GetNewExpenseHistory()
 	{
@@ -197,6 +205,11 @@ else
 	}
 
 	// Income History Methods
+
+	List<IncomeHistory> GetIncomeHistoryList(int year, int month)
+	{
+		return incomeHistoryService.GetListByYearMonth(year, month);
+	}
 
 	IncomeHistory GetNewIncomeHistory()
 	{
@@ -297,10 +310,5 @@ else
 	private void HideIncomeHistoryForm()
 	{
 		incomeHistoryForm.SetVisible(false);
-	}
-
-	void Test()
-	{
-		
 	}
 }
