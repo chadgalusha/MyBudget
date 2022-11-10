@@ -217,6 +217,7 @@ a, .btn-link {
 
     .calendar-grid > div {
         border: 1px solid black;
+        overflow: auto;
     }
 
     .calendar-grid:hover {
@@ -228,7 +229,11 @@ a, .btn-link {
 }
 
     #currentDay:hover {
-        background-color: rgb(102, 255, 102);
+        background-color: rgb(179, 255, 139);
+    }
+
+    #currentDay > h6 {
+        text-align:left;
     }
 
 #notMonthDay {
@@ -237,6 +242,10 @@ a, .btn-link {
 
 #monthDay:hover {
     background-color: lightgrey;
+}
+
+#monthDay > h6 {
+    text-align: left;
 }
 
 .calendar-date-bar {
@@ -263,4 +272,34 @@ a, .btn-link {
 
     .budget-calendar-menu > h4 {
         text-align: center;
+    }
+
+#incomeItem {
+    height: 15px;
+    margin: 1px 4px 1px;
+    background-color: forestgreen;
+    color: white;
+    border: 1px solid black;
+    border-radius: 6px;
+    font-size: 12px;
+    display: block;
+}
+
+    #incomeItem:hover {
+        background-color: #1b7637;
+    }
+
+#expenseItem {
+    height: 15px;
+    margin: 1px 4px 1px;
+    background-color: orangered;
+    color: white;
+    border: 1px solid black;
+    border-radius: 6px;
+    font-size: 12px;
+    display: block;
+}
+
+    #expenseItem:hover {
+        background-color: #b32121;
     }

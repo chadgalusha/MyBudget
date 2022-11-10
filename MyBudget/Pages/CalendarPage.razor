@@ -3,6 +3,7 @@
 @using MyBudget.Components
 @using MyBudget.Models
 @using MyBudget.Services
+@using System.Globalization
 @inject IHistoryService<ExpenseHistory> expenseHistoryService
 @inject IService<ExpenseCategories> expenseCategoryService
 @inject IHistoryService<IncomeHistory> incomeHistoryService
@@ -10,7 +11,7 @@
 
 @if (thisMonthIncomeHistoryList == null || thisMonthExpenseHistoryList == null)
 {
-	<div class="mybudgetloader"></div>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -33,7 +34,7 @@ else
 					<div>Saturday</div>
 				</div>
 
-				<div class="calendar-grid">
+				@*<div class="calendar-grid">
 					@{count = 1;}
 					@for (int i = 0; i <= total; i++)
 					{
@@ -47,20 +48,57 @@ else
 						}
 						else
 						{
+							@* Get list<T> for current day of types ExpenseHistory / IncomeHistory 
+							thisDayIncomeHistoryList = GetIncomeHistoryListForDay(count);
+							thisDayExpenseHistoryList = GetExpenseHistoryListForDay(count);
+
 							if (count == today)
 							{
-								<div id="currentDay">@count</div>
+								<div id="currentDay">
+									<h6>@count</h6>
+									@if (thisDayIncomeHistoryList.Count != 0)
+									{
+										foreach (var income in thisDayIncomeHistoryList)
+										{
+											<div id="incomeItem" style="text-align:center;">@income.IncomeName</div>
+										}
+									}
+									@if (thisDayExpenseHistoryList.Count != 0)
+									{
+										foreach (var expense in thisDayExpenseHistoryList)
+										{
+											<div id="expenseItem" style="text-align:center;">@expense.ExpenseName</div>
+										}
+									}
+								</div>
 								count++;
 							}
 							else
 							{
-								<div id="monthDay">@count</div>
+								<div id="monthDay">
+									<h6>@count</h6>
+									@if (thisDayIncomeHistoryList.Count != 0)
+									{
+										foreach (var income in thisDayIncomeHistoryList)
+										{
+											<div id="incomeItem" style="text-align:center;">@income.IncomeName</div>
+										}
+									}
+									@if (thisDayExpenseHistoryList.Count != 0)
+									{
+										foreach (var expense in thisDayExpenseHistoryList)
+										{
+											<div id="expenseItem" style="text-align:center;">@expense.ExpenseName</div>
+										}
+									}
+								</div>
 								count++;
 							}
-						
 						}
 					}
-				</div>
+				</div>*@
+				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today" 
+					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList" />
 			</div>
 		</div>
 		<div class="budget-calendar-menu">
@@ -107,8 +145,11 @@ else
 	List<ExpenseCategories> expenseCategoryList = new();
 	IncomeHistory incomeHistory = new();
 
-	List<IncomeHistory> thisMonthIncomeHistoryList = new();
-	List<ExpenseHistory> thisMonthExpenseHistoryList = new();
+	List<IncomeHistory> thisMonthIncomeHistoryList;
+	List<ExpenseHistory> thisMonthExpenseHistoryList;
+
+	List<IncomeHistory> thisDayIncomeHistoryList;
+	List<ExpenseHistory> thisDayExpenseHistoryList;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -142,6 +183,18 @@ else
 	string GetMonthString(int month)
 	{
 		return calendarProcessor.GetMonthString(month);
+	}
+
+	// Calendar methods
+
+	List<IncomeHistory> GetIncomeHistoryListForDay(int currentDay)
+	{
+		return thisMonthIncomeHistoryList.Where(i => i.IncomeDate.Day == currentDay).ToList();
+	}
+
+	List<ExpenseHistory> GetExpenseHistoryListForDay(int currentDay)
+	{
+		return thisMonthExpenseHistoryList.Where(e => e.ExpenseDate.Day == currentDay).ToList();
 	}
 
 	// Expense History methods
