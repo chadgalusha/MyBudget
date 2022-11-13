@@ -9,12 +9,9 @@
 
 <h3 style="text-align:center">Expense History</h3>
 
-@if (expenseHistoryList == null)
+@if (expenseHistoryList == null || expenseCategoryList == null)
 {
-	@*<div class="spinner-border text-danger" role="status">
-		<span class="sr-only">Loading...</span>
-	</div>*@
-	<div class="mybudgetloader"></div>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -125,8 +122,8 @@ else
 @code {
 
 	bool ShowPopup = false;
-	List<ExpenseHistory> expenseHistoryList = new();
-	List<ExpenseCategories> expenseCategoryList = new();
+	List<ExpenseHistory> expenseHistoryList;
+	List<ExpenseCategories> expenseCategoryList;
 	ExpenseHistory expenseHistory = new();
 
 	private string searchString1 = "";

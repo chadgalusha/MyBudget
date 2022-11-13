@@ -1,13 +1,14 @@
 ﻿@page "/bankaccounttypespage"
 @using MyBudget.Services
 @using MyBudget.Models
+@using MyBudget.Components
 @inject ITypeService<BankAccountTypes> bankAccountTypesService
 
 <h3 style="text-align:center">Bank Account Types</h3>
 
 @if (bankAccountTypesList == null)
 {
-	<p><em>Loading...</em></p>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -85,7 +86,7 @@ else
 
 @code 
 {
-	List<BankAccountTypes> bankAccountTypesList = new();
+	List<BankAccountTypes> bankAccountTypesList;
 	BankAccountTypes bankAccountType = new();
 	bool ShowPopup = false;
 

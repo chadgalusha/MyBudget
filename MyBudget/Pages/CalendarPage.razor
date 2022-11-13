@@ -34,69 +34,6 @@ else
 					<div>Saturday</div>
 				</div>
 
-				@*<div class="calendar-grid">
-					@{count = 1;}
-					@for (int i = 0; i <= total; i++)
-					{
-						if (i < startingIndex)
-						{
-							<div id="notMonthDay"></div>
-						}
-						else if (i > endingIndex)
-						{
-							<div id="notMonthDay"></div>
-						}
-						else
-						{
-							@* Get list<T> for current day of types ExpenseHistory / IncomeHistory 
-							thisDayIncomeHistoryList = GetIncomeHistoryListForDay(count);
-							thisDayExpenseHistoryList = GetExpenseHistoryListForDay(count);
-
-							if (count == today)
-							{
-								<div id="currentDay">
-									<h6>@count</h6>
-									@if (thisDayIncomeHistoryList.Count != 0)
-									{
-										foreach (var income in thisDayIncomeHistoryList)
-										{
-											<div id="incomeItem" style="text-align:center;">@income.IncomeName</div>
-										}
-									}
-									@if (thisDayExpenseHistoryList.Count != 0)
-									{
-										foreach (var expense in thisDayExpenseHistoryList)
-										{
-											<div id="expenseItem" style="text-align:center;">@expense.ExpenseName</div>
-										}
-									}
-								</div>
-								count++;
-							}
-							else
-							{
-								<div id="monthDay">
-									<h6>@count</h6>
-									@if (thisDayIncomeHistoryList.Count != 0)
-									{
-										foreach (var income in thisDayIncomeHistoryList)
-										{
-											<div id="incomeItem" style="text-align:center;">@income.IncomeName</div>
-										}
-									}
-									@if (thisDayExpenseHistoryList.Count != 0)
-									{
-										foreach (var expense in thisDayExpenseHistoryList)
-										{
-											<div id="expenseItem" style="text-align:center;">@expense.ExpenseName</div>
-										}
-									}
-								</div>
-								count++;
-							}
-						}
-					}
-				</div>*@
 				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today" 
 					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList" />
 			</div>
@@ -120,9 +57,7 @@ else
 }
 
 @code {
-
-	int total = 41; // inclues 0 for total of 42
-
+	
 	[Inject] ISnackbar Snackbar { get; set; }
 	[Inject] IDialogService DialogService { get; set; }
 
@@ -132,7 +67,7 @@ else
 	int today;
 	int startingIndex;
 	int endingIndex;
-	int count = 1;
+
 	// selectedDateTime for calendar menu
 	DateTime selectedDateTime;
 
@@ -147,9 +82,6 @@ else
 
 	List<IncomeHistory> thisMonthIncomeHistoryList;
 	List<ExpenseHistory> thisMonthExpenseHistoryList;
-
-	List<IncomeHistory> thisDayIncomeHistoryList;
-	List<ExpenseHistory> thisDayExpenseHistoryList;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -170,6 +102,8 @@ else
 		thisMonthExpenseHistoryList = GetExpenseHistoryList(year, month);
 	}
 
+	// Calendar methods
+
 	int GetFirstOfMonthStartingIndex()
 	{
 		return calendarProcessor.IntForFirstDayOfMonth(year, month);
@@ -185,19 +119,7 @@ else
 		return calendarProcessor.GetMonthString(month);
 	}
 
-	// Calendar methods
-
-	List<IncomeHistory> GetIncomeHistoryListForDay(int currentDay)
-	{
-		return thisMonthIncomeHistoryList.Where(i => i.IncomeDate.Day == currentDay).ToList();
-	}
-
-	List<ExpenseHistory> GetExpenseHistoryListForDay(int currentDay)
-	{
-		return thisMonthExpenseHistoryList.Where(e => e.ExpenseDate.Day == currentDay).ToList();
-	}
-
-	// Expense History methods
+	#region Expense History methods
 
 	List<ExpenseHistory> GetExpenseHistoryList(int year, int month)
 	{
@@ -257,7 +179,8 @@ else
 		}
 	}
 
-	// Income History Methods
+	#endregion
+	#region Income History methods
 
 	List<IncomeHistory> GetIncomeHistoryList(int year, int month)
 	{
@@ -317,6 +240,7 @@ else
 		}
 	}
 
+	#endregion
 	// Button methods
 
 	void CancelExpenseHistory()

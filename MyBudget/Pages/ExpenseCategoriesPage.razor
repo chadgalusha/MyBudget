@@ -1,13 +1,14 @@
 ﻿@page "/expensecategoriespage"
 @using MyBudget.Services
 @using MyBudget.Models
+@using MyBudget.Components
 @inject IService<ExpenseCategories> expenseCategoriesService
 
 <h3 style="text-align:center">Expense Categories</h3>
 
 @if (expenseCategoriesList == null)
 {
-	<p><em>Loading...</em></p>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -95,7 +96,7 @@ else
 @code {
 
 	bool ShowPopup = false;
-	List<ExpenseCategories> expenseCategoriesList = new();
+	List<ExpenseCategories> expenseCategoriesList;
 	ExpenseCategories expenseCategory = new();
 	private string searchString1 = "";
 	private ExpenseCategories selectedItem1 = null;

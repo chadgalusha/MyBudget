@@ -4,33 +4,39 @@
 @using MyBudget.Components
 @inject IIncomeAndExpensesViewModelService service
 
-<h1 style="text-align:center;">CG Budgeting</h1>
-<h4 style="text-align:center;">Income and Expenses</h4>
+@if (_lastMonthConfig == null || _thisMonthConfig == null || _lastYearConfig == null || _thisYearConfig == null)
+{
+	<MyBudgetLoadingIndicator />
+}
+else
+{
+	<h1 style="text-align:center;">CG Budgeting</h1>
+	<h4 style="text-align:center;">Income and Expenses</h4>
 
-<div class="graph-flex-container">
-	<div>
-		<h6 style="text-align:center;">Last Month Income/Expenses</h6>
-		<Chart Config="_lastMonthConfig" @ref="_chart"></Chart>
+	<div class="graph-flex-container">
+		<div>
+			<h6 style="text-align:center;">Last Month Income/Expenses</h6>
+			<Chart Config="_lastMonthConfig" @ref="_chart"></Chart>
+		</div>
+		<div>
+			<h6 style="text-align:center;">This Month Income/Expenses</h6>
+			<Chart Config="_thisMonthConfig" @ref="_chart"></Chart>
+		</div>
+		<div>
+			<h6 style="text-align:center;">Last Year Income/Expenses</h6>
+			<Chart Config="_lastYearConfig" @ref="_chart"></Chart>
+		</div>
+		<div>
+			<h6 style="text-align:center;">This Year Income/Expenses</h6>
+			<Chart Config="_thisYearConfig" @ref="_chart"></Chart>
+		</div>
 	</div>
-	<div>
-		<h6 style="text-align:center;">This Month Income/Expenses</h6>
-		<Chart Config="_thisMonthConfig" @ref="_chart"></Chart>
-	</div>
-	<div>
-		<h6 style="text-align:center;">Last Year Income/Expenses</h6>
-		<Chart Config="_lastYearConfig" @ref="_chart"></Chart>
-	</div>
-	<div>
-		<h6 style="text-align:center;">This Year Income/Expenses</h6>
-		<Chart Config="_thisYearConfig" @ref="_chart"></Chart>
-	</div>
-</div>
 
-<div class="donut-chart-flex-container">
-	<MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="donutIndex"
-			  InputData="donutChartData" InputLabels="donutChartLabels" id="donut-chart"
-			  ></MudChart>
-</div>
+	<div class="donut-chart-flex-container">
+		<MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="donutIndex"
+			  InputData="donutChartData" InputLabels="donutChartLabels" id="donut-chart"></MudChart>
+	</div>
+}
 
 @code {
 

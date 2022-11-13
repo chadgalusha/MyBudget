@@ -1,13 +1,14 @@
 ﻿@page "/incometypespage"
 @using MyBudget.Services
 @using MyBudget.Models
+@using MyBudget.Components
 @inject ITypeService<IncomeTypes> incomeTypeService
 
 <h3 style="text-align:center">Income Types</h3>
 
 @if (incomeTypesList == null)
 {
-	<p><em>Loading...</em></p>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -84,7 +85,7 @@ else
 }
 
 @code {
-	List<IncomeTypes> incomeTypesList = new();
+	List<IncomeTypes> incomeTypesList;
 	IncomeTypes incomeType = new();
 	bool ShowPopup = false;
 

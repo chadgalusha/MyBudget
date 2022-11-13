@@ -1,13 +1,14 @@
 ﻿@page "/expensetypespage"
 @using MyBudget.Services
 @using MyBudget.Models
+@using MyBudget.Components
 @inject ITypeService<ExpenseTypes> expenseTypeService
 
 <h3 style="text-align:center">Expense Types</h3>
 
 @if (expenseTypeList == null)
 {
-	<p><em>Loading...</em></p>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -84,7 +85,7 @@ else
 }
 
 @code {
-	List<ExpenseTypes> expenseTypeList = new();
+	List<ExpenseTypes> expenseTypeList;
 	ExpenseTypes expenseType = new();
 	bool ShowPopup = false;
 
