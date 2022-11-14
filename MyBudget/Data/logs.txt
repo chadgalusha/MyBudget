@@ -526,3 +526,17 @@
 2022-11-08 17:21:44.506 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":28,"ExpenseName":"Test3","AmountPaid":0,"ExpenseDate":"2022-11-08T17:18:15.1235378","ExpenseCategoryId":1}
 2022-11-08 17:21:47.188 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":27,"ExpenseName":"Test2","AmountPaid":0,"ExpenseDate":"2022-11-08T17:18:14.0877126","ExpenseCategoryId":1}
 2022-11-08 17:22:02.288 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":8,"IncomeName":"Test2","IncomeAmount":2,"IncomeDate":"2022-11-08T00:00:00"}
+2022-11-14 10:51:42.758 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":29,"ExpenseName":"Test","AmountPaid":3,"ExpenseDate":"2022-11-14T10:51:03.6942812-06:00","ExpenseCategoryId":1}
+2022-11-14 10:51:42.779 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":30,"ExpenseName":"Test","AmountPaid":4,"ExpenseDate":"2022-11-14T10:51:18.3209493-06:00","ExpenseCategoryId":1}
+2022-11-14 10:51:42.788 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":31,"ExpenseName":"Test","AmountPaid":4,"ExpenseDate":"2022-11-14T10:51:18.8046477-06:00","ExpenseCategoryId":1}
+2022-11-14 10:51:42.797 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":32,"ExpenseName":"Test","AmountPaid":5,"ExpenseDate":"2022-11-14T10:51:18.9676112-06:00","ExpenseCategoryId":1}
+2022-11-14 10:51:42.806 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":33,"ExpenseName":"Test","AmountPaid":6,"ExpenseDate":"2022-11-14T10:51:19.1384112-06:00","ExpenseCategoryId":1}
+2022-11-14 10:51:42.814 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":34,"ExpenseName":"Test","AmountPaid":7,"ExpenseDate":"2022-11-14T10:51:19.6996184-06:00","ExpenseCategoryId":1}
+2022-11-14 10:51:42.822 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":35,"ExpenseName":"Test","AmountPaid":7,"ExpenseDate":"2022-11-14T10:51:20.5645811-06:00","ExpenseCategoryId":1}
+2022-11-14 10:57:51.300 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":35,"ExpenseName":"Test","AmountPaid":7,"ExpenseDate":"2022-11-14T10:51:20.5645811","ExpenseCategoryId":1}
+2022-11-14 10:57:53.324 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":34,"ExpenseName":"Test","AmountPaid":7,"ExpenseDate":"2022-11-14T10:51:19.6996184","ExpenseCategoryId":1}
+2022-11-14 10:57:55.544 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":33,"ExpenseName":"Test","AmountPaid":6,"ExpenseDate":"2022-11-14T10:51:19.1384112","ExpenseCategoryId":1}
+2022-11-14 10:57:57.526 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":32,"ExpenseName":"Test","AmountPaid":5,"ExpenseDate":"2022-11-14T10:51:18.9676112","ExpenseCategoryId":1}
+2022-11-14 10:58:08.405 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":31,"ExpenseName":"Test","AmountPaid":4,"ExpenseDate":"2022-11-14T10:51:18.8046477","ExpenseCategoryId":1}
+2022-11-14 10:58:10.573 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":30,"ExpenseName":"Test","AmountPaid":4,"ExpenseDate":"2022-11-14T10:51:18.3209493","ExpenseCategoryId":1}
+2022-11-14 11:12:43.996 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":9,"IncomeName":"Test","IncomeAmount":3,"IncomeDate":"2022-11-14T00:00:00-06:00"}

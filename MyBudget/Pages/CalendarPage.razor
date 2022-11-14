@@ -19,7 +19,7 @@ else
 		<div class="budget-calendar">
 			<MudToolBar class="calendar-date-bar">
 				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft"></MudIconButton>
-				<h3 style="text-align:center;">@GetMonthString(month) @year</h3>
+				<h3 style="text-align:center;margin-top:6px;">@GetMonthString(month) @year</h3>
 				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight"></MudIconButton>
 			</MudToolBar>
 
@@ -35,7 +35,8 @@ else
 				</div>
 
 				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today" 
-					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList" />
+					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList"
+					UpdateCurrentDay="@UpdateCurrentDay" />
 			</div>
 		</div>
 		<div class="budget-calendar-menu">
@@ -57,7 +58,7 @@ else
 }
 
 @code {
-	
+
 	[Inject] ISnackbar Snackbar { get; set; }
 	[Inject] IDialogService DialogService { get; set; }
 
@@ -119,10 +120,25 @@ else
 		return calendarProcessor.GetMonthString(month);
 	}
 
-	#region Expense History methods
-
-	List<ExpenseHistory> GetExpenseHistoryList(int year, int month)
+	void UpdateCurrentDay(int updatedDate)
 	{
+		if (updatedDate == selectedDateTime.Day) { return; }
+
+		if (updatedDate < selectedDateTime.Day)
+		{
+			selectedDateTime = selectedDateTime.AddDays(-(selectedDateTime.Day - updatedDate));
+		}
+
+		if (updatedDate > selectedDateTime.Day)
+		{
+			selectedDateTime = selectedDateTime.AddDays(updatedDate - selectedDateTime.Day);
+		}
+	}
+
+    #region Expense History methods
+
+    List<ExpenseHistory> GetExpenseHistoryList(int year, int month)
+    {
 		return expenseHistoryService.GetListByYearMonth(year, month);
 	}
 

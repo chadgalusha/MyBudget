@@ -25,7 +25,8 @@
 			*@
 			if (count == today)
 			{
-				<div id="currentDay">
+				int currentCount = count; // initialize here to send correct date through event
+				<div id="currentDay" @onclick="() => CallUpdateCurrentDay(currentCount)">
 					<h6>@count</h6>
 					@if (thisDayIncomeHistoryList.Count != 0)
 					{
@@ -46,7 +47,8 @@
 			}
 			else
 			{
-				<div id="monthDay">
+				int currentCount = count; // initialize here to send correct date through event
+				<div id="monthDay" @onclick="() => CallUpdateCurrentDay(currentCount)">
 					<h6>@count</h6>
 					@if (thisDayIncomeHistoryList.Count != 0)
 					{
@@ -86,6 +88,9 @@
 	[Parameter, EditorRequired]
 	public List<ExpenseHistory> thisMonthExpenseHistoryList { get; set; }
 
+	[Parameter, EditorRequired]
+	public EventCallback<int> UpdateCurrentDay { get; set; }
+
 	private int count = 1;
 
 	private int totalCalendarDays = 41; // includes 0 for total of 42
@@ -102,6 +107,11 @@
 	List<ExpenseHistory> GetExpenseHistoryListForDay(int currentDay)
 	{
 		return thisMonthExpenseHistoryList.Where(e => e.ExpenseDate.Day == currentDay).ToList();
+	}
+
+	private async Task CallUpdateCurrentDay(int day)
+	{
+		await UpdateCurrentDay.InvokeAsync(day);
 	}
 
 }
