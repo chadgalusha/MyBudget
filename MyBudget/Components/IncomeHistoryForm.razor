@@ -8,16 +8,17 @@
 		<MudNumericField T="decimal" @bind-Value="incomeHistory.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999" />
 		<MudDatePicker Date="selectedDate" @bind-Value="incomeHistory.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" />
 	</MudForm>
-	<div style="margin-top:2px;margin-bottom:2px;">
+	<div style="margin-top:2px;margin-bottom:2px;text-align:center;">
 		@if (incomeHistory.IncomeHistoryId == 0)
 		{
-			<MudButton @onclick="CallSaveIncomeHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Save</MudButton>
-			<MudButton @onclick="CallCancelIncomeHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Cancel</MudButton>
+			<MudButton @onclick="CallSaveIncomeHistory" Variant="Variant.Filled" Color="Color.Success" style="margin: 0 4px 2px 4px;">Save</MudButton>
+			<MudButton @onclick="CallCancelIncomeHistory" Variant="Variant.Filled" Color="Color.Warning" style="margin: 0 4px 2px 4px;">Cancel</MudButton>
 		}
 		else
 		{
-			<MudButton @onclick="CallUpdateIncomeHistory" Variant="Variant.Filled" Color="Color.Success" style="margin-bottom:2px;">Edit</MudButton>
-			<MudButton @onclick="CallDeleteIncomeHistory" Variant="Variant.Filled" Color="Color.Error" style="float:right;margin-bottom:2px;">Delete</MudButton>
+			<MudButton @onclick="CallUpdateIncomeHistory" Variant="Variant.Filled" Color="Color.Success" style="margin: 0 4px 2px 4px;">Edit</MudButton>
+			<MudButton @onclick="CallCancelIncomeHistory" Variant="Variant.Filled" Color="Color.Warning" style="margin: 0 4px 2px 4px;">Cancel</MudButton>
+			<MudButton @onclick="CallDeleteIncomeHistory" Variant="Variant.Filled" Color="Color.Error" style="margin: 0 4px 2px 4px;">Delete</MudButton>
 		}
 	</div>
 </MudCard>

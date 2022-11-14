@@ -226,7 +226,6 @@ a, .btn-link {
 
 #currentDay {
     background-color: rgb(199, 218, 250);
-    box-shadow: 0 0 1px 1px black;
 }
 
     #currentDay:hover {
@@ -251,6 +250,10 @@ a, .btn-link {
 
 #monthDay > h6 {
     text-align: left;
+}
+
+.selected-day {
+    box-shadow: 0 0 1px 1px black;
 }
 
 .calendar-date-bar {
@@ -291,6 +294,7 @@ a, .btn-link {
     border-radius: 6px;
     font-size: 12px;
     display: block;
+    overflow: hidden;
 }
 
     #incomeItem:hover {
@@ -308,6 +312,7 @@ a, .btn-link {
     border-radius: 6px;
     font-size: 12px;
     display: block;
+    overflow: hidden;
 }
 
     #expenseItem:hover {

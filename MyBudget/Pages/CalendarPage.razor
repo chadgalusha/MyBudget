@@ -36,7 +36,7 @@ else
 
 				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today" 
 					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList"
-					UpdateCurrentDay="@UpdateCurrentDay" />
+					UpdateCurrentDay="@UpdateCurrentDay" EditIncomeHistory="@EditIncomeHistory" EditExpenseHistory="@EditExpenseHistory"/>
 			</div>
 		</div>
 		<div class="budget-calendar-menu">
@@ -135,10 +135,29 @@ else
 		}
 	}
 
-    #region Expense History methods
+	async void EditIncomeHistory(int id)
+	{
+		incomeHistory = await GetIncomeHistoryById(id);
+		CancelExpenseHistory();
+		ShowIncomeHistoryForm();
+	}
 
-    List<ExpenseHistory> GetExpenseHistoryList(int year, int month)
-    {
+	async void EditExpenseHistory(int id)
+	{
+		expenseHistory = await GetExpenseHistoryById(id);
+		CancelIncomeHistory();
+		ShowExpenseHistoryForm();
+	}
+
+	#region Expense History methods
+
+	async Task<ExpenseHistory> GetExpenseHistoryById(int id)
+	{
+		return await expenseHistoryService.GetById(id);
+	}
+
+	List<ExpenseHistory> GetExpenseHistoryList(int year, int month)
+	{
 		return expenseHistoryService.GetListByYearMonth(year, month);
 	}
 
@@ -198,6 +217,11 @@ else
 	#endregion
 	#region Income History methods
 
+	async Task<IncomeHistory> GetIncomeHistoryById(int id)
+	{
+		return await incomeHistoryService.GetById(id);
+	}
+
 	List<IncomeHistory> GetIncomeHistoryList(int year, int month)
 	{
 		return incomeHistoryService.GetListByYearMonth(year, month);
@@ -227,7 +251,7 @@ else
 	{
 		try
 		{
-
+			Snackbar.Add($"Mock Update: {income.IncomeHistoryId}", Severity.Info);
 		}
 		catch (Exception e)
 		{
@@ -248,7 +272,7 @@ else
 	{
 		try
 		{
-
+			Snackbar.Add($"Mock Delete: {income.IncomeHistoryId}", Severity.Info);
 		}
 		catch (Exception e)
 		{
@@ -267,6 +291,7 @@ else
 
 	void TurnOnExpenseHistory()
 	{
+		expenseHistory = GetNewExpenseHistory();
 		HideIncomeHistoryForm();
 		ShowExpenseHistoryForm();
 	}
@@ -279,6 +304,7 @@ else
 
 	void TurnOnIncomeHistory()
 	{
+		incomeHistory = GetNewIncomeHistory();
 		HideExpenseHistoryForm();
 		ShowIncomeHistoryForm();
 	}
