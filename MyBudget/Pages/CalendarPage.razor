@@ -34,7 +34,7 @@ else
 					<div>Saturday</div>
 				</div>
 
-				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today" 
+				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today"
 					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList"
 					UpdateCurrentDay="@UpdateCurrentDay" EditIncomeHistory="@EditIncomeHistory" EditExpenseHistory="@EditExpenseHistory"/>
 			</div>
@@ -52,7 +52,7 @@ else
 
 			<IncomeHistoryForm @ref="incomeHistoryForm" selectedDate="selectedDateTime" incomeHistory="incomeHistory"
 			SaveIncomeHistory="() => SaveIncomeHistoryAsync(incomeHistory)" CancelIncomeHistory="CancelIncomeHistory"
-			UpdateIncomeHistory="() => UpdateIncomeHistoryAsync(incomeHistory)" DeleteIncomeHistory="() => DeleteIncomeHistoryAsync(incomeHistory)"/>
+			UpdateIncomeHistory="() => UpdateIncomeHistoryAsync(incomeHistory)" DeleteIncomeHistory="() => DeleteConfirmIncomeHistory(incomeHistory)"/>
 		</div>
 	</div>
 }
@@ -201,9 +201,9 @@ else
 		try
 		{
 			await expenseHistoryService.CreateRecord(expense);
+			thisMonthExpenseHistoryList.Add(expense);
 			Snackbar.Add($"Created new Expense History: {expense.ExpenseName} {expense.ExpenseDate}", Severity.Success);
-			HideExpenseHistoryForm();
-			expenseHistory = GetNewExpenseHistory();
+			CancelExpenseHistory();
 		}
 		catch (Exception e)
 		{
@@ -237,6 +237,9 @@ else
 		try
 		{
 			await expenseHistoryService.DeleteRecord(expense);
+			thisMonthExpenseHistoryList = GetExpenseHistoryList(year, month); // a hack until I can update render to remove deleted item
+			Snackbar.Add($"Successfully deleted {expense.ExpenseName} : {expense.ExpenseDate.ToShortDateString()}", Severity.Success);
+			CancelExpenseHistory();
 		}
 		catch (Exception e)
 		{
@@ -268,9 +271,9 @@ else
 		try
 		{
 			await incomeHistoryService.CreateRecord(income);
+			thisMonthIncomeHistoryList.Add(income);
 			Snackbar.Add($"Created new Income history: {income.IncomeName} {income.IncomeDate}", Severity.Success);
-			HideIncomeHistoryForm();
-			incomeHistory = GetNewIncomeHistory();
+			CancelIncomeHistory();
 		}
 		catch (Exception e)
 		{
@@ -282,7 +285,7 @@ else
 	{
 		try
 		{
-			Snackbar.Add($"Mock Update: {income.IncomeHistoryId}", Severity.Info);
+			await incomeHistoryService.UpdateRecord(income);
 		}
 		catch (Exception e)
 		{
@@ -303,7 +306,10 @@ else
 	{
 		try
 		{
-			Snackbar.Add($"Mock Delete: {income.IncomeHistoryId}", Severity.Info);
+			await incomeHistoryService.DeleteRecord(income);
+			thisMonthIncomeHistoryList = GetIncomeHistoryList(year, month);
+			Snackbar.Add($"Successfully deleted {income.IncomeName} : {income.IncomeDate.ToShortDateString()}", Severity.Success);
+			CancelIncomeHistory();
 		}
 		catch (Exception e)
 		{
