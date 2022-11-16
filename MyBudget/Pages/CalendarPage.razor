@@ -18,9 +18,9 @@ else
 	<div>
 		<div class="budget-calendar">
 			<MudToolBar class="calendar-date-bar">
-				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft"></MudIconButton>
+				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft" OnClick="BackOneMonth"></MudIconButton>
 				<h3 style="text-align:center;margin-top:6px;">@GetMonthString(month) @year</h3>
-				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight"></MudIconButton>
+				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight" OnClick="ForwardOneMonth"></MudIconButton>
 			</MudToolBar>
 
 			<div class="calendar-container">
@@ -87,23 +87,37 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 		currentDateTime = DateTime.Now;
-		year = currentDateTime.Year;
-		month = currentDateTime.Month;
-		today = currentDateTime.Day;
-		startingIndex = GetFirstOfMonthStartingIndex();
-		endingIndex = startingIndex + GetNumberOfDaysInMonth() - 1;
+		Set_Year_Month_Today(currentDateTime);
+		SetIndexes();
 		selectedDateTime = currentDateTime;
 
 		expenseHistory = GetNewExpenseHistory();
 		expenseCategoryList = await expenseCategoryService.GetList();
-
 		incomeHistory = GetNewIncomeHistory();
 
-		thisMonthIncomeHistoryList = GetIncomeHistoryList(year, month);
-		thisMonthExpenseHistoryList = GetExpenseHistoryList(year, month);
+		GetHistoryLists();
 	}
 
 	// Calendar methods
+
+	void Set_Year_Month_Today(DateTime dateTime)
+	{
+		year = dateTime.Year;
+		month = dateTime.Month;
+		today = dateTime.Day;
+	}
+
+	void SetIndexes()
+	{
+		startingIndex = GetFirstOfMonthStartingIndex();
+		endingIndex = startingIndex + GetNumberOfDaysInMonth() - 1;
+	}
+
+	void GetHistoryLists()
+	{
+		thisMonthIncomeHistoryList = GetIncomeHistoryList(year, month);
+		thisMonthExpenseHistoryList = GetExpenseHistoryList(year, month);
+	}
 
 	int GetFirstOfMonthStartingIndex()
 	{
@@ -147,6 +161,22 @@ else
 		expenseHistory = await GetExpenseHistoryById(id);
 		CancelIncomeHistory();
 		ShowExpenseHistoryForm();
+	}
+
+	void BackOneMonth()
+	{
+		selectedDateTime = calendarProcessor.PreviousMonth(selectedDateTime);
+		Set_Year_Month_Today(selectedDateTime);
+		SetIndexes();
+		GetHistoryLists();
+	}
+
+	void ForwardOneMonth()
+	{
+		selectedDateTime = calendarProcessor.NextMonth(selectedDateTime);
+		Set_Year_Month_Today(selectedDateTime);
+		SetIndexes();
+		GetHistoryLists();
 	}
 
 	#region Expense History methods
@@ -196,8 +226,8 @@ else
 	async Task DeleteConfirmExpenseHistory(ExpenseHistory expenseHistory)
 	{
 		bool? confirmed = await DialogService.ShowMessageBox(
-			"Warning", $"Permanently Delete {expenseHistory.ExpenseName} : {expenseHistory.ExpenseDate.ToShortDateString()}?",
-			yesText: "Delete", cancelText: "Cancel");
+		"Warning", $"Permanently Delete {expenseHistory.ExpenseName} : {expenseHistory.ExpenseDate.ToShortDateString()}?",
+		yesText: "Delete", cancelText: "Cancel");
 
 		if (confirmed == true) { await DeleteExpenseHistoryAsync(expenseHistory); }
 	}
@@ -215,6 +245,7 @@ else
 	}
 
 	#endregion
+
 	#region Income History methods
 
 	async Task<IncomeHistory> GetIncomeHistoryById(int id)
@@ -262,8 +293,8 @@ else
 	async Task DeleteConfirmIncomeHistory(IncomeHistory incomeHistory)
 	{
 		bool? confirmed = await DialogService.ShowMessageBox(
-			"Warning", $"Permanently Delete {incomeHistory.IncomeName} : {incomeHistory.IncomeDate.ToShortDateString()}?",
-			yesText: "Delete", cancelText: "Cancel");
+		"Warning", $"Permanently Delete {incomeHistory.IncomeName} : {incomeHistory.IncomeDate.ToShortDateString()}?",
+		yesText: "Delete", cancelText: "Cancel");
 
 		if (confirmed == true) { await DeleteIncomeHistoryAsync(incomeHistory); }
 	}
@@ -281,6 +312,7 @@ else
 	}
 
 	#endregion
+
 	// Button methods
 
 	void CancelExpenseHistory()
@@ -311,23 +343,12 @@ else
 
 	// Component visibility toggles
 
-	private void ShowExpenseHistoryForm()
-	{
-		expenseHistoryForm.SetVisible(true);
-	}
+	private void ShowExpenseHistoryForm() => expenseHistoryForm.SetVisible(true);
 
-	private void HideExpenseHistoryForm()
-	{
-		expenseHistoryForm.SetVisible(false);
-	}
+	private void HideExpenseHistoryForm() => expenseHistoryForm.SetVisible(false);
 
-	private void ShowIncomeHistoryForm()
-	{
-		incomeHistoryForm.SetVisible(true);
-	}
+	private void ShowIncomeHistoryForm() => incomeHistoryForm.SetVisible(true);
 
-	private void HideIncomeHistoryForm()
-	{
-		incomeHistoryForm.SetVisible(false);
-	}
+	private void HideIncomeHistoryForm() => incomeHistoryForm.SetVisible(false);
+
 }

@@ -15,7 +15,7 @@
 	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
 </div>
 
-<MudTable Items="@expenseHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+<MudTable Items="@expenseTempHistoryList" Striped="true" Dense="true" class="mud-table-styles">
 	<HeaderContent>
 		<MudTh>Row</MudTh>
 		<MudTh>Expense Name</MudTh>
@@ -28,7 +28,7 @@
 		<MudTd DataLabel="Row">@context.ExpenseHistoryId</MudTd>
 		<MudTd DataLabel="Expense Name"><MudTextField @bind-Value="context.ExpenseName" Label="Expense Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
 		<MudTd DataLabel="Amount Paid"><MudNumericField @bind-Value="context.AmountPaid" Label="Expense Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999" /></MudTd>
-		<MudTd DataLabel="Expense Date"><MudDatePicker @bind-value="context.ExpenseDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense" Date="context.ExpenseDate" /></MudTd>
+		<MudTd DataLabel="Expense Date"><MudDatePicker @bind-Date="context.ExpenseDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudTd>
 		<MudTd DataLabel="Expense Category">
 			<MudSelect T="int" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="context.ExpenseCategoryId">
 				@foreach (var category in expenseCategoryList)
@@ -53,8 +53,7 @@
 
 @code {
 
-	ExpenseHistory expenseHistory = new();
-	List<ExpenseHistory> expenseHistoryList = new();
+	List<TempExpenseHistory> expenseTempHistoryList = new();
 	List<ExpenseCategories> expenseCategoryList = new();
 
 	[Inject] ISnackbar Snackbar { get; set; }
@@ -62,55 +61,55 @@
 	protected override async Task OnInitializedAsync()
 	{
 		expenseCategoryList = await expenseCategoryService.GetList();
-		expenseHistoryList.Add(GetInitialExpenseHistory());
+		expenseTempHistoryList.Add(GetInitialTempExpenseHistory());
 	}
 
 	// Table functionality methods
 
 	void AddRow()
 	{
-		if (expenseHistoryList.Count >= 25)
+		if (expenseTempHistoryList.Count >= 25)
 		{
 			Snackbar.Add("Max of 25 new records", Severity.Info);
 			return;
 		}
 
-		expenseHistoryList.Add(GetNextRow());
+		expenseTempHistoryList.Add(GetNextRow());
 	}
 
 	void DeleteRow()
 	{
-		var lastIndex = expenseHistoryList.LastOrDefault();
-		expenseHistoryList.Remove(lastIndex);
+		var lastIndex = expenseTempHistoryList.LastOrDefault();
+		expenseTempHistoryList.Remove(lastIndex);
 	}
 
 	void RemoveElement(int id)
 	{
-		var element = expenseHistoryList.Where(e => e.ExpenseHistoryId == id).First();
-		expenseHistoryList.Remove(element);
+		var element = expenseTempHistoryList.Where(e => e.ExpenseHistoryId == id).First();
+		expenseTempHistoryList.Remove(element);
 		ReIndexList();
 	}
 
-	ExpenseHistory GetInitialExpenseHistory()
+	TempExpenseHistory GetInitialTempExpenseHistory()
 	{
 		return new() { ExpenseHistoryId = 1, ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
 	}
 
-	ExpenseHistory GetNextRow()
+	TempExpenseHistory GetNextRow()
 	{
 		return new() { ExpenseHistoryId = NextId(), ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
 	}
 
 	int NextId()
 	{
-		return expenseHistoryList.Count + 1;
+		return expenseTempHistoryList.Count + 1;
 	}
 
 	void ReIndexList()
 	{
 		int currentIndex = 1;
 
-		foreach (var expense in expenseHistoryList)
+		foreach (var expense in expenseTempHistoryList)
 		{
 			expense.ExpenseHistoryId = currentIndex;
 			currentIndex++;
@@ -128,9 +127,10 @@
 			return;
 		}
 
-		foreach (var expense in expenseHistoryList)
+		foreach (var expense in expenseTempHistoryList)
 		{
-			await SaveRecord(expense);
+			ExpenseHistory newExpenseHistory = GetNewModel(expense);
+			await SaveRecord(newExpenseHistory);
 		}
 
 		ClearListAndSuccessMessage();
@@ -138,20 +138,22 @@
 
 	void ClearListAndSuccessMessage()
 	{
-		expenseHistoryList.Clear();
-		expenseHistoryList.Add(GetInitialExpenseHistory());
+		expenseTempHistoryList.Clear();
+		expenseTempHistoryList.Add(GetInitialTempExpenseHistory());
 		Snackbar.Add("New Expense Histories Added", Severity.Success);
 	}
 
 	int CheckListForIssues()
 	{
-		foreach (var expense in expenseHistoryList)
+		foreach (var expense in expenseTempHistoryList)
 		{
 			if (string.IsNullOrWhiteSpace(expense.ExpenseName))
 			{
 				return expense.ExpenseHistoryId;
 			}
-			if (expense.ExpenseDate.Year < 2000)
+
+			DateTime dateTime = (DateTime)expense.ExpenseDate;
+			if (dateTime.Year < 2000)
 			{
 				return expense.ExpenseHistoryId;
 			}
@@ -159,11 +161,10 @@
 		return 0;
 	}
 
-	async Task SaveRecord(ExpenseHistory expense)
+	async Task SaveRecord(ExpenseHistory newExpenseHistory)
 	{
 		try
 		{
-			ExpenseHistory newExpenseHistory = GetNewModel(expense);
 			await expenseHistoryService.CreateRecord(newExpenseHistory);
 		}
 		catch (Exception e)
@@ -172,14 +173,26 @@
 		}
 	}
 
-	ExpenseHistory GetNewModel(ExpenseHistory expense)
+	// Convert TempExpenseHistory to ExpenseHistory to save to db
+	ExpenseHistory GetNewModel(TempExpenseHistory expense)
 	{
 		return new()
 		{
 			ExpenseName = expense.ExpenseName,
 			AmountPaid = expense.AmountPaid,
-			ExpenseDate = expense.ExpenseDate,
+			ExpenseDate = (DateTime)expense.ExpenseDate,
 			ExpenseCategoryId = expense.ExpenseCategoryId
 		};
 	}
+
+	// Temp class added due to MudBlazor DateTimePicker needing DateTime? instead of DateTime to bind Date
+	class TempExpenseHistory
+	{
+		public int ExpenseHistoryId { get; set; }
+		public string ExpenseName { get; set; }
+		public decimal AmountPaid { get; set; }
+		public DateTime? ExpenseDate { get; set; }
+		public int ExpenseCategoryId { get; set; }
+	}
+
 }

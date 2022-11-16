@@ -540,3 +540,77 @@
 2022-11-14 10:58:08.405 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":31,"ExpenseName":"Test","AmountPaid":4,"ExpenseDate":"2022-11-14T10:51:18.8046477","ExpenseCategoryId":1}
 2022-11-14 10:58:10.573 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":30,"ExpenseName":"Test","AmountPaid":4,"ExpenseDate":"2022-11-14T10:51:18.3209493","ExpenseCategoryId":1}
 2022-11-14 11:12:43.996 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":9,"IncomeName":"Test","IncomeAmount":3,"IncomeDate":"2022-11-14T00:00:00-06:00"}
+2022-11-15 12:10:39.211 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":74,"ExpenseName":"Wal-Mart","AmountPaid":10.64,"ExpenseDate":"2022-10-19T00:00:00","ExpenseCategoryId":3}
+2022-11-15 12:10:47.952 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":5,"ExpenseName":"Amazon","AmountPaid":33.93,"ExpenseDate":"2022-10-13T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:10:51.358 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":6,"ExpenseName":"Cafe 931","AmountPaid":20.8,"ExpenseDate":"2022-10-13T00:00:00","ExpenseCategoryId":0}
+2022-11-15 12:10:59.707 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":7,"ExpenseName":"Lasaters","AmountPaid":19.5,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
+2022-11-15 12:36:43.451 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":128,"ExpenseName":"Wal-Mart","AmountPaid":266.72,"ExpenseDate":"2022-11-15T12:27:27.978127-06:00","ExpenseCategoryId":3}
+2022-11-15 12:36:43.470 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":129,"ExpenseName":"FSNB Withdraw","AmountPaid":143.5,"ExpenseDate":"2022-11-15T12:27:30.4632865-06:00","ExpenseCategoryId":13}
+2022-11-15 12:36:43.479 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":130,"ExpenseName":"Ross","AmountPaid":109.43,"ExpenseDate":"2022-11-15T12:27:30.6463879-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.487 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":131,"ExpenseName":"Amazon","AmountPaid":39.97,"ExpenseDate":"2022-11-15T12:27:30.8173803-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.495 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":132,"ExpenseName":"Cafe 931","AmountPaid":36.27,"ExpenseDate":"2022-11-15T12:27:30.9831683-06:00","ExpenseCategoryId":8}
+2022-11-15 12:36:43.503 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":133,"ExpenseName":"Chipotle","AmountPaid":34.38,"ExpenseDate":"2022-11-15T12:30:12.3879693-06:00","ExpenseCategoryId":8}
+2022-11-15 12:36:43.511 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":134,"ExpenseName":"Store #01","AmountPaid":30.89,"ExpenseDate":"2022-11-15T12:30:13.0929617-06:00","ExpenseCategoryId":4}
+2022-11-15 12:36:43.518 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":135,"ExpenseName":"Amazon","AmountPaid":30.48,"ExpenseDate":"2022-11-15T12:30:13.4255019-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.525 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":136,"ExpenseName":"Amazon","AmountPaid":28.43,"ExpenseDate":"2022-11-15T12:30:13.6083279-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.533 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":137,"ExpenseName":"Shell","AmountPaid":25.01,"ExpenseDate":"2022-11-15T12:30:13.7609871-06:00","ExpenseCategoryId":4}
+2022-11-15 12:36:43.541 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":138,"ExpenseName":"Amazon","AmountPaid":24.08,"ExpenseDate":"2022-11-15T12:30:13.9070525-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.549 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":139,"ExpenseName":"Lasaters","AmountPaid":19.5,"ExpenseDate":"2022-11-15T12:30:14.0606665-06:00","ExpenseCategoryId":8}
+2022-11-15 12:36:43.557 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":140,"ExpenseName":"Amazon","AmountPaid":17.18,"ExpenseDate":"2022-11-15T12:30:16.0857491-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.564 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":141,"ExpenseName":"Wal-Mart","AmountPaid":14.04,"ExpenseDate":"2022-11-15T12:30:16.2523074-06:00","ExpenseCategoryId":3}
+2022-11-15 12:36:43.578 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":142,"ExpenseName":"Adobe","AmountPaid":10.59,"ExpenseDate":"2022-11-15T12:30:16.4385723-06:00","ExpenseCategoryId":12}
+2022-11-15 12:36:43.587 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":143,"ExpenseName":"Sonic","AmountPaid":10.02,"ExpenseDate":"2022-11-15T12:30:16.5800137-06:00","ExpenseCategoryId":8}
+2022-11-15 12:36:43.595 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":144,"ExpenseName":"Amazon","AmountPaid":7.54,"ExpenseDate":"2022-11-15T12:30:16.7341489-06:00","ExpenseCategoryId":9}
+2022-11-15 12:36:43.603 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":145,"ExpenseName":"FSNB Fee","AmountPaid":2.5,"ExpenseDate":"2022-11-15T12:30:16.8886887-06:00","ExpenseCategoryId":6}
+2022-11-15 12:40:38.748 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":145,"ExpenseName":"FSNB Fee","AmountPaid":2.5,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":6}
+2022-11-15 12:40:44.797 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":144,"ExpenseName":"Amazon","AmountPaid":7.54,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:40:51.444 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":143,"ExpenseName":"Sonic","AmountPaid":10.02,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
+2022-11-15 12:40:56.849 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":142,"ExpenseName":"Adobe","AmountPaid":10.59,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":12}
+2022-11-15 12:41:02.699 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":141,"ExpenseName":"Wal-Mart","AmountPaid":14.04,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":3}
+2022-11-15 12:41:09.099 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":140,"ExpenseName":"Amazon","AmountPaid":17.18,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:41:14.225 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":139,"ExpenseName":"Lasaters","AmountPaid":19.5,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
+2022-11-15 12:41:18.865 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":138,"ExpenseName":"Amazon","AmountPaid":24.08,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:41:23.871 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":137,"ExpenseName":"Shell","AmountPaid":25.01,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":4}
+2022-11-15 12:41:28.894 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":136,"ExpenseName":"Amazon","AmountPaid":28.43,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:41:33.958 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":135,"ExpenseName":"Amazon","AmountPaid":30.48,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:41:38.798 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":134,"ExpenseName":"Store #01","AmountPaid":30.89,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":4}
+2022-11-15 12:41:44.879 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":133,"ExpenseName":"Chipotle","AmountPaid":34.38,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
+2022-11-15 12:41:49.882 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":132,"ExpenseName":"Cafe 931","AmountPaid":36.27,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":8}
+2022-11-15 12:41:55.176 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":131,"ExpenseName":"Amazon","AmountPaid":39.97,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:41:59.522 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":130,"ExpenseName":"Ross","AmountPaid":109.43,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":9}
+2022-11-15 12:42:03.912 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":129,"ExpenseName":"FSNB Withdraw","AmountPaid":143.5,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":13}
+2022-11-15 12:42:09.002 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":128,"ExpenseName":"Wal-Mart","AmountPaid":266.72,"ExpenseDate":"2022-10-03T00:00:00","ExpenseCategoryId":3}
+2022-11-15 17:58:03.621 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":146,"ExpenseName":"Test","AmountPaid":55.67,"ExpenseDate":"2022-11-02T00:00:00","ExpenseCategoryId":4}
+2022-11-15 18:13:44.683 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":146,"ExpenseName":"Test","AmountPaid":55.67,"ExpenseDate":"2022-11-02T00:00:00","ExpenseCategoryId":4}
+2022-11-15 18:21:51.349 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":147,"ExpenseName":"Publix","AmountPaid":15.64,"ExpenseDate":"2022-10-04T00:00:00","ExpenseCategoryId":3}
+2022-11-15 18:21:51.361 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":148,"ExpenseName":"Awaken Church","AmountPaid":300.00,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":2}
+2022-11-15 18:21:51.369 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":149,"ExpenseName":"Cumberland Electric","AmountPaid":167.3,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":1}
+2022-11-15 18:21:51.378 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":150,"ExpenseName":"Clarksville Water","AmountPaid":138.66,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":1}
+2022-11-15 18:21:51.386 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":151,"ExpenseName":"Reflections Ortho","AmountPaid":119,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":5}
+2022-11-15 18:21:51.394 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":152,"ExpenseName":"Heritage Medical","AmountPaid":28.76,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":5}
+2022-11-15 18:21:51.400 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":153,"ExpenseName":"Premier Medical","AmountPaid":20,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":5}
+2022-11-15 18:21:51.408 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":154,"ExpenseName":"Amazon","AmountPaid":5.7,"ExpenseDate":"2022-10-05T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:21:51.415 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":155,"ExpenseName":"Cross World","AmountPaid":53.05,"ExpenseDate":"2022-10-06T00:00:00","ExpenseCategoryId":2}
+2022-11-15 18:21:51.424 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":156,"ExpenseName":"Shipley Donuts","AmountPaid":16.66,"ExpenseDate":"2022-10-06T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:21:51.439 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":157,"ExpenseName":"Hi Road","AmountPaid":5.41,"ExpenseDate":"2022-10-06T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:21:51.447 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":158,"ExpenseName":"Kroger","AmountPaid":128.49,"ExpenseDate":"2022-10-06T00:00:00","ExpenseCategoryId":3}
+2022-11-15 18:21:51.455 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":159,"ExpenseName":"Lowes","AmountPaid":37.54,"ExpenseDate":"2022-10-07T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:21:51.463 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":160,"ExpenseName":"Lowes","AmountPaid":34.67,"ExpenseDate":"2022-10-07T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:21:51.471 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":161,"ExpenseName":"Kroger","AmountPaid":25,"ExpenseDate":"2022-10-07T00:00:00","ExpenseCategoryId":3}
+2022-11-15 18:21:51.478 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":162,"ExpenseName":"School Cafe","AmountPaid":10.5,"ExpenseDate":"2022-10-07T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:21:51.486 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":163,"ExpenseName":"Dollar Tree","AmountPaid":9.58,"ExpenseDate":"2022-10-07T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:28:27.378 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":164,"ExpenseName":"Mission BBQ","AmountPaid":71.09,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:28:27.385 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":165,"ExpenseName":"Publix","AmountPaid":56.32,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":3}
+2022-11-15 18:28:27.392 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":166,"ExpenseName":"Wal-Mart","AmountPaid":37.37,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":3}
+2022-11-15 18:28:27.399 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":167,"ExpenseName":"Hi Road","AmountPaid":30,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":4}
+2022-11-15 18:28:27.410 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":168,"ExpenseName":"Black Rifle Coffee","AmountPaid":21.52,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:28:27.424 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":169,"ExpenseName":"Mapco","AmountPaid":20.01,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":4}
+2022-11-15 18:28:27.435 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":170,"ExpenseName":"Store #15","AmountPaid":20,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":4}
+2022-11-15 18:28:27.444 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":171,"ExpenseName":"Publix","AmountPaid":16.29,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":3}
+2022-11-15 18:28:27.451 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":172,"ExpenseName":"Sonic","AmountPaid":12,"ExpenseDate":"2022-11-11T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:28:27.458 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":173,"ExpenseName":"Amazon","AmountPaid":11.48,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:28:27.465 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":174,"ExpenseName":"Apple Music","AmountPaid":10.94,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:28:27.471 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":175,"ExpenseName":"Spotify","AmountPaid":10.94,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":9}
+2022-11-15 18:28:27.478 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":176,"ExpenseName":"Tropical Smoothie","AmountPaid":9.43,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:29:23.312 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":172,"ExpenseName":"Sonic","AmountPaid":12,"ExpenseDate":"2022-11-11T00:00:00","ExpenseCategoryId":8}
+2022-11-15 18:29:40.521 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":172,"ExpenseName":"Sonic","AmountPaid":12,"ExpenseDate":"2022-10-11T00:00:00","ExpenseCategoryId":8}

@@ -14,7 +14,7 @@
 	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
 </div>
 
-<MudTable Items="@incomeHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+<MudTable Items="@incomeTempHistoryList" Striped="true" Dense="true" class="mud-table-styles">
 	<HeaderContent>
 		<MudTh>Row</MudTh>
 		<MudTh>Income Name</MudTh>
@@ -26,7 +26,7 @@
 		<MudTd DataLabel="Row">@context.IncomeHistoryId</MudTd>
 		<MudTd DataLabel="Income Name"><MudTextField @bind-Value="context.IncomeName" Label="Income Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
 		<MudTd DataLabel="Income Amount"><MudNumericField @bind-Value="context.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/></MudTd>
-		<MudTd DataLabel="Income Date"><MudDatePicker @bind-value="context.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" Date="context.IncomeDate"/></MudTd>
+		<MudTd DataLabel="Income Date"><MudDatePicker @bind-Date="context.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudTd>
 		<MudTd>
 			<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
 			@onclick="(() => RemoveElement(context.IncomeHistoryId))" class="mud-table-button" style="text-align:center;"/>
@@ -43,70 +43,65 @@
 
 @code {
 
-	private List<IncomeHistory> incomeHistoryList = new();
+	private List<TempIncomeHistory> incomeTempHistoryList = new();
 
 	[Inject] ISnackbar Snackbar { get; set; }
 
 	protected override void OnInitialized()
 	{
-		incomeHistoryList.Add(GetInitialIncomeHistory());
+		incomeTempHistoryList.Add(GetInitialIncomeHistory());
 	}
 
 	// Table functionality methods
 
 	void AddRow()
 	{
-		if (incomeHistoryList.Count >= 25)
+		if (incomeTempHistoryList.Count >= 25)
 		{
 			Snackbar.Add("Max of 25 new records", Severity.Info);
 			return;
 		}
 
-		incomeHistoryList.Add(GetNextRow());
+		incomeTempHistoryList.Add(GetNextRow());
 	}
 
 	void DeleteRow()
 	{
-		var lastIndex = incomeHistoryList.LastOrDefault();
-		incomeHistoryList.Remove(lastIndex);
+		var lastIndex = incomeTempHistoryList.LastOrDefault();
+		incomeTempHistoryList.Remove(lastIndex);
 	}
 
 	void RemoveElement(int id)
 	{
-		var element = incomeHistoryList.Where(i => i.IncomeHistoryId == id).First();
-		incomeHistoryList.Remove(element);
+		var element = incomeTempHistoryList.Where(i => i.IncomeHistoryId == id).First();
+		incomeTempHistoryList.Remove(element);
 		ReIndexList();
 	}
 
-	IncomeHistory GetInitialIncomeHistory()
+	TempIncomeHistory GetInitialIncomeHistory()
 	{
 		return new() { IncomeHistoryId = 1, IncomeDate = DateTime.Now };
 	}
 
 	int NextId()
 	{
-		return incomeHistoryList.Count + 1;
+		return incomeTempHistoryList.Count + 1;
 	}
 
-	IncomeHistory GetNextRow()
+	TempIncomeHistory GetNextRow()
 	{
 		return new() { IncomeHistoryId = NextId(), IncomeDate = DateTime.Now };
 	}
 
 	void ReIndexList()
 	{
-		int currendIndex = 1;
+		int currentIndex = 1;
 
-		foreach (var income in incomeHistoryList)
+		foreach (var income in incomeTempHistoryList)
 		{
-			income.IncomeHistoryId = currendIndex;
-			currendIndex++;
+			income.IncomeHistoryId = currentIndex;
+			currentIndex++;
 		}
-	}
-
-	void Test()
-	{
-		Snackbar.Add("Hello", Severity.Info);
 	}
 
 	// Save methods
@@ -120,9 +115,10 @@
 			return;
 		}
 
-		foreach (var income in incomeHistoryList)
+		foreach (var income in incomeTempHistoryList)
 		{
-			await SaveRecord(income);
+			IncomeHistory newIncomeHistory = GetNewModel(income);
+			await SaveRecord(newIncomeHistory);
 		}
 
 		ClearListAndSuccessMessage();
@@ -130,20 +126,22 @@
 
 	void ClearListAndSuccessMessage()
 	{
-		incomeHistoryList.Clear();
-		incomeHistoryList.Add(GetInitialIncomeHistory());
+		incomeTempHistoryList.Clear();
+		incomeTempHistoryList.Add(GetInitialIncomeHistory());
 		Snackbar.Add("New Income Histories Added", Severity.Success);
 	}
 
 	int CheckListForIssues()
 	{
-		foreach (var income in incomeHistoryList)
+		foreach (var income in incomeTempHistoryList)
 		{
 			if (string.IsNullOrWhiteSpace(income.IncomeName))
 			{
 				return income.IncomeHistoryId;
 			}
-			if (income.IncomeDate.Year < 2000)
+
+			DateTime dateTime = (DateTime)income.IncomeDate;
+			if (dateTime.Year < 2000)
 			{
 				return income.IncomeHistoryId;
 			}
@@ -151,11 +149,10 @@
 		return 0;
 	}
 
-	async Task SaveRecord(IncomeHistory income)
+	async Task SaveRecord(IncomeHistory newIncomeHistory)
 	{
 		try
 		{
-			IncomeHistory newIncomeHistory = GetNewModel(income);
 			await incomeHistoryService.CreateRecord(newIncomeHistory);
 		}
 		catch (Exception e)
@@ -164,13 +161,24 @@
 		}
 	}
 
-	IncomeHistory GetNewModel(IncomeHistory income)
+	// Transform TempIncomeHistory to IncomeHistory for saving to db
+	IncomeHistory GetNewModel(TempIncomeHistory income)
 	{
 		return new()
 		{
 			IncomeName = income.IncomeName,
 			IncomeAmount = income.IncomeAmount,
-			IncomeDate = income.IncomeDate
+			IncomeDate = (DateTime)income.IncomeDate
 		};
 	}
+
+	// Added Temp class due to MudBlazor date picker component needing DateTime? rather than DateTime
+	class TempIncomeHistory
+	{
+		public int IncomeHistoryId { get; set; }
+		public string IncomeName { get; set; }
+		public decimal IncomeAmount { get; set; }
+		public DateTime? IncomeDate { get; set; }
+	}
+
 }
