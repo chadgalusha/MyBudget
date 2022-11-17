@@ -738,3 +738,7 @@
 2022-11-16 10:35:25.970 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":11,"IncomeName":"Test","IncomeAmount":0,"IncomeDate":"2022-11-04T10:35:13.1996249"}
 2022-11-16 10:38:05.700 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":12,"IncomeName":"Test","IncomeAmount":0,"IncomeDate":"2022-11-10T10:37:57.9471285-06:00"}
 2022-11-16 10:38:16.402 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":12,"IncomeName":"Test","IncomeAmount":0,"IncomeDate":"2022-11-10T10:37:57.9471285"}
+2022-11-16 10:43:04.632 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":26,"ExpenseName":"Test2","AmountPaid":33.2,"ExpenseDate":"2022-11-08T00:00:00","ExpenseCategoryId":3}
+2022-11-16 10:43:25.529 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":26,"ExpenseName":"Test3","AmountPaid":33.2,"ExpenseDate":"2022-11-08T00:00:00","ExpenseCategoryId":3}
+2022-11-16 19:10:06.736 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":13,"IncomeName":"Test","IncomeAmount":12,"IncomeDate":"2022-11-16T19:09:59.1270205-06:00"}
+2022-11-16 19:10:18.843 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":13,"IncomeName":"Test","IncomeAmount":12,"IncomeDate":"2022-11-16T19:09:59.1270205"}

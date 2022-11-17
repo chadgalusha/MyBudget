@@ -1,0 +1,47 @@
+﻿@inherits ExpenseHistoryAddMultiplePageBase
+@page "/expensehistoryaddmultiple"
+@using MyBudget.Components
+
+<h3 style="text-align:center;">Add Multiple Expense Histories</h3>
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
+
+<MudTable Items="@expenseTempHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+	<HeaderContent>
+		<MudTh>Row</MudTh>
+		<MudTh>Expense Name</MudTh>
+		<MudTh>Amount Paid</MudTh>
+		<MudTh>Expense Date</MudTh>
+		<MudTh>Expense Category</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Row">@context.ExpenseHistoryId</MudTd>
+		<MudTd DataLabel="Expense Name"><MudTextField @bind-Value="context.ExpenseName" Label="Expense Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
+		<MudTd DataLabel="Amount Paid"><MudNumericField @bind-Value="context.AmountPaid" Label="Expense Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999" /></MudTd>
+		<MudTd DataLabel="Expense Date"><MudDatePicker @bind-Date="context.ExpenseDate" Label="Expense Date" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudTd>
+		<MudTd DataLabel="Expense Category">
+			<MudSelect T="int" Variant="Variant.Outlined" AnchorOrigin="Origin.BottomCenter" @bind-Value="context.ExpenseCategoryId">
+				@foreach (var category in expenseCategoryList)
+				{
+					<MudSelectItem Value="category.ExpenseCategoryId">@category.ExpenseCategoryName</MudSelectItem>
+				}
+			</MudSelect>
+		</MudTd>
+		<MudTd>
+			<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
+			@onclick="(() => RemoveElement(context.ExpenseHistoryId))" class="mud-table-button" style="text-align:center;"/>
+		</MudTd>
+	</RowTemplate>
+</MudTable>
+
+<div style="margin-top:5px;margin-bottom:5px;">
+	<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
+	<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
+</div>
