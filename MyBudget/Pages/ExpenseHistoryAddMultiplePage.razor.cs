@@ -5,10 +5,10 @@ using MyBudget.Services;
 
 namespace MyBudget.Pages
 {
-	public class ExpenseHistoryAddMultiplePageBase : ComponentBase
+	public partial class ExpenseHistoryAddMultiplePage
 	{
-		protected List<TempExpenseHistory> expenseTempHistoryList = new();
-		protected List<ExpenseCategories> expenseCategoryList = new();
+		private readonly List<TempExpenseHistory> expenseTempHistoryList = new();
+		private List<ExpenseCategories> expenseCategoryList;
 
 		[Inject] ISnackbar Snackbar { get; set; }
 		[Inject] IHistoryService<ExpenseHistory> ExpenseHistoryService { get; set; }
@@ -22,7 +22,7 @@ namespace MyBudget.Pages
 
 		// Table functionality methods
 
-		protected void AddRow()
+		private void AddRow()
 		{
 			if (expenseTempHistoryList.Count >= 25)
 			{
@@ -33,35 +33,35 @@ namespace MyBudget.Pages
 			expenseTempHistoryList.Add(GetNextRow());
 		}
 
-		protected void DeleteRow()
+		private void DeleteRow()
 		{
 			var lastIndex = expenseTempHistoryList.LastOrDefault();
 			expenseTempHistoryList.Remove(lastIndex);
 		}
 
-		protected void RemoveElement(int id)
+		private void RemoveElement(int id)
 		{
 			var element = expenseTempHistoryList.Where(e => e.ExpenseHistoryId == id).First();
 			expenseTempHistoryList.Remove(element);
 			ReIndexList();
 		}
 
-		protected TempExpenseHistory GetInitialTempExpenseHistory()
+		private TempExpenseHistory GetInitialTempExpenseHistory()
 		{
 			return new() { ExpenseHistoryId = 1, ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
 		}
 
-		protected TempExpenseHistory GetNextRow()
+		private TempExpenseHistory GetNextRow()
 		{
 			return new() { ExpenseHistoryId = NextId(), ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
 		}
 
-		protected int NextId()
+		private int NextId()
 		{
 			return expenseTempHistoryList.Count + 1;
 		}
 
-		protected void ReIndexList()
+		private void ReIndexList()
 		{
 			int currentIndex = 1;
 
@@ -74,7 +74,7 @@ namespace MyBudget.Pages
 
 		// Save methods
 
-		protected async Task ProcessList()
+		private async Task ProcessList()
 		{
 			int result = CheckListForIssues();
 			if (result != 0)
@@ -92,14 +92,14 @@ namespace MyBudget.Pages
 			ClearListAndSuccessMessage();
 		}
 
-		protected void ClearListAndSuccessMessage()
+		private void ClearListAndSuccessMessage()
 		{
 			expenseTempHistoryList.Clear();
 			expenseTempHistoryList.Add(GetInitialTempExpenseHistory());
 			Snackbar.Add("New Expense Histories Added", Severity.Success);
 		}
 
-		protected int CheckListForIssues()
+		private int CheckListForIssues()
 		{
 			foreach (var expense in expenseTempHistoryList)
 			{
@@ -117,7 +117,7 @@ namespace MyBudget.Pages
 			return 0;
 		}
 
-		protected async Task SaveRecord(ExpenseHistory newExpenseHistory)
+		private async Task SaveRecord(ExpenseHistory newExpenseHistory)
 		{
 			try
 			{
@@ -130,7 +130,7 @@ namespace MyBudget.Pages
 		}
 
 		// Convert TempExpenseHistory to ExpenseHistory to save to db
-		protected ExpenseHistory GetNewModel(TempExpenseHistory expense)
+		private static ExpenseHistory GetNewModel(TempExpenseHistory expense)
 		{
 			return new()
 			{
@@ -142,7 +142,7 @@ namespace MyBudget.Pages
 		}
 
 		// Temp class added due to MudBlazor DateTimePicker needing DateTime? instead of DateTime to bind Date
-		protected class TempExpenseHistory
+		private class TempExpenseHistory
 		{
 			public int ExpenseHistoryId { get; set; }
 			public string ExpenseName { get; set; }

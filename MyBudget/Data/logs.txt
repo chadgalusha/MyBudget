@@ -742,3 +742,11 @@
 2022-11-16 10:43:25.529 -06:00 [INF] ExpenseHistory updated: {"ExpenseHistoryId":26,"ExpenseName":"Test3","AmountPaid":33.2,"ExpenseDate":"2022-11-08T00:00:00","ExpenseCategoryId":3}
 2022-11-16 19:10:06.736 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":13,"IncomeName":"Test","IncomeAmount":12,"IncomeDate":"2022-11-16T19:09:59.1270205-06:00"}
 2022-11-16 19:10:18.843 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":13,"IncomeName":"Test","IncomeAmount":12,"IncomeDate":"2022-11-16T19:09:59.1270205"}
+2022-11-17 08:30:16.787 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":14,"IncomeName":"Test","IncomeAmount":33,"IncomeDate":"2022-11-17T08:30:10.9051537-06:00"}
+2022-11-17 08:30:31.280 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":47,"ExpenseName":"Test","AmountPaid":44,"ExpenseDate":"2022-11-17T08:30:23.5190538-06:00","ExpenseCategoryId":6}
+2022-11-17 08:30:53.628 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":47,"ExpenseName":"Test","AmountPaid":44,"ExpenseDate":"2022-11-17T08:30:23.5190538","ExpenseCategoryId":6}
+2022-11-17 08:30:59.749 -06:00 [INF] IncomeHistory updated: {"IncomeHistoryId":14,"IncomeName":"Test","IncomeAmount":44,"IncomeDate":"2022-11-17T08:30:10.9051537"}
+2022-11-17 08:31:10.290 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":14,"IncomeName":"Test","IncomeAmount":44,"IncomeDate":"2022-11-17T08:30:10.9051537"}
+2022-11-21 13:54:53.742 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":15,"IncomeName":"Test","IncomeAmount":43.1,"IncomeDate":"2022-11-17T00:00:00"}
+2022-11-21 13:55:06.509 -06:00 [INF] IncomeHistory updated: {"IncomeHistoryId":15,"IncomeName":"Test","IncomeAmount":43.12,"IncomeDate":"2022-11-17T00:00:00"}
+2022-11-21 13:55:45.378 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":48,"ExpenseName":"Test","AmountPaid":63.3,"ExpenseDate":"2022-10-17T13:54:57.6778171-05:00","ExpenseCategoryId":5}

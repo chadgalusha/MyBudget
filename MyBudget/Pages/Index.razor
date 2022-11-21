@@ -1,8 +1,5 @@
 ﻿@page "/"
-@using MyBudget.ViewModels
-@using MyBudget.Services
 @using MyBudget.Components
-@inject IIncomeAndExpensesViewModelService service
 
 @if (_lastMonthConfig == null || _thisMonthConfig == null || _lastYearConfig == null || _thisYearConfig == null)
 {
@@ -16,180 +13,27 @@ else
 	<div class="graph-flex-container">
 		<div>
 			<h6 style="text-align:center;">Last Month Income/Expenses</h6>
-			<Chart Config="_lastMonthConfig" @ref="_chart"></Chart>
+			<Chart Config="_lastMonthConfig" ></Chart>
 		</div>
 		<div>
 			<h6 style="text-align:center;">This Month Income/Expenses</h6>
-			<Chart Config="_thisMonthConfig" @ref="_chart"></Chart>
+			<Chart Config="_thisMonthConfig" ></Chart>
 		</div>
 		<div>
 			<h6 style="text-align:center;">Last Year Income/Expenses</h6>
-			<Chart Config="_lastYearConfig" @ref="_chart"></Chart>
+			<Chart Config="_lastYearConfig" ></Chart>
 		</div>
 		<div>
 			<h6 style="text-align:center;">This Year Income/Expenses</h6>
-			<Chart Config="_thisYearConfig" @ref="_chart"></Chart>
+			<Chart Config="_thisYearConfig" ></Chart>
 		</div>
 	</div>
 
 	<div class="donut-chart-flex-container">
-		<MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="donutIndex"
-			  InputData="donutChartData" InputLabels="donutChartLabels" id="donut-chart"></MudChart>
+		<div id="donut-chart">
+			<h6>Last Month Expenses Break Down</h6>
+			<MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" @bind-SelectedIndex="donutIndex"
+				  InputData="donutChartData" InputLabels="donutChartLabels" ></MudChart>
+		</div>
 	</div>
-}
-
-@code {
-
-	private BarChartConfig _lastMonthConfig;
-	private BarChartConfig _thisMonthConfig;
-	private BarChartConfig _lastYearConfig;
-	private BarChartConfig _thisYearConfig;
-	private Chart _chart;
-
-	private int donutIndex = -1;
-	public double[] donutChartData = { 50, 234, 94, 12};
-	public string[] donutChartLabels = { "test1", "test2", "test3", "test4" };
-
-	protected override void OnInitialized()
-	{
-		_lastMonthConfig = GetBarCharConfiguration(_lastMonthConfig);
-		var lastMonthIncomeExpensesVM = LastMonthIncomeExpenseVM();
-		SetBarChartLabelsAndData(_lastMonthConfig, lastMonthIncomeExpensesVM);
-
-		_thisMonthConfig = GetBarCharConfiguration(_thisMonthConfig);
-		var thisMonthIncomeExpenseVM = ThisMonthIncomeExpenseVM();
-		SetBarChartLabelsAndData(_thisMonthConfig, thisMonthIncomeExpenseVM);
-
-		_lastYearConfig = GetBarCharConfiguration(_lastYearConfig);
-		var lastYearIncomeExpenseVM = LastYearIncomeExpenseVM();
-		SetBarChartLabelsAndData(_lastYearConfig, lastYearIncomeExpenseVM);
-
-		_thisYearConfig = GetBarCharConfiguration(_thisYearConfig);
-		var thisYearIncomeExpenseVM = ThisYearIncomeExpenseVM();
-		SetBarChartLabelsAndData(_thisYearConfig, thisYearIncomeExpenseVM);
-		var newlastMonthIncomeExpense = LastMonthIncomeExpenseVM();
-		var newthisMonthIncomeExpense = ThisMonthIncomeExpenseVM();
-	}
-
-	IncomeAndExpensesViewModel LastMonthIncomeExpenseVM()
-	{
-		IncomeAndExpensesViewModel lastMonthViewModel = new()
-		{
-			Income = "Last Month Income",
-			IncomeAmount = service.LastMonthIncome(),
-			Expenses = "Last Month Expenses",
-			ExpensesAmount = service.LastMonthExpenses()
-		};
-
-		return lastMonthViewModel;
-	}
-
-	IncomeAndExpensesViewModel ThisMonthIncomeExpenseVM()
-	{
-		IncomeAndExpensesViewModel thisMonthViewModel = new()
-		{
-			Income = "This Month Income",
-			IncomeAmount = service.ThisMonthIncome(),
-			Expenses = "This Month Expenses",
-			ExpensesAmount = service.ThisMonthExpenses()
-		};
-
-		return thisMonthViewModel;
-	}
-
-	IncomeAndExpensesViewModel LastYearIncomeExpenseVM()
-	{
-		IncomeAndExpensesViewModel lastYearViewModel = new()
-		{
-			Income = "Last Year Income",
-			IncomeAmount = service.LastYearIncome(),
-			Expenses = "Last Year Expenses",
-			ExpensesAmount = service.LastYearExpenses()
-		};
-
-		return lastYearViewModel;
-	}
-
-	IncomeAndExpensesViewModel ThisYearIncomeExpenseVM()
-	{
-		IncomeAndExpensesViewModel thisYearViewModel = new()
-		{
-			Income = "This Year Income",
-			IncomeAmount = service.ThisYearIncome(),
-			Expenses = "This Year Expenses",
-			ExpensesAmount = service.ThisYearExpenses()
-		};
-
-		return thisYearViewModel;
-	}
-
-	List<string> ViewModelDataLabels(IncomeAndExpensesViewModel viewModel)
-	{
-		return new List<string>() { viewModel.Income, viewModel.Expenses };
-	}
-
-	List<decimal> ViewModelData(IncomeAndExpensesViewModel viewModel)
-	{
-		return new List<decimal>() { viewModel.IncomeAmount, viewModel.ExpensesAmount };
-	}
-
-	BarChartConfig GetBarCharConfiguration(BarChartConfig newBarChart)
-	{
-		newBarChart = new BarChartConfig()
-		{
-			Options = new Options()
-			{
-				Plugins = new Plugins()
-				{
-					Legend = new Legend()
-					{
-						Align = LegendAlign.Center,
-						Display = false,
-						Position = LegendPosition.Top
-					}
-				},
-				Scales = new Dictionary<string, Axis>()
-				{
-					{
-						Scales.XAxisId, new Axis()
-						{
-							Stacked = true,
-							Ticks = new Ticks()
-							{
-								MaxRotation = 0,
-								MinRotation = 0
-							}
-						}
-					},
-					{
-						Scales.YAxisId, new Axis()
-						{
-							Stacked = true	
-						}
-					}
-				}
-			}	
-		};
-
-		return newBarChart;
-	}
-
-	void SetBarChartLabelsAndData(BarChartConfig barChartConfig, IncomeAndExpensesViewModel viewModel)
-	{
-		barChartConfig.Data.Labels = ViewModelDataLabels(viewModel);
-		SetBarChartDatasets(barChartConfig, viewModel);
-	}
-
-	void SetBarChartDatasets(BarChartConfig barChartConfig, IncomeAndExpensesViewModel viewModel)
-	{
-		barChartConfig.Data.Datasets.Add(new BarDataset()
-			{
-				Label = "Value",
-				Data = ViewModelData(viewModel),
-				BackgroundColor = new List<string>() { "#7aed6d", "#f06772" },
-				BorderColor = new List<string>() { "green", "red" },
-				BorderWidth = 1, 
-				HoverBackgroundColor = new List<string>() { "#15a805", "#b80412" }
-			});
-	}
 }

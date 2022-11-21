@@ -85,7 +85,7 @@ namespace MyBudget.DataAccess
 			}
 		}
 
-        // Due to issue with SQLite interface, result must go to array before where clauses.
+        // Due to issue with SQLite API, result must go to array before where clauses.
         public decimal[] GetHistoryArrayForMonth(int year, int month)
 		{
 			using (_connection = new SQLiteConnection(_dbPath))

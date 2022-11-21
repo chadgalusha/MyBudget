@@ -5,9 +5,9 @@ using MyBudget.Services;
 
 namespace MyBudget.Pages
 {
-	public class IncomeHistoryAddMultiplePageBase : ComponentBase
+	public partial class IncomeHistoryAddMultiplePage
 	{
-		protected List<TempIncomeHistory> incomeTempHistoryList = new();
+		private readonly List<TempIncomeHistory> incomeTempHistoryList = new();
 
 		[Inject] ISnackbar Snackbar { get; set; }
 		[Inject] IHistoryService<IncomeHistory> IncomeHistoryService{ get; set; }
@@ -19,7 +19,7 @@ namespace MyBudget.Pages
 
 		// Table functionality methods
 
-		protected void AddRow()
+		private void AddRow()
 		{
 			if (incomeTempHistoryList.Count >= 25)
 			{
@@ -30,35 +30,35 @@ namespace MyBudget.Pages
 			incomeTempHistoryList.Add(GetNextRow());
 		}
 
-		protected void DeleteRow()
+		private void DeleteRow()
 		{
 			var lastIndex = incomeTempHistoryList.LastOrDefault();
 			incomeTempHistoryList.Remove(lastIndex);
 		}
 
-		protected void RemoveElement(int id)
+		private void RemoveElement(int id)
 		{
 			var element = incomeTempHistoryList.Where(i => i.IncomeHistoryId == id).First();
 			incomeTempHistoryList.Remove(element);
 			ReIndexList();
 		}
 
-		protected TempIncomeHistory GetInitialIncomeHistory()
+		private TempIncomeHistory GetInitialIncomeHistory()
 		{
 			return new() { IncomeHistoryId = 1, IncomeDate = DateTime.Now };
 		}
 
-		protected int NextId()
+		private int NextId()
 		{
 			return incomeTempHistoryList.Count + 1;
 		}
 
-		TempIncomeHistory GetNextRow()
+		private TempIncomeHistory GetNextRow()
 		{
 			return new() { IncomeHistoryId = NextId(), IncomeDate = DateTime.Now };
 		}
 
-		protected void ReIndexList()
+		private void ReIndexList()
 		{
 			int currentIndex = 1;
 
@@ -71,7 +71,7 @@ namespace MyBudget.Pages
 
 		// Save methods
 
-		protected async Task ProcessList()
+		private async Task ProcessList()
 		{
 			int result = CheckListForIssues();
 			if (result != 0)
@@ -89,14 +89,14 @@ namespace MyBudget.Pages
 			ClearListAndSuccessMessage();
 		}
 
-		protected void ClearListAndSuccessMessage()
+		private void ClearListAndSuccessMessage()
 		{
 			incomeTempHistoryList.Clear();
 			incomeTempHistoryList.Add(GetInitialIncomeHistory());
 			Snackbar.Add("New Income Histories Added", Severity.Success);
 		}
 
-		protected int CheckListForIssues()
+		private int CheckListForIssues()
 		{
 			foreach (var income in incomeTempHistoryList)
 			{
@@ -114,7 +114,7 @@ namespace MyBudget.Pages
 			return 0;
 		}
 
-		protected async Task SaveRecord(IncomeHistory newIncomeHistory)
+		private async Task SaveRecord(IncomeHistory newIncomeHistory)
 		{
 			try
 			{
@@ -127,7 +127,7 @@ namespace MyBudget.Pages
 		}
 
 		// Transform TempIncomeHistory to IncomeHistory for saving to db
-		protected IncomeHistory GetNewModel(TempIncomeHistory income)
+		private IncomeHistory GetNewModel(TempIncomeHistory income)
 		{
 			return new()
 			{
@@ -138,7 +138,7 @@ namespace MyBudget.Pages
 		}
 
 		// Added Temp class due to MudBlazor date picker component needing DateTime? rather than DateTime
-		protected class TempIncomeHistory
+		private class TempIncomeHistory
 		{
 			public int IncomeHistoryId { get; set; }
 			public string IncomeName { get; set; }

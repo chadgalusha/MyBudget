@@ -164,6 +164,12 @@ a, .btn-link {
         margin: 20px 20px 20px 20px;
     }
 
+#donut-chart > h6 {
+    text-align: center;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
 .history-inline-form {
     display: flex;
     flex-flow: row wrap;
