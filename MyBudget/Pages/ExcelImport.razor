@@ -1,0 +1,30 @@
+﻿@page "/excelimport"
+@using MyBudget.Components
+
+@if (expenseCategoryList == null)
+{
+	<MyBudgetLoadingIndicator />
+}
+else
+{
+	<MudFileUpload T="IBrowserFile">
+		<ButtonTemplate>
+			<MudButton HtmlTag="label"
+					   Variant="Variant.Filled"
+					   Color="Color.Primary"
+					   for="@context">
+				Select a file (.xlsx or .csv)
+			</MudButton>
+		</ButtonTemplate>
+		<SelectedTemplate>
+			@if (context != null)
+			{
+				<MudText>@context.Name</MudText>
+			}
+			else
+			{
+				<MudText>No File</MudText>
+			}
+		</SelectedTemplate>
+	</MudFileUpload>
+}

@@ -96,9 +96,14 @@ namespace MyBudget.Services
 			return AddUpTotal(expenseArray);
 		}
 
-		// PRIVATE METHODS
+        public List<ExpenseHistory> GetListByYearMonth(int year, int month)
+        {
+            return _expenseHistoryDataAccess.GetListByYearMonth(year, month);
+        }
 
-		private static decimal AddUpTotal(decimal[] amountArray)
+        // PRIVATE METHODS
+
+        private static decimal AddUpTotal(decimal[] amountArray)
 		{
 			decimal total = 0;
 

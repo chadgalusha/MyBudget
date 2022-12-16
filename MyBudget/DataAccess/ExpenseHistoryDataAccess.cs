@@ -17,7 +17,7 @@ namespace MyBudget.DataAccess
 
 		public Task<ExpenseHistory> GetRecordByIdAsync(int id)
 		{
-			Initialize();
+			AsyncInitialize();
 			return _asyncConnection.Table<ExpenseHistory>()
 				.Where(e => e.ExpenseHistoryId == id)
 				.FirstAsync();
@@ -25,13 +25,13 @@ namespace MyBudget.DataAccess
 
 		public Task<List<ExpenseHistory>> GetListAsync()
 		{
-			Initialize();
+			AsyncInitialize();
 			return _asyncConnection.Table<ExpenseHistory>().ToListAsync();
 		}
 
 		public async Task<ExpenseHistory> CreateRecordAsync(ExpenseHistory newExpenseHistory)
 		{
-			Initialize();
+			AsyncInitialize();
 
 			try
 			{
@@ -85,7 +85,8 @@ namespace MyBudget.DataAccess
 			}
 		}
 
-		public decimal[] GetHistoryArrayForMonth(int year, int month)
+        // Due to issue with SQLite API, result must go to array before where clauses.
+        public decimal[] GetHistoryArrayForMonth(int year, int month)
 		{
 			using (_connection = new SQLiteConnection(_dbPath))
 			{
@@ -112,9 +113,22 @@ namespace MyBudget.DataAccess
 			}
 		}
 
+		public List<ExpenseHistory> GetListByYearMonth(int year, int month)
+		{
+			using (_connection = new SQLiteConnection(_dbPath))
+			{
+                var result = _connection.Table<ExpenseHistory>()
+                    .ToArray()
+                    .Where(i => i.ExpenseDate.Year == year)
+                    .Where(i => i.ExpenseDate.Month == month);
+
+                return result.ToList();
+            }
+		}
+
 		// PRIVATE METHODS
 
-		private void Initialize()
+		private void AsyncInitialize()
 		{
 			if (_asyncConnection != null) { return; }
 

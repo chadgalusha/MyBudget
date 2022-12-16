@@ -9,7 +9,7 @@
 
 @if (incomeHistoryList == null)
 {
-	<p><em>Loading...</em></p>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -109,7 +109,7 @@ else
 @code {
 
 	bool ShowPopup = false;
-	List<IncomeHistory> incomeHistoryList = new();
+	List<IncomeHistory> incomeHistoryList;
 	IncomeHistory incomeHistory = new();
 
 	private string searchString1 = "";

@@ -1,108 +1,50 @@
 ﻿@page "/calendarpage"
-@using MyBudget.Helpers
-@inject ICalendarProcessor calendarProcessor
+@using MyBudget.Components
 
-<div>
-	<div class="budget-calendar">
-		<MudToolBar class="calendar-date-bar">
-			<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft"></MudIconButton>
-			<h3 style="text-align:center;">@GetMonthString(month) @year</h3>
-			<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight"></MudIconButton>
-		</MudToolBar>
+@if (thisMonthIncomeHistoryList == null || thisMonthExpenseHistoryList == null)
+{
+	<MyBudgetLoadingIndicator />
+}
+else
+{
+	<div>
+		<div class="budget-calendar">
+			<MudToolBar class="calendar-date-bar">
+				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleLeft" OnClick="BackOneMonth"></MudIconButton>
+				<h3 style="text-align:center;margin-top:6px;">@GetMonthString(month) @year</h3>
+				<MudIconButton Color="Color.Info" Icon="@Icons.Filled.ArrowCircleRight" OnClick="ForwardOneMonth"></MudIconButton>
+			</MudToolBar>
 
-		<div class="calendar-container">
-			<div class="calendar-header">
-				<div>Sunday</div>
-				<div>Monday</div>
-				<div>Tuesday</div>
-				<div>Wednesday</div>
-				<div>Thursday</div>
-				<div>Friday</div>
-				<div>Saturday</div>
-			</div>
+			<div class="calendar-container">
+				<div class="calendar-header">
+					<div>Sunday</div>
+					<div>Monday</div>
+					<div>Tuesday</div>
+					<div>Wednesday</div>
+					<div>Thursday</div>
+					<div>Friday</div>
+					<div>Saturday</div>
+				</div>
 
-			<div class="calendar-grid">
-				@for (int i = 0; i <= total; i++)
-				{
-					if (i < startingIndex)
-					{
-						<div id="notMonthDay"></div>
-					}
-					else if (i > endingIndex)
-					{
-						<div id="notMonthDay"></div>
-					}
-					else
-					{
-						if (count == today)
-						{
-							<div id="currentDay">@count</div>
-							count++;
-						}
-						else
-						{
-							<div id="monthDay">@count</div>
-							count++;
-						}
-						
-					}
-				}
+				<CalendarGrid startingIndex="@startingIndex" endingIndex="@endingIndex" today="@today"
+					thisMonthIncomeHistoryList="@thisMonthIncomeHistoryList" thisMonthExpenseHistoryList="@thisMonthExpenseHistoryList"
+					UpdateCurrentDay="@UpdateCurrentDay" EditIncomeHistory="@EditIncomeHistory" EditExpenseHistory="@EditExpenseHistory"/>
 			</div>
 		</div>
+		<div class="budget-calendar-menu">
+			<h4>@GetMonthString(selectedDateTime.Month) @selectedDateTime.Day, @selectedDateTime.Year</h4>
+			<MudButtonGroup Color="Color.Info" Variant="Variant.Outlined" VerticalAlign="true" style="margin: 5px 10px 5px;display:flex;justify-content:center;">
+				<MudButton OnClick="TurnOnExpenseHistory">New Expense History</MudButton>
+				<MudButton OnClick="TurnOnIncomeHistory">New Income History</MudButton>
+			</MudButtonGroup>
+
+			<ExpenseHistoryForm selectedDate="selectedDateTime" expenseHistory="expenseHistory" expenseCategoryList="expenseCategoryList"
+			SaveExpenseHistory="() => SaveExpenseHistoryAsync(expenseHistory)" CancelExpenseHistory="CancelExpenseHistory" @ref="expenseHistoryForm"
+			UpdateExpenseHistory="() => UpdateExpenseHistoryAsync(expenseHistory)" DeleteExpenseHistory="() => DeleteConfirmExpenseHistory(expenseHistory)" />
+
+			<IncomeHistoryForm @ref="incomeHistoryForm" selectedDate="selectedDateTime" incomeHistory="incomeHistory"
+			SaveIncomeHistory="() => SaveIncomeHistoryAsync(incomeHistory)" CancelIncomeHistory="CancelIncomeHistory"
+			UpdateIncomeHistory="() => UpdateIncomeHistoryAsync(incomeHistory)" DeleteIncomeHistory="() => DeleteConfirmIncomeHistory(incomeHistory)"/>
+		</div>
 	</div>
-	<div class="budget-calendar-menu">
-		<h4>@GetMonthString(selectedDateTime.Month) @selectedDateTime.Day, @selectedDateTime.Year</h4>
-		<MudTextField T="string" Label="Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20"/>
-		<MudNumericField T="int" Label="Number" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999"/>
-		<MudDatePicker Variant="Variant.Outlined" Margin="Margin.Dense" />
-	</div>
-</div>
-
-@code {
-
-	int total = 41; // inclues 0 for total of 42
-
-	[Inject] ISnackbar Snackbar { get; set; }
-
-	// figure out how to get 1st day of month to match grid
-	DateTime currentDateTime;
-	int year;
-	int month;
-	int today;
-	int startingIndex;
-	int endingIndex;
-	int count = 1;
-	// selectedDateTime for calendar menu
-	DateTime selectedDateTime;
-
-	protected override void OnInitialized()
-	{
-		currentDateTime = DateTime.Now;
-		year = currentDateTime.Year;
-		month = currentDateTime.Month;
-		today = currentDateTime.Day;
-		startingIndex = GetFirstOfMonthStartingIndex();
-		endingIndex = startingIndex + GetNumberOfDaysInMonth() - 1;
-		selectedDateTime = currentDateTime;
-	}
-
-	int GetFirstOfMonthStartingIndex()
-	{
-		return calendarProcessor.IntForFirstDayOfMonth(year, month);
-	}
-
-	int GetNumberOfDaysInMonth()
-	{
-		return calendarProcessor.NumberDaysInMonth(year, month);
-	}
-
-	string GetMonthString(int month)
-	{
-		return calendarProcessor.GetMonthString(month);
-	}
-
-	void Test()
-	{
-		
-	}
 }

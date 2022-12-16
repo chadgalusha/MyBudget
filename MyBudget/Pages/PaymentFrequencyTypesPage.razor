@@ -1,13 +1,14 @@
 ﻿@page "/paymentfrequencytypespage"
 @using MyBudget.Services
 @using MyBudget.Models
+@using MyBudget.Components
 @inject ITypeService<PaymentFrequencyTypes> paymentFrequencyTypeService
 
 <h3 style="text-align:center">Payment Frequency Types</h3>
 
 @if (paymentFrequencyTypesList == null)
 {
-	<p><em>Loading...</em></p>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -85,7 +86,7 @@ else
 
 @code 
 {
-	List<PaymentFrequencyTypes> paymentFrequencyTypesList = new();
+	List<PaymentFrequencyTypes> paymentFrequencyTypesList;
 	PaymentFrequencyTypes paymentFrequencyType = new PaymentFrequencyTypes();
 	bool ShowPopup = false;
 
