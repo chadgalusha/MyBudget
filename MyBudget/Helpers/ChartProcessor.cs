@@ -38,7 +38,10 @@ namespace MyBudget.Helpers
 				expenseName = GetExpenseCategoryName(expenseCategoryList, id);
 				total = GetTotalForExpenseCategory(expenseHistoryList, id);
 
-				donutChartData.Add(expenseName, total);
+				if (total > 0.00M)
+				{
+					donutChartData.Add(expenseName, total);
+				}
 			}
 
 			return donutChartData;

@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using MyBudget.Components
 
-@if (_lastMonthConfig == null || _thisMonthConfig == null || _lastYearConfig == null || _thisYearConfig == null)
+@if (_lastMonthConfig == null || _thisMonthConfig == null || _lastYearConfig == null || _thisYearConfig == null || donutChartDictionary == null)
 {
 	<MyBudgetLoadingIndicator />
 }
