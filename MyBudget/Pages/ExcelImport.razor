@@ -1,5 +1,6 @@
 ﻿@page "/excelimport"
 @using MyBudget.Components
+@using System.Text;
 
 @if (expenseCategoryList == null)
 {
@@ -7,11 +8,11 @@
 }
 else
 {
-	<MudFileUpload T="IBrowserFile">
+@*	<MudFileUpload T="IBrowserFile">
 		<ButtonTemplate>
 			<MudButton HtmlTag="label"
 					   Variant="Variant.Filled"
-					   Color="Color.Primary"
+					   Color="Color.Info"
 					   for="@context">
 				Select a file (.xlsx or .csv)
 			</MudButton>
@@ -26,5 +27,52 @@ else
 				<MudText>No File</MudText>
 			}
 		</SelectedTemplate>
-	</MudFileUpload>
+	</MudFileUpload>*@
+	<MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => TestExcel())">Select File</MudButton>
+	<MudText>@testMessage</MudText>
+}
+@code{
+	string testMessage = "hello";
+
+	async void TestExcel()
+	{
+		try
+		{
+			var test = await SelectFile();
+			Snackbar.Add($"{test.FullPath}", Severity.Success);
+
+			using (var stream = File.Open(test.FullPath, FileMode.Open, FileAccess.Read))
+			{
+			//using (var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+			//{
+				//	do
+				//	{
+				//		while (reader.Read())
+				//		{
+				//			Snackbar.Add(reader.GetString(1)[..30] + " ");
+				//		}
+				//	} while (reader.NextResult());
+				//}
+
+				using var reader = ExcelDataReader.ExcelReaderFactory.CreateCsvReader(stream, new ExcelDataReader.ExcelReaderConfiguration()
+				{ FallbackEncoding = Encoding.GetEncoding(1252),
+				  AutodetectSeparators = new char[] { ',', ';', '\t', '|', '#' },
+				  LeaveOpen = false,
+				  AnalyzeInitialCsvRows = 0
+				});
+
+				do
+				{
+					while (reader.Read())
+					{
+						Snackbar.Add(reader.GetString(1)[..30] + " ");
+					}
+				} while (reader.NextResult());
+			}
+        }
+        catch (Exception e)
+        {
+            Snackbar.Add($"{e.Message}", Severity.Error);
+        }
+	}
 }
