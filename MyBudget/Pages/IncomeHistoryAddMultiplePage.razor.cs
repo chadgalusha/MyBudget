@@ -2,11 +2,13 @@
 using MudBlazor;
 using MyBudget.Models;
 using MyBudget.Services;
+using MyBudget.TempModels;
 
 namespace MyBudget.Pages
 {
 	public partial class IncomeHistoryAddMultiplePage
 	{
+		// Added Temp class due to MudBlazor date picker component needing DateTime? rather than DateTime
 		private readonly List<TempIncomeHistory> incomeTempHistoryList = new();
 
 		[Inject] ISnackbar Snackbar { get; set; }
@@ -36,13 +38,6 @@ namespace MyBudget.Pages
 			incomeTempHistoryList.Remove(lastIndex);
 		}
 
-		private void RemoveElement(int id)
-		{
-			var element = incomeTempHistoryList.Where(i => i.IncomeHistoryId == id).First();
-			incomeTempHistoryList.Remove(element);
-			ReIndexList();
-		}
-
 		private TempIncomeHistory GetInitialIncomeHistory()
 		{
 			return new() { IncomeHistoryId = 1, IncomeDate = DateTime.Now };
@@ -56,17 +51,6 @@ namespace MyBudget.Pages
 		private TempIncomeHistory GetNextRow()
 		{
 			return new() { IncomeHistoryId = NextId(), IncomeDate = DateTime.Now };
-		}
-
-		private void ReIndexList()
-		{
-			int currentIndex = 1;
-
-			foreach (var income in incomeTempHistoryList)
-			{
-				income.IncomeHistoryId = currentIndex;
-				currentIndex++;
-			}
 		}
 
 		// Save methods
@@ -135,15 +119,6 @@ namespace MyBudget.Pages
 				IncomeAmount = income.IncomeAmount,
 				IncomeDate = (DateTime)income.IncomeDate
 			};
-		}
-
-		// Added Temp class due to MudBlazor date picker component needing DateTime? rather than DateTime
-		private class TempIncomeHistory
-		{
-			public int IncomeHistoryId { get; set; }
-			public string IncomeName { get; set; }
-			public decimal IncomeAmount { get; set; }
-			public DateTime? IncomeDate { get; set; }
 		}
 	}
 }
