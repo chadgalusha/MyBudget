@@ -49,8 +49,9 @@ else
 	{
 		try
 		{
-			var test = await SelectFile();
-			Snackbar.Add($"{test.FullPath}", Severity.Success);
+			var test =  await SelectFile();
+			
+			//Snackbar.Add($"{test.FullPath}", Severity.Success);
 
 			using (var stream = File.Open(test.FullPath, FileMode.Open, FileAccess.Read))
 			{

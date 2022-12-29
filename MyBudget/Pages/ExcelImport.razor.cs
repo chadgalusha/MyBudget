@@ -29,7 +29,7 @@ namespace MyBudget.Pages
 		protected override async Task OnInitializedAsync()
 		{
 			expenseCategoryList = await ExpenseCategoryService.GetList();
-			ShowSelectedFile(file);
+			DisplayFile(file);
 		}
 
 		private async Task<FileResult> SelectFile()
@@ -37,15 +37,15 @@ namespace MyBudget.Pages
 			try
 			{
 				//var result = await FilePicker.Default.PickAsync();
-				CsvExcelProcessor c = new();
-				var result = await c.Csv_Xslx_Selector();
+				CsvExcelProcessor csvexcelProcessor = new();
+				var result = await csvexcelProcessor.Csv_Xslx_Selector();
 
 				if (!(result.FileName.EndsWith("xlsx", StringComparison.OrdinalIgnoreCase) ||
 					result.FileName.EndsWith("csv", StringComparison.OrdinalIgnoreCase)))
 				{
 					result = new FileResult(badFile);
 				}
-
+				
 				return result;
 			}
 			catch (Exception e)
@@ -58,7 +58,7 @@ namespace MyBudget.Pages
 		private void ClearFile()
 		{
 			file = null;
-			ShowSelectedFile(file);
+			DisplayFile(file);
 			ClearList(tempIncomeHistoryList);
 			ClearList(tempExpenseHistoryList);
 		}
@@ -71,11 +71,11 @@ namespace MyBudget.Pages
 			}
 		}
 
-		private void ShowSelectedFile(FileResult file)
+		private void DisplayFile(FileResult file)
 		{
 			if (file != null)
 			{
-				selectedFileString = file.FullPath;
+				selectedFileString = file.FileName;
 			}
 			else
 			{
