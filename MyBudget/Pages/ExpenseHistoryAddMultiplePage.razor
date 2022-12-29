@@ -15,7 +15,9 @@ else
 		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
 	</div>
 
-	<ExpenseHistoryAddTable expenseCategoryList="expenseCategoryList" expenseTempHistoryList="expenseTempHistoryList" />
+	<div>
+		<ExpenseHistoryAddTable expenseCategoryList="expenseCategoryList" expenseTempHistoryList="expenseTempHistoryList" />
+	</div>
 
 	<div style="margin-top:5px;margin-bottom:5px;">
 		<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
