@@ -115,9 +115,9 @@ namespace MyBudget.Pages
 		{
 			return new()
 			{
-				IncomeName = income.IncomeName,
+				IncomeName   = income.IncomeName,
 				IncomeAmount = income.IncomeAmount,
-				IncomeDate = (DateTime)income.IncomeDate
+				IncomeDate   = (DateTime)income.IncomeDate
 			};
 		}
 	}

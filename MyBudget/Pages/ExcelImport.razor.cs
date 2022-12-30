@@ -17,6 +17,7 @@ namespace MyBudget.Pages
 		private FileResult file;
 		private string selectedFileString;
 		private readonly string badFile = "badfiletype";
+		private bool ShowLoading = false;
 
 		[Inject] IHistoryService<IncomeHistory> IncomeHistoryService { get; set; }
 		[Inject] IHistoryService<ExpenseHistory> ExpenseHistoryService { get; set; }
@@ -28,21 +29,28 @@ namespace MyBudget.Pages
 		{
 			expenseCategoryList = await ExpenseCategoryService.GetList();
 			DisplayFile(file);
+
+			tempIncomeHistoryList = new();
+			tempExpenseHistoryList = new();
 		}
 
 		async Task TestExcel()
 		{
 			try
 			{
-				var selectedFile = await SelectFile();
+				ShowLoading = true;
 
+				var selectedFile = await SelectFile();
 				var income_expense_tuple = Processor.ProcessFile(selectedFile);
 
 				tempIncomeHistoryList = income_expense_tuple.Item1;
 				tempExpenseHistoryList = income_expense_tuple.Item2;
+
+				ShowLoading = false;
 			}
 			catch (Exception e)
 			{
+				ShowLoading = false;
 				Snackbar.Add($"{e.Message}", Severity.Error);
 			}
 		}
@@ -70,18 +78,25 @@ namespace MyBudget.Pages
 
 		private void ClearFile()
 		{
+			ClearIncomes();
+			ClearExpenses();
 			file = null;
 			DisplayFile(file);
+		}
+
+		private void ClearIncomes()
+		{
 			ClearList(tempIncomeHistoryList);
+		}
+
+		private void ClearExpenses()
+		{
 			ClearList(tempExpenseHistoryList);
 		}
 
-		private void ClearList<T>(List<T> list)
+		private static void ClearList<T>(List<T> list)
 		{
-			if (list != null)
-			{
-				list.Clear();
-			}
+			list?.Clear();
 		}
 
 		private void DisplayFile(FileResult file)

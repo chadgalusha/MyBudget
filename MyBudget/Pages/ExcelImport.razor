@@ -15,6 +15,10 @@ else
 		<MudText><strong>File Selected:</strong> @selectedFileString</MudText>
 	</div>
 
+	<div style="margin-top:30px;">
+		<hr />
+	</div>
+
 	// Incomes section
 	<div>
 		<h5 style="text-align:center;">Incomes</h5>
@@ -23,21 +27,32 @@ else
 		{
 			<p class="nodata">No data to show</p>
 		}
-		<div style="margin-top:5px;margin-bottom:5px;">
-			<MudButton Variant="Variant.Filled" Color="Color.Success" Style="float:right;">Submit Incomes</MudButton>
+		<div style="margin-top:5px;margin-bottom:5px;float:right;">
+			<MudButton Variant="Variant.Filled" Color="Color.Success">Submit Incomes</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearIncomes" >Clear Incomes</MudButton>
 		</div>
 	</div>
-		
+
+	<div style="margin-top:50px;">
+		<hr />
+	</div>
+
 	// Expenses section
-	<div style="margin-top: 50px;">
+	<div style="margin-top:20px;">
 		<h5 style="text-align:center;">Expenses</h5>
 		<ExpenseHistoryAddTable expenseCategoryList="expenseCategoryList" expenseTempHistoryList="tempExpenseHistoryList" />
 		@if (tempExpenseHistoryList == null || tempExpenseHistoryList.Count == 0)
 		{
 			<p class="nodata">No data to show</p>
 		}
-		<div style="margin-top:5px;margin-bottom:5px;">
-			<MudButton Variant="Variant.Filled" Color="Color.Success" Style="float:right;">Submit Expenses</MudButton>
+		<div style="margin-top:5px;margin-bottom:5px;float:right;">
+			<MudButton Variant="Variant.Filled" Color="Color.Success">Submit Expenses</MudButton>
+			<MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="ClearExpenses" >Clear Expenses</MudButton>
 		</div>
 	</div>
+
+	@if (ShowLoading)
+	{
+		<MyBudgetLoadingIndicator />
+	}
 }

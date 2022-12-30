@@ -81,18 +81,20 @@ namespace MyBudget.Helpers
 							{
 								tupleResult.Item1.Add(new TempIncomeHistory
 								{
-									IncomeName = reader.GetString(1)[..30],
-									IncomeAmount = Convert.ToDecimal(reader.GetDouble(2)),
-									IncomeDate = reader.GetDateTime(0)
+									IncomeHistoryId = NextId(tupleResult.Item1),
+									IncomeName      = NameUpTo40Chars(reader.GetString(1)),
+									IncomeAmount    = Convert.ToDecimal(reader.GetDouble(2)),
+									IncomeDate      = reader.GetDateTime(0)
 								});
 							}
 							if (reader.GetDouble(2) < 0)
 							{
 								tupleResult.Item2.Add(new TempExpenseHistory
 								{
-									ExpenseName = reader.GetString(1)[..30],
-									AmountPaid = Convert.ToDecimal(reader.GetDouble(2)),
-									ExpenseDate = reader.GetDateTime(0)
+									ExpenseHistoryId = NextId(tupleResult.Item2),
+									ExpenseName		 = NameUpTo40Chars(reader.GetString(1)),
+									AmountPaid		 = Convert.ToDecimal(reader.GetDouble(2)),
+									ExpenseDate		 = reader.GetDateTime(0)
 								});
 							}
 
@@ -120,18 +122,20 @@ namespace MyBudget.Helpers
 							{
 								tupleResult.Item1.Add(new TempIncomeHistory
 								{
-									IncomeName = reader.GetString(1)[..30],
-									IncomeAmount = Convert.ToDecimal(reader.GetString(2)),
-									IncomeDate = Convert.ToDateTime(reader.GetString(0))
+									IncomeHistoryId = NextId(tupleResult.Item1),
+									IncomeName		= NameUpTo40Chars(reader.GetString(1)),
+									IncomeAmount    = Convert.ToDecimal(reader.GetString(2)),
+									IncomeDate		= Convert.ToDateTime(reader.GetString(0))
 								});
 							}
 							if (Convert.ToDouble(reader.GetString(2)) < 0)
 							{
 								tupleResult.Item2.Add(new TempExpenseHistory
 								{
-									ExpenseName = reader.GetString(1)[..30],
-									AmountPaid = Convert.ToDecimal(reader.GetString(2)),
-									ExpenseDate = Convert.ToDateTime(reader.GetString(0))
+									ExpenseHistoryId = NextId(tupleResult.Item2),
+									ExpenseName		 = NameUpTo40Chars(reader.GetString(1)),
+									AmountPaid		 = Convert.ToDecimal(reader.GetString(2)),
+									ExpenseDate		 = Convert.ToDateTime(reader.GetString(0))
 								});
 							}
 						}
@@ -153,8 +157,18 @@ namespace MyBudget.Helpers
 			};
 		}
 
-		private static List<TempIncomeHistory> GetNewTempIncomeList() => new List<TempIncomeHistory>();
+		private static string NameUpTo40Chars(string name)
+		{
+			return name.Length > 40 ? name[..40] : name;
+		}
 
-		private static List<TempExpenseHistory> GetNewTempExpenseList() => new List<TempExpenseHistory>();
+		private static int NextId<T>(List<T> list)
+		{
+			return list.Count + 1;
+		}
+
+		private static List<TempIncomeHistory> GetNewTempIncomeList() => new();
+
+		private static List<TempExpenseHistory> GetNewTempExpenseList() => new();
 	}
 }
