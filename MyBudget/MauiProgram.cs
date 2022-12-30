@@ -66,6 +66,7 @@ public static class MauiProgram
 
 		builder.Services.AddTransient<ICalendarProcessor, CalendarProcessor>();
 		builder.Services.AddTransient<IChartProcessor, ChartProcessor>();
+		builder.Services.AddTransient<ICsvExcelProcessor, CsvExcelProcessor>();
 
 		builder.Services.AddMudServices(config =>
 		{
