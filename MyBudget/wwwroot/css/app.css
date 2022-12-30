@@ -334,3 +334,13 @@ a, .btn-link {
     background-color: rgb(224, 224, 224);
     height: 20px;
 }
+
+.loadingindicator {
+    top: 50%;
+    left: 50%;
+    width: 10em;
+    height: 10em;
+    margin-top: -9em;
+    margin-left: 5em;
+    position: fixed;
+}
