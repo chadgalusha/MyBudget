@@ -16,7 +16,6 @@ namespace MyBudget.Pages
 		private List<ExpenseCategories> expenseCategoryList;
 		private FileResult file;
 		private string selectedFileString;
-		private readonly string badFile = "badfiletype";
 		private bool ShowLoading = false;
 
 		[Inject] IHistoryService<IncomeHistory> IncomeHistoryService { get; set; }
@@ -34,46 +33,108 @@ namespace MyBudget.Pages
 			tempExpenseHistoryList = new();
 		}
 
-		async Task TestExcel()
+		async Task SelectFile()
 		{
 			try
 			{
-				ShowLoading = true;
+				ShowLoadingOn();
 
-				var selectedFile = await SelectFile();
+				var selectedFile = await Processor.Csv_Xslx_Selector();
 				var income_expense_tuple = Processor.ProcessFile(selectedFile);
 
-				tempIncomeHistoryList = income_expense_tuple.Item1;
-				tempExpenseHistoryList = income_expense_tuple.Item2;
+				SetTempLists(income_expense_tuple);
 
-				ShowLoading = false;
+				DisplayFile(selectedFile);
+
+				ShowLoadingOff();
 			}
 			catch (Exception e)
 			{
-				ShowLoading = false;
-				Snackbar.Add($"{e.Message}", Severity.Error);
+				ShowLoadingOff();
+				Snackbar.Add($"Error with file, or improperly formatted file", Severity.Error);
+				MyBudgetLogger.ErrorLogMessage(e);
 			}
 		}
 
-		private async Task<FileResult> SelectFile()
+		private void SetTempLists((List<TempIncomeHistory>, List<TempExpenseHistory>) income_expense_tuple)
+		{
+			tempIncomeHistoryList = income_expense_tuple.Item1;
+			tempExpenseHistoryList = income_expense_tuple.Item2;
+		}
+
+		private async Task SaveIncomes()
 		{
 			try
 			{
-				var fileResult = await Processor.Csv_Xslx_Selector();
+				int incomesProcessed = 0;
 
-				if (!(fileResult.FileName.EndsWith("xlsx", StringComparison.OrdinalIgnoreCase) ||
-					fileResult.FileName.EndsWith("csv", StringComparison.OrdinalIgnoreCase)))
+				foreach (var tempIncome in tempIncomeHistoryList)
 				{
-					fileResult = new FileResult(badFile);
+					IncomeHistory newIncome = GetNewIncomeHistory(tempIncome);
+
+					var result = await IncomeHistoryService.CreateRecord(newIncome);
+
+					if (result.IncomeHistoryId != 0)
+					{
+						incomesProcessed++;
+					}
 				}
-				
-				return fileResult;
+
+				Snackbar.Add($"Expected Incomes to save: [{tempIncomeHistoryList.Count}]. Actual Incomes saved: [{incomesProcessed}]", Severity.Success);
+				ClearIncomes();
 			}
 			catch (Exception e)
 			{
-				Snackbar.Add($"Error: {e.Message}", Severity.Error);
-				return new FileResult(badFile);
+				Snackbar.Add($"Error processing Incomes: {e.Message}", Severity.Error);
 			}
+		}
+
+		private async Task SaveExpenses()
+		{
+			try
+			{
+				int expensesProcessed = 0;
+
+				foreach (var tempExpense in tempExpenseHistoryList)
+				{
+					ExpenseHistory newExpense = GetNewExpenseHistory(tempExpense);
+
+					var result = await ExpenseHistoryService.CreateRecord(newExpense);
+
+					if (result.ExpenseHistoryId != 0)
+					{
+						expensesProcessed++;
+					}
+				}
+
+				Snackbar.Add($"Expected Expenses to save: [{tempExpenseHistoryList.Count}]. Actual Expenses saved: [{expensesProcessed}]", Severity.Success);
+				ClearExpenses();
+			}
+			catch (Exception e)
+			{
+				Snackbar.Add($"Error processing Expenses: {e.Message}", Severity.Error);
+			}
+		}
+
+		private IncomeHistory GetNewIncomeHistory(TempIncomeHistory tempIncomeHistory)
+		{
+			return new()
+			{
+				IncomeName	 = tempIncomeHistory.IncomeName,
+				IncomeDate	 = (DateTime)tempIncomeHistory.IncomeDate,
+				IncomeAmount = tempIncomeHistory.IncomeAmount
+			};
+		}
+
+		private ExpenseHistory GetNewExpenseHistory(TempExpenseHistory tempExpenseHistory)
+		{
+			return new()
+			{
+				ExpenseName		  = tempExpenseHistory.ExpenseName,
+				ExpenseDate		  = (DateTime)tempExpenseHistory.ExpenseDate,
+				AmountPaid		  = tempExpenseHistory.AmountPaid,
+				ExpenseCategoryId = tempExpenseHistory.ExpenseCategoryId
+			};
 		}
 
 		private void ClearFile()
@@ -103,12 +164,22 @@ namespace MyBudget.Pages
 		{
 			if (file != null)
 			{
-				selectedFileString = file.FileName;
+				selectedFileString = file.FullPath;
 			}
 			else
 			{
 				selectedFileString = "no file selected";
 			}
+		}
+
+		private void ShowLoadingOn()
+		{
+			ShowLoading = true;
+		}
+
+		private void ShowLoadingOff()
+		{
+			ShowLoading = false;
 		}
 	}
 }

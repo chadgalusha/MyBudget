@@ -33,6 +33,7 @@ namespace MyBudget.Helpers
 			}
 		}
 
+		// Process .xslx or .csv file. As file can have incomes and expenses, send back separate lists in tuple(incomes, expenses)
 		public (List<TempIncomeHistory>, List<TempExpenseHistory>) ProcessFile(FileResult file)
 		{
 			(List<TempIncomeHistory>, List<TempExpenseHistory>) tupleResult = new(GetNewTempIncomeList(), GetNewTempExpenseList());
@@ -50,7 +51,7 @@ namespace MyBudget.Helpers
 			return tupleResult;
 		}
 
-		// Private methods
+		#region Private Methods
 
 		private static FilePickerFileType GetFilesAllowed()
 		{
@@ -65,7 +66,7 @@ namespace MyBudget.Helpers
 			return allowedFiles;
 		}
 
-		// Process Excel Files
+		// Process Excel (.xslx) Files
 		private (List<TempIncomeHistory>, List<TempExpenseHistory>) ExcelProccesor(FileResult file,
 			(List<TempIncomeHistory>, List<TempExpenseHistory>) tupleResult)
 		{
@@ -91,10 +92,11 @@ namespace MyBudget.Helpers
 							{
 								tupleResult.Item2.Add(new TempExpenseHistory
 								{
-									ExpenseHistoryId = NextId(tupleResult.Item2),
-									ExpenseName		 = NameUpTo40Chars(reader.GetString(1)),
-									AmountPaid		 = Convert.ToDecimal(reader.GetDouble(2)),
-									ExpenseDate		 = reader.GetDateTime(0)
+									ExpenseHistoryId  = NextId(tupleResult.Item2),
+									ExpenseName		  = NameUpTo40Chars(reader.GetString(1)),
+									AmountPaid		  = Math.Abs(Convert.ToDecimal(reader.GetDouble(2))),
+									ExpenseDate		  = reader.GetDateTime(0),
+									ExpenseCategoryId = 1
 								});
 							}
 
@@ -132,10 +134,11 @@ namespace MyBudget.Helpers
 							{
 								tupleResult.Item2.Add(new TempExpenseHistory
 								{
-									ExpenseHistoryId = NextId(tupleResult.Item2),
-									ExpenseName		 = NameUpTo40Chars(reader.GetString(1)),
-									AmountPaid		 = Convert.ToDecimal(reader.GetString(2)),
-									ExpenseDate		 = Convert.ToDateTime(reader.GetString(0))
+									ExpenseHistoryId  = NextId(tupleResult.Item2),
+									ExpenseName		  = NameUpTo40Chars(reader.GetString(1)),
+									AmountPaid		  = Math.Abs(Convert.ToDecimal(reader.GetString(2))),
+									ExpenseDate		  = Convert.ToDateTime(reader.GetString(0)),
+									ExpenseCategoryId = 1
 								});
 							}
 						}
@@ -170,5 +173,7 @@ namespace MyBudget.Helpers
 		private static List<TempIncomeHistory> GetNewTempIncomeList() => new();
 
 		private static List<TempExpenseHistory> GetNewTempExpenseList() => new();
+
+		#endregion
 	}
 }

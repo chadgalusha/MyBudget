@@ -766,3 +766,15 @@
 2022-12-22 15:32:19.710 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":53,"ExpenseName":"Test4","AmountPaid":33.33,"ExpenseDate":"2022-12-22T15:31:49.7441787","ExpenseCategoryId":1}
 2022-12-22 15:32:22.146 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":51,"ExpenseName":"Test2","AmountPaid":11.11,"ExpenseDate":"2022-12-22T15:31:49.4230829","ExpenseCategoryId":1}
 2022-12-22 15:32:25.072 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":52,"ExpenseName":"Test3","AmountPaid":22.22,"ExpenseDate":"2022-12-22T15:31:49.595674","ExpenseCategoryId":1}
+2023-01-04 14:25:06.026 -06:00 [INF] Error: Unable to cast object of type 'System.String' to type 'System.Double'.
+2023-01-04 14:42:48.269 -06:00 [INF] Error: Unable to cast object of type 'System.String' to type 'System.Double'.
+2023-01-04 15:59:59.656 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":20,"IncomeName":"GUSTO DES:PAY 617126 ID:6semjrqq7fa INDN","IncomeAmount":1373.77,"IncomeDate":"2023-01-04T00:00:00"}
+2023-01-04 16:00:23.953 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":54,"ExpenseName":"JERSEY MIKES 4012 05/25 PURCHASE CLARKSV","AmountPaid":13.97,"ExpenseDate":"2023-01-04T00:00:00","ExpenseCategoryId":4}
+2023-01-04 16:00:23.961 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":55,"ExpenseName":"WM SUPERC Wal- 05/26 PURCHASE CLARKSVILL","AmountPaid":25.15,"ExpenseDate":"2023-01-04T00:00:00","ExpenseCategoryId":3}
+2023-01-04 16:01:07.630 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":55,"ExpenseName":"WM SUPERC Wal- 05/26 PURCHASE CLARKSVILL","AmountPaid":25.15,"ExpenseDate":"2023-01-04T00:00:00","ExpenseCategoryId":3}
+2023-01-04 16:01:12.817 -06:00 [INF] ExpenseHistory deleted: {"ExpenseHistoryId":54,"ExpenseName":"JERSEY MIKES 4012 05/25 PURCHASE CLARKSV","AmountPaid":13.97,"ExpenseDate":"2023-01-04T00:00:00","ExpenseCategoryId":4}
+2023-01-04 16:01:19.300 -06:00 [INF] IncomeHistory deleted: {"IncomeHistoryId":20,"IncomeName":"GUSTO DES:PAY 617126 ID:6semjrqq7fa INDN","IncomeAmount":1373.77,"IncomeDate":"2023-01-04T00:00:00"}
+2023-01-04 16:01:35.679 -06:00 [INF] IncomeHistory created: {"IncomeHistoryId":21,"IncomeName":"GUSTO DES:PAY 617126 ID:6semjrqq7fa INDN","IncomeAmount":1373.77,"IncomeDate":"2023-01-04T00:00:00"}
+2023-01-04 16:02:12.237 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":56,"ExpenseName":"JERSEY MIKES 4012 05/25 PURCHASE CLARKSV","AmountPaid":13.97,"ExpenseDate":"2023-01-04T00:00:00","ExpenseCategoryId":12}
+2023-01-04 16:03:50.146 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":57,"ExpenseName":"CHIPOTLE ONLINE 05/27 PURCHASE 180-024-4","AmountPaid":12.59,"ExpenseDate":"2023-01-03T00:00:00","ExpenseCategoryId":5}
+2023-01-04 16:03:50.163 -06:00 [INF] ExpenseHistory created: {"ExpenseHistoryId":58,"ExpenseName":"1ST NAIL BAR 05/28 PURCHASE CLARKSVILLE ","AmountPaid":105,"ExpenseDate":"2023-01-02T00:00:00","ExpenseCategoryId":19}
