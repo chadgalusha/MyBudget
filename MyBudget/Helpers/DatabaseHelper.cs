@@ -12,6 +12,8 @@ namespace MyBudget.Helpers
             return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "test_database.sqlite");
         }
 
+        // When application starts check if db tables exist. Loop through types from Models folder,
+        // add any tables to db that are not present
         public static void CheckForDbTables()
         {
             using (SQLiteConnection connection = new(GetDbPath()))

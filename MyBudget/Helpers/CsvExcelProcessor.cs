@@ -67,6 +67,9 @@ namespace MyBudget.Helpers
 		}
 
 		// Process Excel (.xslx) Files
+		// Create a FileStream, and then an Excel Data Reader. While looping through the stream,
+		// read 3rd column which is excpected to be a double. Add to either incomes or expenses
+		// depending if value is > or < than $0.00.
 		private (List<TempIncomeHistory>, List<TempExpenseHistory>) ExcelProccesor(FileResult file,
 			(List<TempIncomeHistory>, List<TempExpenseHistory>) tupleResult)
 		{
@@ -109,6 +112,9 @@ namespace MyBudget.Helpers
 		}
 
 		// Process Csv Files
+		// Create a FileStream, and then an CSV Data Reader. While looping through the stream,
+		// read 3rd column which is excpected to be a double. Add to either incomes or expenses
+		// depending if value is > or < than $0.00.
 		private (List<TempIncomeHistory>, List<TempExpenseHistory>) CsvProcessor(FileResult file,
 			(List<TempIncomeHistory>, List<TempExpenseHistory>) tupleResult)
 		{
