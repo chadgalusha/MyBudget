@@ -3,16 +3,15 @@
 @using MyBudget.Models
 @using MyBudget.Helpers
 @using System.Globalization
+@using MyBudget.Components
 @inject IService<BankAccounts> bankAccountService
 @inject ITypeService<BankAccountTypes> bankAccountTypeService
 
 <h3 style="text-align:center">Bank Accounts</h3>
 
-@if (bankAccountsList == null)
+@if (bankAccountsList == null || bankAccountTypeList == null)
 {
-	<div class="spinner-border text-success" role="status">
-		<span class="sr-only">Loading...</span>
-	</div>
+	<MyBudgetLoadingIndicator />
 }
 else
 {
@@ -108,8 +107,8 @@ else
 }
 
 @code {
-	List<BankAccounts> bankAccountsList = new();
-	List<BankAccountTypes> bankAccountTypeList = new();
+	List<BankAccounts> bankAccountsList;
+	List<BankAccountTypes> bankAccountTypeList;
 	BankAccounts bankAccount = new();
 	bool ShowPopup = false;
 

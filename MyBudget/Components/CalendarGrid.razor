@@ -1,0 +1,151 @@
+﻿@using MyBudget.Models;
+
+<div class="calendar-grid">
+	@{
+		count = 1;
+	}
+	@for (int i = 0; i <= totalCalendarDays; i++)
+	{
+		if (i < startingIndex)
+		{
+			<div id="notMonthDay"></div>
+		}
+		else if (i > endingIndex)
+		{
+			<div id="notMonthDay"></div>
+		}
+		else
+		{
+			@* Get list<T> for current day of types ExpenseHistory / IncomeHistory *@
+			thisDayIncomeHistoryList = GetIncomeHistoryListForDay(count);
+			thisDayExpenseHistoryList = GetExpenseHistoryListForDay(count);
+
+			@* if count == today, print items (if any) in id="currentDay" box. Only difference between the 2
+				is that one div is id="currentDay", other is "monthday" which adds different styling
+			*@
+			if (count == today)
+			{
+				int currentCount = count; // initialize here to send correct date through event
+				<div class="@OutlineSelectedDay(currentCount)" id="currentDay" @onclick="() => CallUpdateCurrentDay(currentCount)">
+					<h6>@count</h6>
+					@if (thisDayIncomeHistoryList.Count != 0)
+					{
+						foreach (var income in thisDayIncomeHistoryList)
+						{
+							<div id="incomeItem" style="text-align:center;" @onclick="() => CallEditIncomeHistory(income.IncomeHistoryId)">@income.IncomeName</div>
+						}
+					}
+					@if (thisDayExpenseHistoryList.Count != 0)
+					{
+						foreach (var expense in thisDayExpenseHistoryList)
+						{
+							<div id="expenseItem" style="text-align:center;" @onclick="() => CallEditExpenseHistory(expense.ExpenseHistoryId)">@expense.ExpenseName</div>
+						}
+					}
+				</div>
+				count++;
+			}
+			else
+			{
+				int currentCount = count; // initialize here to send correct date through event
+				<div class="@OutlineSelectedDay(currentCount)" id="monthDay" @onclick="() => CallUpdateCurrentDay(currentCount)">
+					<h6>@count</h6>
+					@if (thisDayIncomeHistoryList.Count != 0)
+					{
+						foreach (var income in thisDayIncomeHistoryList)
+						{
+							<div id="incomeItem" style="text-align:center;" @onclick="() => CallEditIncomeHistory(income.IncomeHistoryId)">@income.IncomeName</div>
+						}
+					}
+					@if (thisDayExpenseHistoryList.Count != 0)
+					{
+						foreach (var expense in thisDayExpenseHistoryList)
+						{
+							<div id="expenseItem" style="text-align:center;" @onclick="() => CallEditExpenseHistory(expense.ExpenseHistoryId)">@expense.ExpenseName</div>
+						}
+					}
+				</div>
+				count++;
+			}
+		}
+	}
+</div>
+
+@code {
+
+	[Parameter, EditorRequired]
+	public int startingIndex { get; set; }
+
+	[Parameter, EditorRequired]
+	public int endingIndex { get; set; }
+
+	[Parameter, EditorRequired]
+	public int today { get; set; }
+
+	[Parameter, EditorRequired]
+	public List<IncomeHistory> thisMonthIncomeHistoryList { get; set; }
+
+	[Parameter, EditorRequired]
+	public List<ExpenseHistory> thisMonthExpenseHistoryList { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<int> UpdateCurrentDay { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<int> EditIncomeHistory { get; set; }
+
+	[Parameter, EditorRequired]
+	public EventCallback<int> EditExpenseHistory { get; set; }
+
+	private int count = 1;
+
+	private int totalCalendarDays = 41; // includes 0 for total of 42
+
+	int selectedDay;
+
+	private List<IncomeHistory> thisDayIncomeHistoryList { get; set; }
+
+	private List<ExpenseHistory> thisDayExpenseHistoryList { get; set; }
+
+	List<IncomeHistory> GetIncomeHistoryListForDay(int currentDay)
+	{
+		return thisMonthIncomeHistoryList.Where(i => i.IncomeDate.Day == currentDay).ToList();
+	}
+
+	List<ExpenseHistory> GetExpenseHistoryListForDay(int currentDay)
+	{
+		return thisMonthExpenseHistoryList.Where(e => e.ExpenseDate.Day == currentDay).ToList();
+	}
+
+	private async Task CallUpdateCurrentDay(int day)
+	{
+		selectedDay = day;
+		await UpdateCurrentDay.InvokeAsync(day);
+	}
+
+	private async Task CallEditIncomeHistory(int incomeHistoryId)
+	{
+		await EditIncomeHistory.InvokeAsync(incomeHistoryId);
+	}
+
+	private async Task CallEditExpenseHistory(int expenseHistoryId)
+	{
+		await EditExpenseHistory.InvokeAsync(expenseHistoryId);
+	}
+
+	bool IsSelectedDay(int day)
+	{
+		return selectedDay == day;
+	}
+
+	string OutlineSelectedDay(int day)
+	{
+		return IsSelectedDay(day) ? "selected-day" : "";
+	}
+
+	protected override void OnInitialized()
+	{
+		selectedDay = today;
+	}
+
+}

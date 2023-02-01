@@ -1,26 +1,26 @@
-﻿@page "/incomehistoryaddmultiple"
+﻿@page "/expensehistoryaddmultiple"
 @using MyBudget.Components
 
-@if (incomeTempHistoryList.Count() == 0)
+@if (expenseCategoryList == null)
 {
 	<MyBudgetLoadingIndicator />
 }
 else
 {
-	<h3 style="text-align:center;">Add Multiple Income Histories</h3>
+	<h3 style="text-align:center;">Add Multiple Expense Histories</h3>
 	<div style="margin-top:5px;margin-bottom:5px;">
-		<LinkButton _href="/incomehistorypage" _text="Back to Income History"></LinkButton>
+		<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
 		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
 		<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
 		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>
 	</div>
 
 	<div>
-		<IncomeHistoryAddTable incomeTempHistoryList="incomeTempHistoryList" />
+		<ExpenseHistoryAddTable expenseCategoryList="expenseCategoryList" expenseTempHistoryList="expenseTempHistoryList" />
 	</div>
 
 	<div style="margin-top:5px;margin-bottom:5px;">
-		<LinkButton _href="/incomehistorypage" _text="Back to Income History"></LinkButton>
+		<LinkButton _href="/expensehistorypage" _text="Back to Expense History"></LinkButton>
 		<MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="AddRow">Add Row</MudButton>
 		<MudButton Variant="Variant.Filled" Color="Color.Secondary" @onclick="DeleteRow">Delete Row</MudButton>
 		<MudButton Variant="Variant.Filled" Color="Color.Success" @onclick="ProcessList" style="float:right;">Submit</MudButton>

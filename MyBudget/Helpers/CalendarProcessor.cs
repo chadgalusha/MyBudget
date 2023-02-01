@@ -19,5 +19,15 @@
 			var monthEnum = (MonthsEnum)month;
 			return monthEnum.ToString();
 		}
+
+		public DateTime PreviousMonth(DateTime currentDateTime)
+		{
+			return currentDateTime.AddMonths(-1);
+		}
+
+		public DateTime NextMonth(DateTime currentDateTime)
+		{
+			return currentDateTime.AddMonths(1);
+		}
 	}
 }

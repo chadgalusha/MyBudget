@@ -1,4 +1,6 @@
-﻿namespace MyBudget.Services
+﻿using MyBudget.Models;
+
+namespace MyBudget.Services
 {
 	public interface IHistoryService<T>
 	{
@@ -11,5 +13,6 @@
 		decimal GetAmountForLastYear();
 		decimal GetAmountForThisMonth();
 		decimal GetAmountForThisYear();
-	}
+		List<T> GetListByYearMonth(int year, int month);
+    }
 }
