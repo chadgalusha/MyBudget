@@ -39,6 +39,13 @@ namespace MyBudget.Helpers
 			Log.Information($"{type.GetType().Name} deleted: {GetJsonSerializedType(type)}");
 		}
 
+		// General Error Message
+
+		public static void ErrorLogMessage(Exception e)
+		{
+			Log.Information($"Error: {e.Message}");
+		}
+
 		// PRIVATE METHODS
 
 		private static string GetJsonSerializedType<T>(T type)

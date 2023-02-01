@@ -2,11 +2,13 @@
 using MudBlazor;
 using MyBudget.Models;
 using MyBudget.Services;
+using MyBudget.TempModels;
 
 namespace MyBudget.Pages
 {
 	public partial class ExpenseHistoryAddMultiplePage
 	{
+		// Added Temp class due to MudBlazor date picker component needing DateTime? rather than DateTime
 		private readonly List<TempExpenseHistory> expenseTempHistoryList = new();
 		private List<ExpenseCategories> expenseCategoryList;
 
@@ -39,13 +41,6 @@ namespace MyBudget.Pages
 			expenseTempHistoryList.Remove(lastIndex);
 		}
 
-		private void RemoveElement(int id)
-		{
-			var element = expenseTempHistoryList.Where(e => e.ExpenseHistoryId == id).First();
-			expenseTempHistoryList.Remove(element);
-			ReIndexList();
-		}
-
 		private TempExpenseHistory GetInitialTempExpenseHistory()
 		{
 			return new() { ExpenseHistoryId = 1, ExpenseDate = DateTime.Now, ExpenseCategoryId = 1 };
@@ -59,17 +54,6 @@ namespace MyBudget.Pages
 		private int NextId()
 		{
 			return expenseTempHistoryList.Count + 1;
-		}
-
-		private void ReIndexList()
-		{
-			int currentIndex = 1;
-
-			foreach (var expense in expenseTempHistoryList)
-			{
-				expense.ExpenseHistoryId = currentIndex;
-				currentIndex++;
-			}
 		}
 
 		// Save methods
@@ -139,16 +123,6 @@ namespace MyBudget.Pages
 				ExpenseDate = (DateTime)expense.ExpenseDate,
 				ExpenseCategoryId = expense.ExpenseCategoryId
 			};
-		}
-
-		// Temp class added due to MudBlazor DateTimePicker needing DateTime? instead of DateTime to bind Date
-		private class TempExpenseHistory
-		{
-			public int ExpenseHistoryId { get; set; }
-			public string ExpenseName { get; set; }
-			public decimal AmountPaid { get; set; }
-			public DateTime? ExpenseDate { get; set; }
-			public int ExpenseCategoryId { get; set; }
 		}
 	}
 }

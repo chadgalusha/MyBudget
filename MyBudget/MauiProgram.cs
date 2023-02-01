@@ -14,6 +14,9 @@ public static class MauiProgram
 	{
 		DatabaseHelper.CheckForDbTables();
 
+		//for reading excel files, otherse 1252 error
+		System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+
 		Log.Logger = new LoggerConfiguration()
 			.MinimumLevel.Debug()
 			.WriteTo.File(@"C:\Users\ChadGalusha\source\repos\MyBudget\MyBudget\Data\logs.txt",
@@ -63,6 +66,7 @@ public static class MauiProgram
 
 		builder.Services.AddTransient<ICalendarProcessor, CalendarProcessor>();
 		builder.Services.AddTransient<IChartProcessor, ChartProcessor>();
+		builder.Services.AddTransient<ICsvExcelProcessor, CsvExcelProcessor>();
 
 		builder.Services.AddMudServices(config =>
 		{

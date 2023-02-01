@@ -1,0 +1,46 @@
+﻿@using MyBudget.Models;
+@using MyBudget.TempModels;
+
+<MudTable Items="@incomeTempHistoryList" Striped="true" Dense="true" class="mud-table-styles">
+	<HeaderContent>
+		<MudTh>Row</MudTh>
+		<MudTh>Income Name</MudTh>
+		<MudTh>Income Amount</MudTh>
+		<MudTh>Income Date</MudTh>
+		<MudTh></MudTh>
+	</HeaderContent>
+	<RowTemplate>
+		<MudTd DataLabel="Row">@context.IncomeHistoryId</MudTd>
+		<MudTd DataLabel="Income Name"><MudTextField @bind-Value="context.IncomeName" Label="Income Name" Variant="Variant.Outlined" Margin="Margin.Dense" MaxLength="20" /></MudTd>
+		<MudTd DataLabel="Income Amount"><MudNumericField @bind-Value="context.IncomeAmount" Label="Income Amount" Variant="Variant.Outlined" Margin="Margin.Dense" Min="0" Max="999999999" /></MudTd>
+		<MudTd DataLabel="Income Date"><MudDatePicker @bind-Date="context.IncomeDate" Label="Income Date" Variant="Variant.Outlined" Margin="Margin.Dense" /></MudTd>
+		<MudTd>
+			<MudIcon Icon="@Icons.Filled.DeleteOutline" Color="Color.Error" Title="delete"
+					 @onclick="(() => RemoveElement(context.IncomeHistoryId))" class="mud-table-button" style="text-align:center;" />
+		</MudTd>
+	</RowTemplate>
+</MudTable>
+
+@code {
+
+	[Parameter, EditorRequired]
+	public List<TempIncomeHistory> incomeTempHistoryList { get; set; }
+
+	private void RemoveElement(int id)
+	{
+		var element = incomeTempHistoryList.Where(i => i.IncomeHistoryId == id).First();
+		incomeTempHistoryList.Remove(element);
+		ReIndexList();
+	}
+
+	private void ReIndexList()
+	{
+		int currentIndex = 1;
+
+		foreach (var income in incomeTempHistoryList)
+		{
+			income.IncomeHistoryId = currentIndex;
+			currentIndex++;
+		}
+	}
+}

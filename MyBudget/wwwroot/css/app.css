@@ -325,3 +325,22 @@ a, .btn-link {
         background: rgb(255,78,78);
         background: radial-gradient(circle, rgba(255,78,78,1) 2%, rgba(254,0,0,1) 98%);
     }
+
+/* No data styles */
+
+.nodata {
+    margin: auto;
+    text-align:center;
+    background-color: rgb(224, 224, 224);
+    height: 20px;
+}
+
+.loadingindicator {
+    top: 50%;
+    left: 50%;
+    width: 10em;
+    height: 10em;
+    margin-top: -9em;
+    margin-left: 5em;
+    position: fixed;
+}
